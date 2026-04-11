@@ -1,8 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { webPageSchema, breadcrumbSchema } from '../data/schema';
+
+const schema = [
+  webPageSchema('Kontakt – Barbier Berlin', 'Barbier Berlin Kontakt: Markgrafenstraße 88, 10969 Berlin. Mo-Fr 10-18, Sa 10-17. Tel: 030 259 265 00.', '/contact'),
+  breadcrumbSchema([{ name: 'Startseite', url: '/' }, { name: 'Kontakt', url: '/contact' }]),
+];
 ---
 
-<Layout title="Kontakt – Barbier Berlin" description="Besuchen Sie uns in Berlin-Kreuzberg. Adresse, Öffnungszeiten und Anfahrt.">
+<Layout title="Kontakt & Anfahrt | Barbier Berlin | Markgrafenstraße 88 Kreuzberg" description="Barbier Berlin besuchen: Markgrafenstraße 88, 10969 Berlin-Kreuzberg. Mo-Fr 10:00-18:00, Sa 10:00-17:00. Tel: 030 259 265 00. Karte & Anfahrt." schema={schema}>
   <!-- Hero -->
   <section class="pt-32 pb-16 bg-[#050506]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

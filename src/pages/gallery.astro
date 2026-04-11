@@ -1,6 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GalleryGrid from '../components/gallery/GalleryGrid';
+import { webPageSchema, breadcrumbSchema } from '../data/schema';
+
+const gallerySchema = [
+  webPageSchema('Galerie – Barbier Berlin', 'Einblicke in Barbier Berlin: Haarschnitte, Bartpflege, Styling. Kreuzberg.', '/gallery'),
+  breadcrumbSchema([{ name: 'Startseite', url: '/' }, { name: 'Galerie', url: '/gallery' }]),
+];
 
 const images = [
   { src: 'https://images.unsplash.com/photo-1585747860019-8e79ff236798?w=600&h=600&fit=crop', alt: 'Haarschnitt' },
@@ -15,7 +21,7 @@ const images = [
 ];
 ---
 
-<Layout title="Galerie – Barbier Berlin" description="Einblicke in unsere Arbeit. Haarschnitte, Bartpflege und Styling bei Barbier Berlin.">
+<Layout title="Galerie | Barbier Berlin Kreuzberg | Unsere Arbeit" description="Galerie von Barbier Berlin — Haarschnitte, Bartpflege und Styling in Kreuzberg. Einblicke in unseren Salon und unsere Arbeit." schema={gallerySchema}>
   <section class="pt-32 pb-16 bg-[#050506]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Unsere Arbeit</span>

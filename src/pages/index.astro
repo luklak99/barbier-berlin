@@ -5,9 +5,25 @@ import ServicesPreview from '../components/home/ServicesPreview';
 import Features from '../components/home/Features';
 import Testimonials from '../components/home/Testimonials';
 import CTASection from '../components/home/CTASection';
+import { barberShopSchema, websiteSchema, webPageSchema, breadcrumbSchema } from '../data/schema';
+
+const schema = [
+  barberShopSchema,
+  websiteSchema,
+  webPageSchema(
+    'Barbier Berlin – Premium Barbershop in Kreuzberg',
+    'Ihr Barbershop in Berlin-Kreuzberg. Haarschnitte ab 20€, Bartpflege, Nassrasur. 4.8★ aus 1.400+ Bewertungen. Online buchen!',
+    '/',
+  ),
+  breadcrumbSchema([{ name: 'Startseite', url: '/' }]),
+];
 ---
 
-<Layout title="Barbier Berlin – Premium Barbershop in Kreuzberg">
+<Layout
+  title="Barbier Berlin | Barbershop Berlin-Kreuzberg | Markgrafenstraße 88"
+  description="Barbier Berlin – Ihr Premium-Barbershop in Kreuzberg. Haarschnitte ab 20€, Bartpflege, Nassrasur & Styling. 4.8★ aus 1.400+ Bewertungen. Jetzt online Termin buchen!"
+  schema={schema}
+>
   <Hero client:load />
   <Features client:visible />
   <ServicesPreview client:visible />

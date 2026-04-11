@@ -8,10 +8,15 @@ interface Props {
   title: string;
   description?: string;
   lang?: Language;
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
 }
 
-const { title, description = 'Barbier Berlin – Ihr Premium-Barbershop in Kreuzberg. Haarschnitte, Bart-Pflege, Rasur und mehr.', lang = 'de' } = Astro.props;
+const { title, description = 'Barbier Berlin – Ihr Premium-Barbershop in Kreuzberg. Haarschnitte, Bart-Pflege, Rasur und mehr. Markgrafenstraße 88, 10969 Berlin.', lang = 'de', schema = [], noindex = false } = Astro.props;
 const rtl = isRTL(lang);
+const canonicalUrl = new URL(Astro.url.pathname, 'https://barbier.berlin').href;
+const languages = { de: '', en: '/en', tr: '/tr', ar: '/ar' } as const;
+const basePath = Astro.url.pathname.replace(/^\/(en|tr|ar)/, '');
 ---
 
 <!doctype html>
@@ -20,13 +25,25 @@ const rtl = isRTL(lang);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="theme-color" content="#050506" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Hreflang -->
+    {Object.entries(languages).map(([code, prefix]) => (
+      <link rel="alternate" hreflang={code} href={`https://barbier.berlin${prefix}${basePath}`} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={`https://barbier.berlin${basePath}`} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang === 'en' ? 'en_US' : lang === 'tr' ? 'tr_TR' : 'ar_SA'} />
+    <meta property="og:site_name" content="Barbier Berlin" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,6 +54,11 @@ const rtl = isRTL(lang);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <title>{title}</title>
+
+    <!-- Schema.org JSON-LD -->
+    {schema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
   </head>
   <body class="min-h-screen flex flex-col antialiased">
     <Header lang={lang} />

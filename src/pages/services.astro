@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { services, type ServiceCategory } from '../data/services';
+import { webPageSchema, breadcrumbSchema, serviceSchema } from '../data/schema';
 
 const categoryLabels: Record<ServiceCategory, string> = {
   haircut: 'Haarschnitte',
@@ -12,9 +13,15 @@ const categoryLabels: Record<ServiceCategory, string> = {
 };
 
 const categories: ServiceCategory[] = ['haircut', 'beard', 'face', 'color', 'kids', 'specials'];
+
+const schema = [
+  webPageSchema('Services & Preise – Barbier Berlin', 'Alle Barbier Berlin Services und Preise. Haarschnitte ab 20€, Bartpflege ab 17€, Nassrasur, Gesichtspflege. Kreuzberg.', '/services'),
+  breadcrumbSchema([{ name: 'Startseite', url: '/' }, { name: 'Services & Preise', url: '/services' }]),
+  ...services.slice(0, 8).map(s => serviceSchema(s.name.de, s.price)),
+];
 ---
 
-<Layout title="Services & Preise – Barbier Berlin" description="Alle Services und Preise von Barbier Berlin. Haarschnitte, Bartpflege, Rasur, Gesichtspflege und mehr.">
+<Layout title="Services & Preise | Barbier Berlin Kreuzberg | Ab 17€" description="22 Grooming-Services bei Barbier Berlin in Kreuzberg. Haarschnitte ab 20€, Bartpflege ab 17€, Nassrasur, Farbe & Styling. Alle Preise inkl. Beratung. Online buchen!" schema={schema}>
   <!-- Hero -->
   <section class="pt-32 pb-16 bg-[#050506]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

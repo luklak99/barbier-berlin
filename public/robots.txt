@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://barbier.berlin/sitemap.xml
+
+# Content signals (EU Directive 2019/790 Article 4)
+# search: yes
+# ai-input: yes
+# ai-train: no

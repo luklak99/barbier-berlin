@@ -1,8 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { webPageSchema, breadcrumbSchema } from '../data/schema';
+
+const schema = [
+  webPageSchema('Über uns – Barbier Berlin', 'Barbier Berlin: Inhaber Mohammed, Meisterbarbier seit 2020 in Kreuzberg. 4.8★, 1.400+ Bewertungen.', '/about'),
+  breadcrumbSchema([{ name: 'Startseite', url: '/' }, { name: 'Über uns', url: '/about' }]),
+];
 ---
 
-<Layout title="Über uns – Barbier Berlin" description="Erfahren Sie mehr über Barbier Berlin — Tradition, Handwerkskunst und Leidenschaft seit 2020.">
+<Layout title="Über uns | Barbier Berlin Kreuzberg | Meisterbarbier Mohammed" description="Lernen Sie Barbier Berlin kennen — gegründet 2020 von Meisterbarbier Mohammed in Kreuzberg. 4.8★ aus 1.400+ Bewertungen. Präzision, Gastfreundschaft & Premium-Qualität." schema={schema}>
   <!-- Hero -->
   <section class="pt-32 pb-16 bg-[#050506]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
