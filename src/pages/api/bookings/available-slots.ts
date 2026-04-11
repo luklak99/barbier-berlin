@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { and, eq } from 'drizzle-orm';
 import { bookings } from '../../../db/schema';
@@ -28,7 +29,7 @@ export async function GET(context: APIContext) {
   const closingHour = dayOfWeek === 6 ? 17 : 18;
   const openingHour = 10;
 
-  const db = getDb(context.locals.runtime.env.DB);
+  const db = getDb(env.DB);
 
   // Get existing bookings for this date
   const existing = await db

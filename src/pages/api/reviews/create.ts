@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { and, eq } from 'drizzle-orm';
 import { bookings, reviews } from '../../../db/schema';
@@ -10,7 +11,7 @@ export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
   if (!token) return errorResponse('Nicht angemeldet.', 401);
 
-  const db = getDb(context.locals.runtime.env.DB);
+  const db = getDb(env.DB);
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 

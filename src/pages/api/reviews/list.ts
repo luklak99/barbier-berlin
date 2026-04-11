@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { desc, eq } from 'drizzle-orm';
 import { reviews, users } from '../../../db/schema';
@@ -5,7 +6,7 @@ import { getDb } from '../../../lib/db';
 import { jsonResponse } from '../../../lib/validation';
 
 export async function GET(context: APIContext) {
-  const db = getDb(context.locals.runtime.env.DB);
+  const db = getDb(env.DB);
 
   const allReviews = await db
     .select({

@@ -1,11 +1,10 @@
 /// <reference path="../.astro/types.d.ts" />
 
-type Runtime = import('@astrojs/cloudflare').Runtime<{
-  DB: D1Database;
-  SMTP_USER: string;
-  SMTP_PASS: string;
-}>;
-
-declare namespace App {
-  interface Locals extends Runtime {}
+// Cloudflare Workers env bindings (Astro v6+: use import { env } from 'cloudflare:workers')
+declare module 'cloudflare:workers' {
+  interface Env {
+    DB: D1Database;
+    SMTP_USER: string;
+    SMTP_PASS: string;
+  }
 }

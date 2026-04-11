@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { eq } from 'drizzle-orm';
 import { users } from '../../../db/schema';
@@ -26,7 +27,7 @@ export async function POST(context: APIContext) {
     if (!password) return errorResponse('Passwort muss mindestens 8 Zeichen lang sein.');
     if (!name) return errorResponse('Name ist erforderlich.');
 
-    const db = getDb(context.locals.runtime.env.DB);
+    const db = getDb(env.DB);
 
     // Check if user exists
     const existing = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
@@ -49,7 +50,6 @@ export async function POST(context: APIContext) {
     const token = await createSession(db, userId);
 
     // Willkommens-E-Mail (fire and forget)
-    const env = context.locals.runtime.env;
     if (env.SMTP_USER && env.SMTP_PASS) {
       sendWelcomeEmail(env, { to: email, customerName: name }).catch(() => {});
     }

@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { eq } from 'drizzle-orm';
 import { bookings, users, pointsTransactions } from '../../../db/schema';
@@ -20,7 +21,7 @@ export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
   if (!token) return errorResponse('Nicht angemeldet.', 401);
 
-  const db = getDb(context.locals.runtime.env.DB);
+  const db = getDb(env.DB);
   const admin = await validateSession(db, token);
   if (!admin || admin.role !== 'admin') return errorResponse('Keine Berechtigung.', 403);
 

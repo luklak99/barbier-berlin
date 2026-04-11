@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { eq } from 'drizzle-orm';
 import { users } from '../../../db/schema';
@@ -22,7 +23,7 @@ export async function POST(context: APIContext) {
       return errorResponse('E-Mail und Passwort sind erforderlich.');
     }
 
-    const db = getDb(context.locals.runtime.env.DB);
+    const db = getDb(env.DB);
 
     const result = await db
       .select()
