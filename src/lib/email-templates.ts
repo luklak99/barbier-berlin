@@ -201,6 +201,13 @@ export function bookingConfirmationHtml(data: BookingEmailData): string {
         jederzeit &uuml;ber Ihr <a href="https://barbier.berlin/dashboard" style="color:${BRAND_GOLD}; text-decoration:underline;">Dashboard</a> verwalten.
       </p>
     </div>
+
+    <div style="margin-top:16px; text-align:center;">
+      <a href="https://wa.me/493025926500?text=${encodeURIComponent(`Hallo, ich habe einen Termin am ${formatDate(data.date)} um ${data.startTime} Uhr gebucht (${data.serviceName}).`)}"
+         style="display:inline-block; padding:10px 20px; background-color:#25D366; color:#fff; border-radius:6px; text-decoration:none; font-size:13px; font-weight:600;">
+        &#128172; Termin in WhatsApp speichern
+      </a>
+    </div>
   `;
 
   return baseLayout(content, `Ihr Termin am ${formatDate(data.date)} um ${data.startTime} Uhr ist bestaetigt.`);

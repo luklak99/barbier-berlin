@@ -12,6 +12,10 @@ export const users = sqliteTable('users', {
   emailVerified: integer('email_verified', { mode: 'boolean' }).notNull().default(false),
   pointsBalance: integer('points_balance').notNull().default(0),
   language: text('language', { enum: ['de', 'en', 'tr', 'ar'] }).notNull().default('de'),
+  referralCode: text('referral_code').unique(),
+  referredBy: text('referred_by'),
+  noShowCount: integer('no_show_count').notNull().default(0),
+  bookingBlocked: integer('booking_blocked', { mode: 'boolean' }).notNull().default(false),
   lastVisitAt: text('last_visit_at'),
   createdAt: text('created_at').notNull().default('(datetime())'),
   updatedAt: text('updated_at').notNull().default('(datetime())'),
@@ -76,6 +80,58 @@ export const emailVerificationTokens = sqliteTable('email_verification_tokens', 
   tokenHash: text('token_hash').notNull(),
   expiresAt: text('expires_at').notNull(),
   createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+// Warteliste für ausgebuchte Slots
+export const waitlist = sqliteTable('waitlist', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  serviceId: text('service_id').notNull(),
+  date: text('date').notNull(),
+  preferredStartTime: text('preferred_start_time'),
+  status: text('status', { enum: ['waiting', 'notified', 'booked', 'expired'] }).notNull().default('waiting'),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+// Trinkgeld
+export const tips = sqliteTable('tips', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  bookingId: text('booking_id').notNull().references(() => bookings.id),
+  amountPoints: integer('amount_points').notNull(),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+// Referral-Einladungen
+export const referrals = sqliteTable('referrals', {
+  id: text('id').primaryKey(),
+  referrerId: text('referrer_id').notNull().references(() => users.id),
+  referredUserId: text('referred_user_id').references(() => users.id),
+  status: text('status', { enum: ['pending', 'completed', 'rewarded'] }).notNull().default('pending'),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+// Saisonale Angebote / Happy Hour
+export const promotions = sqliteTable('promotions', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  discountPercent: integer('discount_percent').notNull(),
+  serviceIds: text('service_ids'), // JSON array of service IDs, null = all
+  dayOfWeek: text('day_of_week'), // 'monday','tuesday', etc. or null = every day
+  startTime: text('start_time'), // e.g. '10:00', null = all day
+  endTime: text('end_time'),
+  validFrom: text('valid_from').notNull(),
+  validUntil: text('valid_until').notNull(),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+// Admin-Einstellungen (Feature-Toggles)
+export const settings = sqliteTable('settings', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  updatedAt: text('updated_at').notNull().default('(datetime())'),
 });
 
 export const pushSubscriptions = sqliteTable('push_subscriptions', {

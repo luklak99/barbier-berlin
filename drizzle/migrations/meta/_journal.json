@@ -15,6 +15,13 @@
       "when": 1775913792293,
       "tag": "0001_right_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1775914590102,
+      "tag": "0002_massive_starjammers",
+      "breakpoints": true
     }
   ]
 }
