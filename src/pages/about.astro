@@ -4,24 +4,25 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Über uns – Barbier Berlin" description="Erfahren Sie mehr über Barbier Berlin — Tradition, Handwerkskunst und Leidenschaft seit 2020.">
   <!-- Hero -->
-  <section class="pt-32 pb-16 bg-surface-950">
+  <section class="pt-32 pb-16 bg-[#050506]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <span class="text-gold-400 font-medium text-sm uppercase tracking-widest">Unsere Geschichte</span>
-      <h1 class="mt-3 text-4xl sm:text-6xl font-display font-bold text-white">Über uns</h1>
-      <p class="mt-4 text-white/50 max-w-2xl mx-auto text-lg">
+      <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Unsere Geschichte</span>
+      <h1 class="mt-3 text-4xl sm:text-6xl font-display font-bold text-[#EDEDEF]">Über uns</h1>
+      <p class="mt-4 text-[#8A8F98] max-w-2xl mx-auto text-lg">
         Tradition trifft Moderne — im Herzen von Kreuzberg.
       </p>
     </div>
   </section>
 
   <!-- Story -->
-  <section class="py-20 bg-white">
+  <section class="py-20 bg-[#0a0a0c]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
-          <span class="text-gold-500 font-medium text-sm uppercase tracking-widest">Seit 2020</span>
-          <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-surface-950">Unsere Geschichte</h2>
-          <div class="mt-6 space-y-4 text-surface-200 leading-relaxed">
+          <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Seit 2020</span>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-[#EDEDEF]">Unsere Geschichte</h2>
+          <div class="mt-2 h-0.5 w-16 bg-gradient-to-r from-[#C8A55A] to-transparent rounded-full"></div>
+          <div class="mt-6 space-y-4 text-[#8A8F98] leading-relaxed">
             <p>
               Barbier Berlin wurde 2020 von Mohammed in der Markgrafenstraße in Berlin-Kreuzberg gegründet —
               mit einer klaren Vision: erstklassige Barbershop-Kultur nach Berlin zu bringen.
@@ -39,16 +40,17 @@ import Layout from '../layouts/Layout.astro';
           </div>
         </div>
         <div class="relative">
-          <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-surface-100">
+          <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06]">
             <img
               src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&h=750&fit=crop"
               alt="Barbier Berlin Salon"
               class="w-full h-full object-cover"
             />
           </div>
-          <div class="absolute -bottom-6 -left-6 bg-gold-500 text-surface-950 rounded-2xl p-6 shadow-xl">
-            <div class="text-3xl font-display font-bold">5+</div>
-            <div class="text-sm font-medium">Jahre Erfahrung</div>
+          <!-- Glassmorphism stats badge -->
+          <div class="absolute -bottom-6 -left-6 bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl p-6 shadow-2xl">
+            <div class="text-3xl font-display font-bold bg-gradient-to-r from-[#C8A55A] to-[#E8D48B] bg-clip-text text-transparent">5+</div>
+            <div class="text-sm font-medium text-[#8A8F98]">Jahre Erfahrung</div>
           </div>
         </div>
       </div>
@@ -56,11 +58,11 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- Owner -->
-  <section class="py-20 bg-surface-50">
+  <section class="py-20 bg-[#050506]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div class="order-2 lg:order-1">
-          <div class="aspect-square rounded-2xl overflow-hidden bg-surface-200 max-w-md mx-auto">
+          <div class="aspect-square rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06] max-w-md mx-auto">
             <img
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face"
               alt="Mohammed — Inhaber & Meisterbarbier"
@@ -69,9 +71,10 @@ import Layout from '../layouts/Layout.astro';
           </div>
         </div>
         <div class="order-1 lg:order-2">
-          <span class="text-gold-500 font-medium text-sm uppercase tracking-widest">Inhaber & Meisterbarbier</span>
-          <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-surface-950">Mohammed</h2>
-          <div class="mt-6 space-y-4 text-surface-200 leading-relaxed">
+          <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Inhaber & Meisterbarbier</span>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-[#EDEDEF]">Mohammed</h2>
+          <div class="mt-2 h-0.5 w-16 bg-gradient-to-r from-[#C8A55A] to-transparent rounded-full"></div>
+          <div class="mt-6 space-y-4 text-[#8A8F98] leading-relaxed">
             <p>
               Mit jahrelanger Erfahrung und einer Leidenschaft für präzise Handwerkskunst hat Mohammed
               Barbier Berlin zu dem gemacht, was es heute ist.
@@ -81,7 +84,7 @@ import Layout from '../layouts/Layout.astro';
               Ob klassischer Schnitt, moderne Styles oder die traditionelle Nassrasur —
               Mohammed beherrscht sein Handwerk mit Liebe zum Detail.
             </p>
-            <p>
+            <p class="italic text-[#EDEDEF]/80 border-l-2 border-[#C8A55A]/40 pl-4">
               „Für mich ist jeder Haarschnitt ein Kunstwerk. Ich nehme mir die Zeit,
               den perfekten Look für jeden Kunden zu finden."
             </p>
@@ -91,28 +94,86 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- Values -->
-  <section class="py-20 bg-surface-950">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <span class="text-gold-400 font-medium text-sm uppercase tracking-widest">Was uns ausmacht</span>
-        <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-white">Unsere Werte</h2>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  <!-- Stats -->
+  <section class="py-16 bg-[#0a0a0c] border-y border-white/[0.06]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
         {[
-          { title: 'Präzision', description: 'Jeder Schnitt sitzt. Wir arbeiten mit höchster Sorgfalt und modernsten Techniken.', icon: '🎯' },
-          { title: 'Gastfreundschaft', description: 'Bei uns fühlen Sie sich willkommen. Tee, Kaffee und gute Gespräche inklusive.', icon: '☕' },
-          { title: 'Qualität', description: 'Nur die besten Produkte und Werkzeuge. Keine Kompromisse bei der Qualität.', icon: '⭐' },
-          { title: 'Persönlichkeit', description: 'Jeder Kunde ist einzigartig. Wir beraten individuell für den perfekten Look.', icon: '👤' },
-          { title: 'Tradition', description: 'Klassische Barbershop-Kultur mit modernem Twist. Das Beste aus zwei Welten.', icon: '🏛️' },
-          { title: 'Vertrauen', description: 'Über 1.400 zufriedene Kunden. Unser Ruf spricht für sich.', icon: '🤝' },
-        ].map((value) => (
-          <div class="bg-white/5 rounded-2xl p-8 border border-white/5 hover:border-gold-500/20 transition-colors">
-            <span class="text-3xl">{value.icon}</span>
-            <h3 class="mt-4 text-xl font-semibold text-white">{value.title}</h3>
-            <p class="mt-2 text-white/50 leading-relaxed">{value.description}</p>
+          { value: '5+', label: 'Jahre Erfahrung' },
+          { value: '1.400+', label: 'Bewertungen' },
+          { value: '4.8', label: 'Sterne' },
+          { value: '20+', label: 'Services' },
+        ].map((stat) => (
+          <div class="text-center">
+            <div class="text-4xl sm:text-5xl font-display font-bold bg-gradient-to-r from-[#C8A55A] to-[#E8D48B] bg-clip-text text-transparent">{stat.value}</div>
+            <div class="mt-2 text-sm text-[#8A8F98]">{stat.label}</div>
           </div>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="py-20 bg-[#050506]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Was uns ausmacht</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-[#EDEDEF]">Unsere Werte</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Praezision -->
+        <div class="group bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 border border-white/[0.06] hover:border-[#C8A55A]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#C8A55A]/5">
+          <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-[#EDEDEF]">Präzision</h3>
+          <p class="mt-2 text-[#8A8F98] leading-relaxed">Jeder Schnitt sitzt. Wir arbeiten mit höchster Sorgfalt und modernsten Techniken.</p>
+        </div>
+
+        <!-- Gastfreundschaft -->
+        <div class="group bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 border border-white/[0.06] hover:border-[#C8A55A]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#C8A55A]/5">
+          <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.468 5.99 5.99 0 00-1.925 3.547 5.975 5.975 0 01-2.133-1.001A3.75 3.75 0 0012 18z" /></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-[#EDEDEF]">Gastfreundschaft</h3>
+          <p class="mt-2 text-[#8A8F98] leading-relaxed">Bei uns fühlen Sie sich willkommen. Tee, Kaffee und gute Gespräche inklusive.</p>
+        </div>
+
+        <!-- Qualitaet -->
+        <div class="group bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 border border-white/[0.06] hover:border-[#C8A55A]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#C8A55A]/5">
+          <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-[#EDEDEF]">Qualität</h3>
+          <p class="mt-2 text-[#8A8F98] leading-relaxed">Nur die besten Produkte und Werkzeuge. Keine Kompromisse bei der Qualität.</p>
+        </div>
+
+        <!-- Persoenlichkeit -->
+        <div class="group bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 border border-white/[0.06] hover:border-[#C8A55A]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#C8A55A]/5">
+          <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-[#EDEDEF]">Persönlichkeit</h3>
+          <p class="mt-2 text-[#8A8F98] leading-relaxed">Jeder Kunde ist einzigartig. Wir beraten individuell für den perfekten Look.</p>
+        </div>
+
+        <!-- Tradition -->
+        <div class="group bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 border border-white/[0.06] hover:border-[#C8A55A]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#C8A55A]/5">
+          <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-[#EDEDEF]">Tradition</h3>
+          <p class="mt-2 text-[#8A8F98] leading-relaxed">Klassische Barbershop-Kultur mit modernem Twist. Das Beste aus zwei Welten.</p>
+        </div>
+
+        <!-- Vertrauen -->
+        <div class="group bg-white/[0.03] backdrop-blur-sm rounded-2xl p-8 border border-white/[0.06] hover:border-[#C8A55A]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#C8A55A]/5">
+          <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-[#EDEDEF]">Vertrauen</h3>
+          <p class="mt-2 text-[#8A8F98] leading-relaxed">Über 1.400 zufriedene Kunden. Unser Ruf spricht für sich.</p>
+        </div>
       </div>
     </div>
   </section>

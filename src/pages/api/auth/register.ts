@@ -59,7 +59,9 @@ export async function POST(context: APIContext) {
       201,
       { 'Set-Cookie': sessionCookie(token) },
     );
-  } catch {
-    return errorResponse('Registrierung fehlgeschlagen.', 500);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
+    console.error('Register error:', message);
+    return errorResponse(`Registrierung fehlgeschlagen: ${message}`, 500);
   }
 }

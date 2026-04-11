@@ -10,18 +10,23 @@ const { lang = 'de' } = Astro.props;
 const tr = t(lang);
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
-  <div class="absolute inset-0 bg-surface-950/80 backdrop-blur-xl border-b border-white/5"></div>
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="main-header">
+  <div class="absolute inset-0 bg-[#050506]/80 backdrop-blur-2xl border-b border-white/[0.06]"></div>
   <nav class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-18">
+    <div class="flex items-center justify-between h-18 transition-all duration-500" id="header-inner">
       <!-- Logo -->
       <a href={`/${lang === 'de' ? '' : lang}`} class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center transition-transform group-hover:scale-110">
-          <span class="text-surface-950 font-display font-bold text-lg">B</span>
+        <div class="relative w-11 h-11 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+          <!-- Gold Gradient Ring -->
+          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[#C8A55A] via-[#E8D48B] to-[#C8A55A] p-[2px]">
+            <div class="w-full h-full rounded-full bg-[#050506]/90 flex items-center justify-center">
+              <span class="text-[#C8A55A] font-display font-bold text-lg">B</span>
+            </div>
+          </div>
         </div>
         <div class="hidden sm:block">
-          <span class="text-white font-display text-xl font-semibold tracking-wide">Barbier</span>
-          <span class="text-gold-400 font-display text-xl font-light ml-1">Berlin</span>
+          <span class="text-[#EDEDEF] font-display text-xl font-semibold tracking-wide">Barbier</span>
+          <span class="text-[#C8A55A] font-display text-xl font-light ml-1">Berlin</span>
         </div>
       </a>
 
@@ -38,15 +43,16 @@ const tr = t(lang);
       <div class="hidden lg:flex items-center gap-3">
         <!-- Language Switcher -->
         <div class="relative group">
-          <button class="text-white/60 hover:text-white text-sm px-2 py-1 transition-colors uppercase">
+          <button class="flex items-center gap-1.5 text-[#8A8F98] hover:text-[#EDEDEF] text-sm px-2 py-1 transition-colors uppercase tracking-wider font-medium">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-width="1.5" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
             {lang}
           </button>
-          <div class="absolute right-0 top-full mt-1 bg-surface-900 border border-white/10 rounded-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-xl">
+          <div class="absolute right-0 top-full mt-2 bg-[#0a0a0c]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl shadow-black/40">
             {Object.entries(languages).map(([code, name]) => (
               <a
                 href={code === 'de' ? '/' : `/${code}`}
-                class={`block px-4 py-2 text-sm whitespace-nowrap transition-colors ${
-                  code === lang ? 'text-gold-400' : 'text-white/60 hover:text-white hover:bg-white/5'
+                class={`block px-5 py-2 text-sm whitespace-nowrap transition-colors ${
+                  code === lang ? 'text-[#C8A55A]' : 'text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.04]'
                 }`}
               >
                 {name}
@@ -55,12 +61,12 @@ const tr = t(lang);
           </div>
         </div>
 
-        <a href="/login" class="text-white/70 hover:text-white text-sm transition-colors px-3 py-2">
+        <a href="/login" class="text-[#8A8F98] hover:text-[#EDEDEF] text-sm transition-colors px-3 py-2">
           {tr.nav.login}
         </a>
         <a
           href="/booking"
-          class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-surface-950 font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:shadow-lg hover:shadow-gold-500/25 active:scale-95"
+          class="bg-gradient-to-r from-[#C8A55A] to-[#B8953A] hover:from-[#D8B56A] hover:to-[#C8A55A] text-[#050506] font-semibold text-sm px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg shadow-[#C8A55A]/20 hover:shadow-xl hover:shadow-[#C8A55A]/30 active:scale-95"
         >
           {tr.nav.booking}
         </a>
@@ -75,6 +81,33 @@ const tr = t(lang);
 <style>
   @reference "../../styles/global.css";
   .nav-link {
-    @apply text-white/70 hover:text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors hover:bg-white/5;
+    @apply relative text-[#8A8F98] hover:text-[#EDEDEF] text-sm font-medium px-3 py-2 transition-colors duration-300;
+  }
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-3 right-3 h-[2px] bg-[#C8A55A] scale-x-0 origin-left transition-transform duration-300;
+  }
+  .nav-link:hover::after {
+    @apply scale-x-100;
   }
 </style>
+
+<script>
+  const header = document.getElementById('main-header');
+  const headerInner = document.getElementById('header-inner');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (header && headerInner) {
+      if (scrollY > 50) {
+        headerInner.style.height = '3.5rem';
+        header.classList.add('header-scrolled');
+      } else {
+        headerInner.style.height = '';
+        header.classList.remove('header-scrolled');
+      }
+    }
+    lastScroll = scrollY;
+  });
+</script>

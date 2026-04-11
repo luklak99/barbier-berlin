@@ -50,8 +50,8 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: var(--color-surface-900);
-  background-color: #fff;
+  color: #EDEDEF;
+  background-color: #050506;
 }
 
 /* RTL support for Arabic */
@@ -61,18 +61,26 @@ html[dir="rtl"] {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-surface-100);
+  background: #0a0a0c;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-brand-400);
+  background: rgba(200, 165, 90, 0.3);
   border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 165, 90, 0.5);
 }
 
 /* Selection */
 ::selection {
-  background-color: var(--color-gold-200);
-  color: var(--color-surface-900);
+  background-color: rgba(200, 165, 90, 0.25);
+  color: #EDEDEF;
+}
+
+/* Header scroll effect */
+.header-scrolled .absolute {
+  border-bottom-color: rgba(200, 165, 90, 0.08);
 }

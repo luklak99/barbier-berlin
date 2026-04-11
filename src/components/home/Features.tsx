@@ -42,23 +42,65 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24 bg-surface-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="relative py-24 overflow-hidden"
+      style={{ background: 'linear-gradient(180deg, #080809 0%, #0a0a0c 50%, #050506 100%)' }}
+    >
+      {/* Noise overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '128px 128px',
+        }}
+      />
+
+      {/* Ambient orb */}
+      <motion.div
+        animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+        className="absolute bottom-[20%] left-[5%] w-[350px] h-[350px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(200,165,90,0.05) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true, margin: '-10%' }}
+              transition={{ type: 'spring', damping: 20, stiffness: 90, delay: i * 0.05 }}
               className="text-center group"
             >
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gold-500/10 text-gold-600 mb-4 group-hover:bg-gold-500 group-hover:text-surface-950 transition-colors">
+              {/* Icon in golden glassmorphism circle */}
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: 'spring', damping: 15, stiffness: 200 }}
+                className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5"
+                style={{
+                  background: 'rgba(200,165,90,0.08)',
+                  border: '1px solid rgba(200,165,90,0.15)',
+                  color: '#C8A55A',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: '0 0 20px rgba(200,165,90,0.08), inset 0 1px 0 0 rgba(200,165,90,0.1)',
+                }}
+              >
                 {feature.icon}
-              </div>
-              <h3 className="text-lg font-semibold text-surface-900">{feature.title}</h3>
-              <p className="mt-2 text-surface-200 text-sm leading-relaxed">{feature.description}</p>
+              </motion.div>
+
+              <h3 className="text-lg font-semibold" style={{ color: '#EDEDEF' }}>
+                {feature.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: '#8A8F98' }}>
+                {feature.description}
+              </p>
             </motion.div>
           ))}
         </div>
