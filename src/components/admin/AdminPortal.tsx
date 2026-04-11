@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { api, getUser } from '../../lib/api';
 import { services } from '../../data/services';
+import AdminStats from './AdminStats';
 
-type Tab = 'today' | 'all' | 'customers';
+type Tab = 'today' | 'all' | 'customers' | 'stats';
 
 interface Appointment {
   id: string;
@@ -141,6 +142,7 @@ export default function AdminPortal() {
     { key: 'today', label: 'Heute' },
     { key: 'all', label: 'Alle Termine' },
     { key: 'customers', label: 'Kunden' },
+    { key: 'stats', label: 'Statistiken' },
   ];
 
   const displayAppointments = activeTab === 'today' ? todayAppointments : appointments;
@@ -343,6 +345,8 @@ export default function AdminPortal() {
           Kundenliste mit Punktestand, Besuchshistorie und Kontaktdaten.
         </div>
       )}
+
+      {activeTab === 'stats' && <AdminStats />}
 
       {/* Walk-in Modal */}
       {showWalkInModal && (

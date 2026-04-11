@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/home/Hero';
 import ServicesPreview from '../components/home/ServicesPreview';
 import Features from '../components/home/Features';
-import Testimonials from '../components/home/Testimonials';
+import LiveReviews from '../components/home/LiveReviews';
 import CTASection from '../components/home/CTASection';
 import { barberShopSchema, websiteSchema, webPageSchema, breadcrumbSchema } from '../data/schema';
 
@@ -27,6 +27,6 @@ const schema = [
   <Hero client:load />
   <Features client:visible />
   <ServicesPreview client:visible />
-  <Testimonials client:visible />
+  <LiveReviews client:visible />
   <CTASection client:visible />
 </Layout>
