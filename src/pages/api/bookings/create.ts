@@ -81,7 +81,7 @@ export async function POST(context: APIContext) {
   }
 
   // E-Mail-Bestätigung (fire and forget)
-  if (env.SMTP_USER && env.SMTP_PASS) {
+  if (env.RELAY_SECRET) {
     sendBookingConfirmation(env, {
       to: user.email,
       customerName: user.name,

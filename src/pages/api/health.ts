@@ -5,7 +5,7 @@ export async function GET() {
     const info: Record<string, unknown> = {
       status: 'ok',
       hasDb: !!env.DB,
-      hasSmtp: !!env.SMTP_USER,
+      hasRelay: !!env.RELAY_SECRET,
     };
 
     if (env.DB) {

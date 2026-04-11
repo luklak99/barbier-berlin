@@ -31,7 +31,7 @@ export async function POST(context: APIContext) {
     });
 
     // Send reset email (fire and forget)
-    if (env.SMTP_USER && env.SMTP_PASS) {
+    if (env.RELAY_SECRET) {
       const { sendPasswordResetEmail } = await import('../../../lib/email');
       sendPasswordResetEmail(env, {
         to: email,
