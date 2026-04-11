@@ -43,6 +43,7 @@ export async function POST(context: APIContext) {
     const passwordHash = await hashPassword(password);
     const userId = generateId();
 
+    const now = new Date().toISOString();
     await db.insert(users).values({
       id: userId,
       email,
@@ -50,6 +51,8 @@ export async function POST(context: APIContext) {
       name,
       phone,
       role: 'customer',
+      createdAt: now,
+      updatedAt: now,
     });
 
     const token = await createSession(db, userId);

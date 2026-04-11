@@ -54,6 +54,7 @@ export async function POST(context: APIContext) {
       // Create a minimal account for the walk-in customer
       userId = generateId();
       const tempPassword = await hashPassword(generateId()); // Random, customer can reset later
+      const ts = new Date().toISOString();
       await db.insert(users).values({
         id: userId,
         email,
@@ -61,6 +62,8 @@ export async function POST(context: APIContext) {
         name,
         phone,
         role: 'customer',
+        createdAt: ts,
+        updatedAt: ts,
       });
     }
   } else {
@@ -68,6 +71,7 @@ export async function POST(context: APIContext) {
     userId = generateId();
     const anonEmail = `walkin-${userId}@barbier.berlin`;
     const tempPassword = await hashPassword(generateId());
+    const ts = new Date().toISOString();
     await db.insert(users).values({
       id: userId,
       email: anonEmail,
@@ -75,6 +79,8 @@ export async function POST(context: APIContext) {
       name,
       phone,
       role: 'customer',
+      createdAt: ts,
+      updatedAt: ts,
     });
   }
 
