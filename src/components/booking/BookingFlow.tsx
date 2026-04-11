@@ -1,8 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { services, type Service, type ServiceCategory } from '../../data/services';
+import { api, getUser } from '../../lib/api';
 
 type Step = 'service' | 'datetime' | 'confirm' | 'success';
+
+interface SlotData {
+  time: string;
+  available: boolean;
+}
+
+interface AvailableSlotsResponse {
+  slots: SlotData[];
+  service: { name: string; price: number; duration: number };
+}
+
+interface CreateBookingResponse {
+  success: boolean;
+  booking: { id: string; serviceId: string; date: string; startTime: string; endTime: string; price: number };
+}
 
 const categoryLabels: Record<ServiceCategory, string> = {
   haircut: 'Haarschnitte',
@@ -13,18 +29,63 @@ const categoryLabels: Record<ServiceCategory, string> = {
   specials: 'Angebote',
 };
 
-const timeSlots = [
-  '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
-  '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-  '16:00', '16:30', '17:00', '17:30',
-];
-
 export default function BookingFlow() {
   const [step, setStep] = useState<Step>('service');
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [activeCategory, setActiveCategory] = useState<ServiceCategory>('haircut');
+
+  // API states
+  const [authChecked, setAuthChecked] = useState(false);
+  const [slots, setSlots] = useState<SlotData[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsError, setSlotsError] = useState('');
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState('');
+
+  // Auth-Check beim Mount
+  useEffect(() => {
+    getUser().then((user) => {
+      if (!user) {
+        window.location.href = '/login';
+      } else {
+        setAuthChecked(true);
+      }
+    });
+  }, []);
+
+  // Slots laden wenn Datum oder Service sich aendern
+  useEffect(() => {
+    if (!selectedDate || !selectedService) {
+      setSlots([]);
+      return;
+    }
+
+    let cancelled = false;
+    setSlotsLoading(true);
+    setSlotsError('');
+    setSelectedTime('');
+
+    api<AvailableSlotsResponse>(
+      `/api/bookings/available-slots?date=${selectedDate}&serviceId=${selectedService.id}`
+    )
+      .then((data) => {
+        if (!cancelled) {
+          setSlots(data.slots);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setSlotsError(err instanceof Error ? err.message : 'Fehler beim Laden der Zeitslots.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setSlotsLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [selectedDate, selectedService]);
 
   const steps: { key: Step; label: string; num: number }[] = [
     { key: 'service', label: 'Service', num: 1 },
@@ -38,12 +99,38 @@ export default function BookingFlow() {
     return d.toISOString().split('T')[0];
   };
 
-  const handleConfirm = () => {
-    // TODO: API call to create booking
-    setStep('success');
+  const handleConfirm = async () => {
+    if (!selectedService || !selectedDate || !selectedTime) return;
+
+    setBookingLoading(true);
+    setBookingError('');
+
+    try {
+      await api<CreateBookingResponse>('/api/bookings/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          serviceId: selectedService.id,
+          date: selectedDate,
+          startTime: selectedTime,
+        }),
+      });
+      setStep('success');
+    } catch (err) {
+      setBookingError(err instanceof Error ? err.message : 'Fehler bei der Buchung.');
+    } finally {
+      setBookingLoading(false);
+    }
   };
 
   const filteredServices = services.filter((s) => s.category === activeCategory);
+
+  if (!authChecked) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -167,21 +254,46 @@ export default function BookingFlow() {
             {selectedDate && (
               <div>
                 <label className="block text-white/60 text-sm mb-2">Uhrzeit wählen</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`py-3 rounded-lg text-sm font-medium transition-colors ${
-                        selectedTime === time
-                          ? 'bg-gold-500 text-surface-950'
-                          : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
+
+                {slotsLoading && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
+                    <span className="ml-3 text-white/40 text-sm">Zeitslots werden geladen...</span>
+                  </div>
+                )}
+
+                {slotsError && (
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-400 text-sm">
+                    {slotsError}
+                  </div>
+                )}
+
+                {!slotsLoading && !slotsError && slots.length === 0 && (
+                  <p className="text-white/40 text-sm py-4">
+                    Keine Zeitslots verfügbar an diesem Tag (ggf. Sonntag oder Feiertag).
+                  </p>
+                )}
+
+                {!slotsLoading && !slotsError && slots.length > 0 && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {slots.map((slot) => (
+                      <button
+                        key={slot.time}
+                        onClick={() => slot.available && setSelectedTime(slot.time)}
+                        disabled={!slot.available}
+                        className={`py-3 rounded-lg text-sm font-medium transition-colors ${
+                          !slot.available
+                            ? 'bg-white/3 text-white/20 cursor-not-allowed line-through'
+                            : selectedTime === slot.time
+                              ? 'bg-gold-500 text-surface-950'
+                              : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        {slot.time}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -245,6 +357,12 @@ export default function BookingFlow() {
               </div>
             </div>
 
+            {bookingError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-400 text-sm mb-4">
+                {bookingError}
+              </div>
+            )}
+
             <p className="text-white/40 text-xs text-center mb-6">
               Kostenlose Stornierung bis 24 Stunden vor dem Termin.
               Bezahlung erfolgt im Salon.
@@ -253,15 +371,24 @@ export default function BookingFlow() {
             <div className="flex gap-3">
               <button
                 onClick={() => setStep('datetime')}
-                className="flex-1 py-3 rounded-full border border-white/10 text-white/60 hover:text-white hover:border-white/20 transition-colors"
+                disabled={bookingLoading}
+                className="flex-1 py-3 rounded-full border border-white/10 text-white/60 hover:text-white hover:border-white/20 transition-colors disabled:opacity-50"
               >
                 Zurück
               </button>
               <button
                 onClick={handleConfirm}
-                className="flex-1 py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors"
+                disabled={bookingLoading}
+                className="flex-1 py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                Termin bestätigen
+                {bookingLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-surface-950 border-t-transparent rounded-full animate-spin" />
+                    Wird gebucht...
+                  </>
+                ) : (
+                  'Termin bestätigen'
+                )}
               </button>
             </div>
           </motion.div>

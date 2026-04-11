@@ -12,6 +12,7 @@ import {
   jsonResponse,
   errorResponse,
 } from '../../../lib/validation';
+import { sendBookingConfirmation } from '../../../lib/email';
 
 export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
@@ -88,6 +89,21 @@ export async function POST(context: APIContext) {
     endTime,
     status: 'confirmed',
   });
+
+  // E-Mail-Bestätigung (fire and forget)
+  const env = context.locals.runtime.env;
+  if (env.SMTP_USER && env.SMTP_PASS) {
+    sendBookingConfirmation(env, {
+      to: user.email,
+      customerName: user.name,
+      serviceName: service.name.de,
+      date,
+      startTime,
+      endTime,
+      price: service.price,
+      bookingId,
+    }).catch(() => {});
+  }
 
   return jsonResponse({
     success: true,

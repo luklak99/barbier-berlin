@@ -12,6 +12,7 @@ import {
   jsonResponse,
   errorResponse,
 } from '../../../lib/validation';
+import { sendWelcomeEmail } from '../../../lib/email';
 
 export async function POST(context: APIContext) {
   try {
@@ -46,6 +47,12 @@ export async function POST(context: APIContext) {
     });
 
     const token = await createSession(db, userId);
+
+    // Willkommens-E-Mail (fire and forget)
+    const env = context.locals.runtime.env;
+    if (env.SMTP_USER && env.SMTP_PASS) {
+      sendWelcomeEmail(env, { to: email, customerName: name }).catch(() => {});
+    }
 
     return jsonResponse(
       { success: true, redirect: '/dashboard' },

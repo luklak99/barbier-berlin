@@ -4,6 +4,8 @@ import { bookings, pointsTransactions, users } from '../../../db/schema';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
 import { jsonResponse, errorResponse } from '../../../lib/validation';
+import { sendBookingCancellation } from '../../../lib/email';
+import { getServiceById } from '../../../data/services';
 
 export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
@@ -56,6 +58,20 @@ export async function POST(context: APIContext) {
       .update(users)
       .set({ pointsBalance: user.pointsBalance + booking.pointsUsed })
       .where(eq(users.id, user.id));
+  }
+
+  // E-Mail-Bestätigung (fire and forget)
+  const env = context.locals.runtime.env;
+  const service = getServiceById(booking.serviceId);
+  if (env.SMTP_USER && env.SMTP_PASS && service) {
+    sendBookingCancellation(env, {
+      to: user.email,
+      customerName: user.name,
+      serviceName: service.name.de,
+      date: booking.date,
+      startTime: booking.startTime,
+      bookingId,
+    }).catch(() => {});
   }
 
   return jsonResponse({ success: true });
