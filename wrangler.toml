@@ -5,4 +5,4 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "barbier-berlin-db"
-database_id = "local"
+database_id = "9593e083-6cf8-4dac-b012-37ef5db04ac7"
