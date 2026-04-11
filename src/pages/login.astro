@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AuthForm from '../components/auth/AuthForm';
+---
+
+<Layout title="Anmelden – Barbier Berlin">
+  <section class="pt-32 pb-16 min-h-screen bg-surface-950 flex flex-col items-center">
+    <div class="max-w-md w-full mx-auto px-4">
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mx-auto mb-4">
+          <span class="text-surface-950 font-display font-bold text-2xl">B</span>
+        </div>
+        <h1 class="text-3xl font-display font-bold text-white">Willkommen zurück</h1>
+        <p class="mt-2 text-white/50">Melden Sie sich in Ihrem Konto an.</p>
+      </div>
+      <AuthForm mode="login" client:load />
+    </div>
+  </section>
+</Layout>

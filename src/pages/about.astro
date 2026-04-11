@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Über uns – Barbier Berlin" description="Erfahren Sie mehr über Barbier Berlin — Tradition, Handwerkskunst und Leidenschaft seit 2020.">
+  <!-- Hero -->
+  <section class="pt-32 pb-16 bg-surface-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-gold-400 font-medium text-sm uppercase tracking-widest">Unsere Geschichte</span>
+      <h1 class="mt-3 text-4xl sm:text-6xl font-display font-bold text-white">Über uns</h1>
+      <p class="mt-4 text-white/50 max-w-2xl mx-auto text-lg">
+        Tradition trifft Moderne — im Herzen von Kreuzberg.
+      </p>
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-gold-500 font-medium text-sm uppercase tracking-widest">Seit 2020</span>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-surface-950">Unsere Geschichte</h2>
+          <div class="mt-6 space-y-4 text-surface-200 leading-relaxed">
+            <p>
+              Barbier Berlin wurde 2020 von Mohammed in der Markgrafenstraße in Berlin-Kreuzberg gegründet —
+              mit einer klaren Vision: erstklassige Barbershop-Kultur nach Berlin zu bringen.
+            </p>
+            <p>
+              Was als kleiner Laden begann, hat sich dank Leidenschaft, Präzision und ehrlicher Handwerkskunst
+              zu einem der beliebtesten Barbershops in Berlin entwickelt.
+              Mit über 1.400 positiven Bewertungen und einer Bewertung von 4.8 Sternen sprechen die Ergebnisse für sich.
+            </p>
+            <p>
+              Bei uns geht es nicht nur um den Haarschnitt — es geht um das Erlebnis.
+              Jeder Kunde wird mit einem Glas Tee oder Kaffee begrüßt, während wir uns Zeit
+              nehmen für eine persönliche Beratung und präzise Arbeit.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-surface-100">
+            <img
+              src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&h=750&fit=crop"
+              alt="Barbier Berlin Salon"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="absolute -bottom-6 -left-6 bg-gold-500 text-surface-950 rounded-2xl p-6 shadow-xl">
+            <div class="text-3xl font-display font-bold">5+</div>
+            <div class="text-sm font-medium">Jahre Erfahrung</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Owner -->
+  <section class="py-20 bg-surface-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1">
+          <div class="aspect-square rounded-2xl overflow-hidden bg-surface-200 max-w-md mx-auto">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face"
+              alt="Mohammed — Inhaber & Meisterbarbier"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="text-gold-500 font-medium text-sm uppercase tracking-widest">Inhaber & Meisterbarbier</span>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-surface-950">Mohammed</h2>
+          <div class="mt-6 space-y-4 text-surface-200 leading-relaxed">
+            <p>
+              Mit jahrelanger Erfahrung und einer Leidenschaft für präzise Handwerkskunst hat Mohammed
+              Barbier Berlin zu dem gemacht, was es heute ist.
+            </p>
+            <p>
+              Sein Anspruch: Jeder Kunde verlässt den Salon mit einem Lächeln.
+              Ob klassischer Schnitt, moderne Styles oder die traditionelle Nassrasur —
+              Mohammed beherrscht sein Handwerk mit Liebe zum Detail.
+            </p>
+            <p>
+              „Für mich ist jeder Haarschnitt ein Kunstwerk. Ich nehme mir die Zeit,
+              den perfekten Look für jeden Kunden zu finden."
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="py-20 bg-surface-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-gold-400 font-medium text-sm uppercase tracking-widest">Was uns ausmacht</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-display font-bold text-white">Unsere Werte</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {[
+          { title: 'Präzision', description: 'Jeder Schnitt sitzt. Wir arbeiten mit höchster Sorgfalt und modernsten Techniken.', icon: '🎯' },
+          { title: 'Gastfreundschaft', description: 'Bei uns fühlen Sie sich willkommen. Tee, Kaffee und gute Gespräche inklusive.', icon: '☕' },
+          { title: 'Qualität', description: 'Nur die besten Produkte und Werkzeuge. Keine Kompromisse bei der Qualität.', icon: '⭐' },
+          { title: 'Persönlichkeit', description: 'Jeder Kunde ist einzigartig. Wir beraten individuell für den perfekten Look.', icon: '👤' },
+          { title: 'Tradition', description: 'Klassische Barbershop-Kultur mit modernem Twist. Das Beste aus zwei Welten.', icon: '🏛️' },
+          { title: 'Vertrauen', description: 'Über 1.400 zufriedene Kunden. Unser Ruf spricht für sich.', icon: '🤝' },
+        ].map((value) => (
+          <div class="bg-white/5 rounded-2xl p-8 border border-white/5 hover:border-gold-500/20 transition-colors">
+            <span class="text-3xl">{value.icon}</span>
+            <h3 class="mt-4 text-xl font-semibold text-white">{value.title}</h3>
+            <p class="mt-2 text-white/50 leading-relaxed">{value.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

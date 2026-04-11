@@ -1,0 +1,80 @@
+---
+import { t, languages, type Language } from '../../i18n/translations';
+import MobileNav from './MobileNav';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = 'de' } = Astro.props;
+const tr = t(lang);
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
+  <div class="absolute inset-0 bg-surface-950/80 backdrop-blur-xl border-b border-white/5"></div>
+  <nav class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-18">
+      <!-- Logo -->
+      <a href={`/${lang === 'de' ? '' : lang}`} class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center transition-transform group-hover:scale-110">
+          <span class="text-surface-950 font-display font-bold text-lg">B</span>
+        </div>
+        <div class="hidden sm:block">
+          <span class="text-white font-display text-xl font-semibold tracking-wide">Barbier</span>
+          <span class="text-gold-400 font-display text-xl font-light ml-1">Berlin</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center gap-1">
+        <a href="/" class="nav-link">{tr.nav.home}</a>
+        <a href="/services" class="nav-link">{tr.nav.services}</a>
+        <a href="/gallery" class="nav-link">{tr.nav.gallery}</a>
+        <a href="/about" class="nav-link">{tr.nav.about}</a>
+        <a href="/contact" class="nav-link">{tr.nav.contact}</a>
+      </div>
+
+      <!-- Right Side -->
+      <div class="hidden lg:flex items-center gap-3">
+        <!-- Language Switcher -->
+        <div class="relative group">
+          <button class="text-white/60 hover:text-white text-sm px-2 py-1 transition-colors uppercase">
+            {lang}
+          </button>
+          <div class="absolute right-0 top-full mt-1 bg-surface-900 border border-white/10 rounded-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-xl">
+            {Object.entries(languages).map(([code, name]) => (
+              <a
+                href={code === 'de' ? '/' : `/${code}`}
+                class={`block px-4 py-2 text-sm whitespace-nowrap transition-colors ${
+                  code === lang ? 'text-gold-400' : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {name}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <a href="/login" class="text-white/70 hover:text-white text-sm transition-colors px-3 py-2">
+          {tr.nav.login}
+        </a>
+        <a
+          href="/booking"
+          class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-surface-950 font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:shadow-lg hover:shadow-gold-500/25 active:scale-95"
+        >
+          {tr.nav.booking}
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <MobileNav lang={lang} client:load />
+    </div>
+  </nav>
+</header>
+
+<style>
+  @reference "../../styles/global.css";
+  .nav-link {
+    @apply text-white/70 hover:text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors hover:bg-white/5;
+  }
+</style>

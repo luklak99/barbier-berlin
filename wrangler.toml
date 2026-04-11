@@ -1,0 +1,8 @@
+name = "barbier-berlin"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "barbier-berlin-db"
+database_id = "local"

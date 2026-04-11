@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { services, type ServiceCategory } from '../data/services';
+
+const categoryLabels: Record<ServiceCategory, string> = {
+  haircut: 'Haarschnitte',
+  beard: 'Bart & Rasur',
+  face: 'Gesicht & Pflege',
+  color: 'Farbe & Styling',
+  kids: 'Kinder & Jugend',
+  specials: 'Angebote',
+};
+
+const categoryIcons: Record<ServiceCategory, string> = {
+  haircut: '✂️',
+  beard: '🪒',
+  face: '✨',
+  color: '🎨',
+  kids: '👦',
+  specials: '🏷️',
+};
+
+const categories: ServiceCategory[] = ['haircut', 'beard', 'face', 'color', 'kids', 'specials'];
+---
+
+<Layout title="Services & Preise – Barbier Berlin" description="Alle Services und Preise von Barbier Berlin. Haarschnitte, Bartpflege, Rasur, Gesichtspflege und mehr.">
+  <!-- Hero -->
+  <section class="pt-32 pb-16 bg-surface-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-gold-400 font-medium text-sm uppercase tracking-widest">Unsere Leistungen</span>
+      <h1 class="mt-3 text-4xl sm:text-6xl font-display font-bold text-white">Services & Preise</h1>
+      <p class="mt-4 text-white/50 max-w-2xl mx-auto text-lg">
+        Erstklassige Grooming-Services für den modernen Mann.
+        Alle Preise inklusive Beratung und Premium-Produkte.
+      </p>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {categories.map((category) => {
+        const categoryServices = services.filter(s => s.category === category);
+        if (categoryServices.length === 0) return null;
+        return (
+          <div class="mb-16 last:mb-0" id={category}>
+            <div class="flex items-center gap-3 mb-8">
+              <span class="text-2xl">{categoryIcons[category]}</span>
+              <h2 class="text-2xl sm:text-3xl font-display font-bold text-surface-950">{categoryLabels[category]}</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {categoryServices.map((service) => (
+                <div class="group relative bg-surface-50 rounded-xl p-6 border border-surface-100 hover:border-gold-300 hover:shadow-lg transition-all">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1">
+                      <h3 class="font-semibold text-surface-900 group-hover:text-gold-700 transition-colors">
+                        {service.name.de}
+                      </h3>
+                      <p class="mt-1 text-surface-200 text-sm">ca. {service.duration} Min.</p>
+                    </div>
+                    <div class="text-2xl font-display font-bold text-gold-600 whitespace-nowrap">
+                      {service.price}€
+                    </div>
+                  </div>
+                  <a
+                    href="/booking"
+                    class="mt-4 inline-flex items-center gap-1 text-gold-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Jetzt buchen
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-surface-950">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-display font-bold text-white">Termin vereinbaren</h2>
+      <p class="mt-3 text-white/50">Buchen Sie Ihren Wunschtermin bequem online.</p>
+      <a
+        href="/booking"
+        class="mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-gold-500 to-gold-600 text-surface-950 font-semibold px-8 py-4 rounded-full hover:shadow-2xl hover:shadow-gold-500/30 transition-all"
+      >
+        Jetzt Termin buchen
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</Layout>
