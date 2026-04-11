@@ -1,0 +1,154 @@
+---
+import { services } from '../../data/services';
+
+const featured = services.filter((s) =>
+  ['herren-schneiden-styling', 'herren-haarschnitt-rasur', 'herren-waschen-schneiden', 'herren-bart-trimmen'].includes(s.id)
+);
+
+const categories = [
+  {
+    key: 'haircut',
+    label: 'Haarschnitte',
+    iconPath: 'M7.848 8.25l1.536.887M7.848 8.25a3 3 0 11-5.196-3 3 3 0 015.196 3zm1.536.887a2.165 2.165 0 011.083 1.839c.005.351.054.695.14 1.024M9.384 9.137l2.077 1.199M7.848 15.75l1.536-.887m-1.536.887a3 3 0 01-5.196 3 3 3 0 015.196-3zm1.536-.887a2.165 2.165 0 001.083-1.838c.005-.352.054-.695.14-1.025m-1.223 2.863l2.077-1.199m0-3.328a4.323 4.323 0 012.068-1.379l5.325-1.628a4.5 4.5 0 012.48-.044l.803.215-7.794 4.5m-2.882-1.664A4.331 4.331 0 0010.607 12m3.736 0l7.794 4.5-.802.215a4.5 4.5 0 01-2.48-.043l-5.326-1.629a4.324 4.324 0 01-2.068-1.379M14.343 12l-2.882 1.664',
+  },
+  {
+    key: 'beard',
+    label: 'Bart & Rasur',
+    iconPath: 'M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z',
+  },
+  {
+    key: 'face',
+    label: 'Gesicht & Pflege',
+    iconPath: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z',
+  },
+  {
+    key: 'color',
+    label: 'Farbe & Styling',
+    iconPath: 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z',
+  },
+  {
+    key: 'kids',
+    label: 'Kinder & Jugend',
+    iconPath: 'M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z',
+  },
+];
+---
+
+<section
+  class="relative py-24 overflow-hidden"
+  style="background: linear-gradient(180deg, #050506 0%, #0a0a0c 50%, #080809 100%);"
+>
+  <!-- Noise overlay -->
+  <div
+    class="absolute inset-0 opacity-[0.025] pointer-events-none"
+    style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E&quot;); background-repeat: repeat; background-size: 128px 128px;"
+  ></div>
+
+  <!-- Ambient orb -->
+  <div
+    class="absolute top-[30%] right-[10%] w-[400px] h-[400px] rounded-full pointer-events-none services-orb"
+    style="background: radial-gradient(circle, rgba(200,165,90,0.06) 0%, transparent 70%); filter: blur(100px);"
+  ></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="animate-on-scroll text-center mb-16">
+      <span class="text-sm uppercase tracking-widest font-medium" style="color: #C8A55A;">
+        Unsere Services
+      </span>
+      <h2 class="mt-3 text-4xl sm:text-5xl font-display font-bold" style="color: #EDEDEF;">
+        Erstklassige Pflege
+      </h2>
+      <p class="mt-4 max-w-2xl mx-auto text-lg" style="color: #8A8F98;">
+        Von pr&auml;zisen Haarschnitten bis zur klassischen Nassrasur &mdash; wir bieten das volle Programm
+        f&uuml;r den modernen Mann.
+      </p>
+    </div>
+
+    <!-- Category Pills - Glassmorphism -->
+    <div class="flex flex-wrap justify-center gap-3 mb-16">
+      {categories.map((cat, i) => (
+        <div
+          class="animate-on-scroll flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium cursor-default transition-all duration-200 hover:scale-105"
+          style={`--stagger: ${i * 50}ms; transition-delay: var(--stagger); background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); color: #EDEDEF; box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);`}
+        >
+          <span style="color: #C8A55A;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d={cat.iconPath} />
+            </svg>
+          </span>
+          <span>{cat.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Featured Services - Glassmorphism cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {featured.map((service, i) => (
+        <div
+          class="animate-on-scroll group relative rounded-2xl p-6 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+          style={`--stagger: ${i * 50}ms; transition-delay: var(--stagger); background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);`}
+        >
+          <!-- Hover glow effect -->
+          <div
+            class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
+            style="box-shadow: inset 0 0 0 1px rgba(200,165,90,0.2), 0 0 30px rgba(200,165,90,0.05);"
+          ></div>
+
+          <!-- Corner gradient accent -->
+          <div
+            class="absolute top-0 right-0 w-28 h-28 rounded-bl-full opacity-50 group-hover:opacity-80 transition-opacity"
+            style="background: radial-gradient(circle at top right, rgba(200,165,90,0.15) 0%, transparent 70%);"
+          ></div>
+
+          <div class="relative">
+            <div class="text-3xl font-display font-bold" style="color: #C8A55A;">
+              {service.price}&euro;
+            </div>
+            <h3 class="mt-3 font-semibold text-lg leading-tight" style="color: #EDEDEF;">
+              {service.name.de}
+            </h3>
+            <p class="mt-2 text-sm" style="color: #8A8F98;">
+              ca. {service.duration} Min.
+            </p>
+            <a
+              href="/booking"
+              class="mt-4 inline-flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all hover:translate-x-0.5"
+              style="color: #C8A55A;"
+            >
+              Jetzt buchen
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- CTA -->
+    <div class="animate-on-scroll text-center mt-12">
+      <a
+        href="/services"
+        class="inline-flex items-center gap-2 font-semibold transition-all hover:scale-[1.02] active:scale-[0.97]"
+        style="color: #C8A55A;"
+      >
+        Alle Services &amp; Preise ansehen
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-orb {
+    animation: servicesOrbFloat 20s linear infinite;
+  }
+  @keyframes servicesOrbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(50px, -30px); }
+    66% { transform: translate(0px, 0px); }
+  }
+</style>

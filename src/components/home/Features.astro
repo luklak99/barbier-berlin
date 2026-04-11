@@ -1,0 +1,91 @@
+---
+// Features Section — Pure Astro, no React, no Framer Motion
+
+const features = [
+  {
+    iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+    title: 'Online Buchung',
+    description: 'Buchen Sie Ihren Termin bequem online — 24/7, ohne Anruf.',
+  },
+  {
+    iconPath: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z',
+    title: 'Bonuspunkte',
+    description: '5% Cashback als Punkte auf jede Buchung. Sammeln und einlösen.',
+  },
+  {
+    iconPath: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+    title: 'Premium Qualität',
+    description: 'Hochwertige Produkte und präzise Handwerkskunst — ohne Kompromisse.',
+  },
+  {
+    iconPaths: [
+      'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z',
+      'M15 11a3 3 0 11-6 0 3 3 0 016 0z',
+    ],
+    title: 'Kreuzberg',
+    description: 'Zentral gelegen in der Markgrafenstraße — perfekt erreichbar mit U-Bahn.',
+  },
+];
+---
+
+<section
+  class="relative py-24 overflow-hidden"
+  style="background: linear-gradient(180deg, #080809 0%, #0a0a0c 50%, #050506 100%);"
+>
+  <!-- Noise overlay -->
+  <div
+    class="absolute inset-0 opacity-[0.025] pointer-events-none"
+    style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E&quot;); background-repeat: repeat; background-size: 128px 128px;"
+  ></div>
+
+  <!-- Ambient orb -->
+  <div
+    class="absolute bottom-[20%] left-[5%] w-[350px] h-[350px] rounded-full pointer-events-none features-orb"
+    style="background: radial-gradient(circle, rgba(200,165,90,0.05) 0%, transparent 70%); filter: blur(80px);"
+  ></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {features.map((feature, i) => (
+        <div
+          class="animate-on-scroll text-center group"
+          style={`--stagger: ${i * 50}ms; transition-delay: var(--stagger);`}
+        >
+          <!-- Icon in golden glassmorphism circle -->
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[5deg]"
+            style="background: rgba(200,165,90,0.08); border: 1px solid rgba(200,165,90,0.15); color: #C8A55A; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 0 20px rgba(200,165,90,0.08), inset 0 1px 0 0 rgba(200,165,90,0.1);"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {feature.iconPaths ? (
+                feature.iconPaths.map((p) => (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={p} />
+                ))
+              ) : (
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={feature.iconPath} />
+              )}
+            </svg>
+          </div>
+
+          <h3 class="text-lg font-semibold" style="color: #EDEDEF;">
+            {feature.title}
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed" style="color: #8A8F98;">
+            {feature.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .features-orb {
+    animation: featuresOrbFloat 18s linear infinite;
+  }
+  @keyframes featuresOrbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-40px, 30px); }
+    66% { transform: translate(0px, 0px); }
+  }
+</style>

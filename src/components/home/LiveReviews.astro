@@ -1,0 +1,119 @@
+---
+// LiveReviews Section — Pure Astro, no React, no Framer Motion
+
+const fallbackReviews = [
+  { id: 'f1', rating: 5, text: 'Bester Barbershop in ganz Berlin! Mohammed nimmt sich immer Zeit und das Ergebnis ist jedes Mal perfekt.', userName: 'Marco S.' },
+  { id: 'f2', rating: 5, text: 'Seit Jahren mein Stammfriseur. Faire Preise, top Qualität und immer eine angenehme Atmosphäre.', userName: 'Ahmet K.' },
+  { id: 'f3', rating: 5, text: 'Die Nassrasur ist ein Erlebnis! Dazu Tee und nette Unterhaltung — besser geht es nicht.', userName: 'Jonas W.' },
+  { id: 'f4', rating: 5, text: 'Professionell, freundlich und präzise. Kann ich jedem nur empfehlen.', userName: 'David M.' },
+  { id: 'f5', rating: 5, text: 'Hervorragendes Preis-Leistungsverhältnis. Die Bartpflege hier ist die beste.', userName: 'Kemal Y.' },
+  { id: 'f6', rating: 5, text: 'Kreuzbergs Geheimtipp! Komme extra aus Charlottenburg hierher.', userName: 'Stefan R.' },
+];
+
+// SSR: Render fallback reviews tripled for seamless infinite scroll
+const allReviews = [...fallbackReviews, ...fallbackReviews, ...fallbackReviews];
+---
+
+<section
+  class="relative py-24 overflow-hidden"
+  style="background: linear-gradient(180deg, #050506 0%, #0a0a0c 50%, #050506 100%);"
+>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="animate-on-scroll text-center mb-16">
+      <span class="text-sm uppercase tracking-widest font-medium" style="color: #C8A55A;">
+        Bewertungen
+      </span>
+      <h2 class="mt-3 text-4xl sm:text-5xl font-display font-bold" style="color: #EDEDEF;">
+        Was unsere Kunden sagen
+      </h2>
+      <div class="mt-4 flex items-center justify-center gap-2">
+        <div class="flex" style="color: #C8A55A;">
+          {[...Array(5)].map(() => (
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+        </div>
+        <span class="font-semibold text-lg" style="color: #C8A55A;">4.8</span>
+        <span class="text-sm" style="color: #8A8F98;">/ 5 &mdash; &uuml;ber 1.400 Bewertungen</span>
+      </div>
+    </div>
+
+    <!-- Scrolling reviews -->
+    <div class="relative">
+      <div class="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style="background: linear-gradient(to right, #0a0a0c, transparent);"></div>
+      <div class="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style="background: linear-gradient(to left, #0a0a0c, transparent);"></div>
+
+      <div class="overflow-hidden">
+        <div id="reviews-scroll-track" class="flex gap-6" style="animation: scroll-testimonials 40s linear infinite; width: max-content;">
+          {allReviews.map((review, i) => (
+            <div
+              class="flex-shrink-0 w-80 rounded-2xl p-6"
+              style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+            >
+              <div class="flex gap-1 mb-3" style="color: #C8A55A;">
+                {[...Array(review.rating)].map(() => (
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              {review.text && (
+                <p class="text-sm leading-relaxed" style="color: rgba(237,237,239,0.7);">{review.text}</p>
+              )}
+              <p class="mt-4 text-sm font-medium" style="color: #C8A55A;">{review.userName}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes scroll-testimonials {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-344px * 6)); }
+  }
+</style>
+
+<script>
+  // Progressively enhance with live reviews from API
+  async function loadLiveReviews() {
+    try {
+      const res = await fetch('/api/reviews/list');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data?.reviews?.length) return;
+
+      const reviews = data.reviews;
+      const track = document.getElementById('reviews-scroll-track');
+      if (!track) return;
+
+      // Build tripled review cards
+      const allReviews = [...reviews, ...reviews, ...reviews];
+      const starSvg = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+
+      track.innerHTML = allReviews.map((review: any) => {
+        const stars = Array(review.rating).fill(starSvg).join('');
+        const text = review.text ? `<p class="text-sm leading-relaxed" style="color: rgba(237,237,239,0.7);">${review.text}</p>` : '';
+        return `<div class="flex-shrink-0 w-80 rounded-2xl p-6" style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);">
+          <div class="flex gap-1 mb-3" style="color: #C8A55A;">${stars}</div>
+          ${text}
+          <p class="mt-4 text-sm font-medium" style="color: #C8A55A;">${review.userName}</p>
+        </div>`;
+      }).join('');
+
+      // Update animation to match new count
+      const count = reviews.length;
+      track.style.animation = `scroll-testimonials-live 40s linear infinite`;
+      const style = document.createElement('style');
+      style.textContent = `@keyframes scroll-testimonials-live { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-344px * ${count})); } }`;
+      document.head.appendChild(style);
+    } catch {
+      // Keep fallback on error — no action needed
+    }
+  }
+
+  loadLiveReviews();
+</script>

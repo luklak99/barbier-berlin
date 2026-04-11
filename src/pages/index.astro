@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/home/Hero';
-import ServicesPreview from '../components/home/ServicesPreview';
-import Features from '../components/home/Features';
-import LiveReviews from '../components/home/LiveReviews';
-import CTASection from '../components/home/CTASection';
+import Hero from '../components/home/Hero.astro';
+import ServicesPreview from '../components/home/ServicesPreview.astro';
+import Features from '../components/home/Features.astro';
+import LiveReviews from '../components/home/LiveReviews.astro';
+import CTASection from '../components/home/CTASection.astro';
 import { barberShopSchema, websiteSchema, webPageSchema, breadcrumbSchema } from '../data/schema';
 
 const schema = [
@@ -24,9 +24,22 @@ const schema = [
   description="Barbier Berlin – Ihr Premium-Barbershop in Kreuzberg. Haarschnitte ab 20€, Bartpflege, Nassrasur & Styling. 4.8★ aus 1.400+ Bewertungen. Jetzt online Termin buchen!"
   schema={schema}
 >
-  <Hero client:load />
-  <Features client:visible />
-  <ServicesPreview client:visible />
-  <LiveReviews client:visible />
-  <CTASection client:visible />
+  <Hero />
+  <Features />
+  <ServicesPreview />
+  <LiveReviews />
+  <CTASection />
 </Layout>
+
+<script>
+  // Global IntersectionObserver for scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+</script>

@@ -1,0 +1,263 @@
+---
+// Hero Section — Pure Astro, no React, no Framer Motion
+---
+
+<section
+  id="hero-section"
+  class="relative min-h-screen flex items-center justify-center overflow-hidden"
+  style="background: linear-gradient(180deg, #050506 0%, #0a0a0f 50%, #050506 100%);"
+>
+  <!-- Noise overlay -->
+  <div
+    class="absolute inset-0 opacity-[0.035] pointer-events-none z-[1]"
+    style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E&quot;); background-repeat: repeat; background-size: 128px 128px;"
+  ></div>
+
+  <!-- Animated ambient orbs -->
+  <div id="hero-orb-container" class="absolute inset-0 pointer-events-none">
+    <div
+      class="absolute top-[15%] left-[20%] w-[500px] h-[500px] rounded-full hero-orb-1"
+      style="background: radial-gradient(circle, rgba(200,165,90,0.10) 0%, transparent 70%); filter: blur(100px);"
+    ></div>
+    <div
+      class="absolute bottom-[10%] right-[15%] w-[450px] h-[450px] rounded-full hero-orb-2"
+      style="background: radial-gradient(circle, rgba(200,165,90,0.07) 0%, transparent 70%); filter: blur(120px);"
+    ></div>
+    <div
+      class="absolute top-[50%] left-[55%] w-[350px] h-[350px] rounded-full hero-orb-3"
+      style="background: radial-gradient(circle, rgba(200,165,90,0.05) 0%, transparent 70%); filter: blur(80px);"
+    ></div>
+  </div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
+    <!-- Badge -->
+    <div class="hero-fade-in" style="--delay: 0s;">
+      <span
+        class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-sm font-medium"
+        style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); color: #C8A55A; box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+      >
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: #C8A55A;"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: #C8A55A;"></span>
+        </span>
+        Premium Barbershop in Kreuzberg
+      </span>
+    </div>
+
+    <!-- Title with parallax -->
+    <div id="hero-title-parallax">
+      <h1
+        class="hero-fade-in mt-8 text-5xl sm:text-7xl lg:text-8xl font-display font-bold leading-[0.95]"
+        style="--delay: 0.15s; color: #EDEDEF; text-shadow: 0 0 80px rgba(200,165,90,0.15), 0 0 40px rgba(200,165,90,0.05);"
+      >
+        Barbier
+        <span
+          class="block"
+          style="background: linear-gradient(135deg, #d4b86a 0%, #C8A55A 40%, #b8943e 70%, #d4b86a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(200,165,90,0.3));"
+        >
+          Berlin
+        </span>
+      </h1>
+    </div>
+
+    <!-- Subtitle with parallax -->
+    <div id="hero-subtitle-parallax">
+      <p
+        class="hero-fade-in mt-6 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed"
+        style="--delay: 0.3s; color: #8A8F98;"
+      >
+        Erstklassige Haarschnitte, pr&auml;zise Rasur und premium Pflege &mdash;
+        seit 2020 Ihr Barbershop im Herzen von Berlin-Kreuzberg.
+      </p>
+    </div>
+
+    <!-- CTAs -->
+    <div class="hero-fade-in mt-10 flex flex-col sm:flex-row items-center justify-center gap-4" style="--delay: 0.45s;">
+      <a
+        href="/booking"
+        class="group relative inline-flex items-center gap-2 font-semibold px-8 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
+        style="background: linear-gradient(135deg, #C8A55A 0%, #d4b86a 50%, #b8943e 100%); color: #050506; box-shadow: 0 0 30px rgba(200,165,90,0.15), 0 4px 20px rgba(200,165,90,0.2);"
+      >
+        Jetzt Termin buchen
+        <svg
+          class="w-5 h-5 transition-transform group-hover:translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+      <a
+        href="/services"
+        class="inline-flex items-center gap-2 font-medium px-6 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
+        style="color: rgba(237,237,239,0.7); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
+      >
+        Unsere Services
+      </a>
+    </div>
+
+    <!-- Stats in glassmorphism cards -->
+    <div id="hero-stats-parallax">
+      <div class="hero-fade-in mt-20 grid grid-cols-3 gap-4 sm:gap-6 max-w-xl mx-auto" style="--delay: 0.7s;">
+        <div
+          class="text-center rounded-2xl px-4 py-5 hero-fade-in"
+          style="--delay: 0.8s; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+        >
+          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
+            <span class="countup" data-target="48">0</span><span class="text-lg">/10</span>
+          </div>
+          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">Bewertung</div>
+        </div>
+        <div
+          class="text-center rounded-2xl px-4 py-5 hero-fade-in"
+          style="--delay: 0.85s; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+        >
+          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
+            <span class="countup" data-target="1400" data-suffix="+">0</span>
+          </div>
+          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">Bewertungen</div>
+        </div>
+        <div
+          class="text-center rounded-2xl px-4 py-5 hero-fade-in"
+          style="--delay: 0.9s; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+        >
+          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
+            <span class="countup" data-target="5" data-suffix="+">0</span>
+          </div>
+          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">Jahre Erfahrung</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero-fade-in absolute bottom-8 left-1/2 -translate-x-1/2" style="--delay: 1.5s;">
+    <div
+      class="w-7 h-11 rounded-full flex items-start justify-center p-2 hero-scroll-bounce"
+      style="border: 2px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.02);"
+    >
+      <div class="w-1.5 h-2.5 rounded-full hero-scroll-dot" style="background-color: #C8A55A;"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Fade-in on mount animation */
+  .hero-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroFadeIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes heroFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Ambient orb floating animations */
+  .hero-orb-1 {
+    animation: orbFloat1 22s linear infinite;
+  }
+  .hero-orb-2 {
+    animation: orbFloat2 28s linear infinite;
+  }
+  .hero-orb-3 {
+    animation: orbFloat3 18s linear infinite;
+  }
+
+  @keyframes orbFloat1 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(120px, -60px); }
+    66% { transform: translate(40px, 30px); }
+  }
+  @keyframes orbFloat2 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-100px, 80px); }
+    66% { transform: translate(-20px, -40px); }
+  }
+  @keyframes orbFloat3 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(60px, -40px); }
+    66% { transform: translate(-30px, 60px); }
+  }
+
+  /* Scroll indicator bounce */
+  .hero-scroll-bounce {
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  .hero-scroll-dot {
+    animation: scrollDot 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+  @keyframes scrollDot {
+    0%, 100% { opacity: 0.4; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(6px); }
+  }
+</style>
+
+<script>
+  // Parallax on scroll
+  const section = document.getElementById('hero-section');
+  const titleEl = document.getElementById('hero-title-parallax');
+  const subtitleEl = document.getElementById('hero-subtitle-parallax');
+  const statsEl = document.getElementById('hero-stats-parallax');
+  const orbContainer = document.getElementById('hero-orb-container');
+
+  if (section && titleEl && subtitleEl && statsEl && orbContainer) {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          const rect = section.getBoundingClientRect();
+          const sectionH = section.offsetHeight;
+          // progress 0..1 as the section scrolls out of view
+          const progress = Math.max(0, Math.min(1, -rect.top / sectionH));
+          titleEl.style.transform = `translateY(${progress * -60}px)`;
+          subtitleEl.style.transform = `translateY(${progress * -30}px)`;
+          statsEl.style.transform = `translateY(${progress * -15}px)`;
+          orbContainer.style.transform = `scale(${1 + progress * 0.3})`;
+          ticking = false;
+        });
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // CountUp animation
+  const countUpObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const target = parseInt(el.dataset.target || '0', 10);
+          const suffix = el.dataset.suffix || '';
+          const duration = 2000;
+          const startTime = performance.now();
+
+          const step = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(eased * target);
+            el.textContent = current + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          countUpObserver.unobserve(el);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  document.querySelectorAll('.countup').forEach((el) => countUpObserver.observe(el));
+</script>
