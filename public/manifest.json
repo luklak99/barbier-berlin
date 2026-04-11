@@ -1,0 +1,17 @@
+{
+  "name": "Barbier Berlin",
+  "short_name": "Barbier",
+  "description": "Premium Barbershop in Berlin-Kreuzberg. Online Terminbuchung, Bonuspunkte.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "categories": ["lifestyle", "health"],
+  "lang": "de",
+  "dir": "ltr"
+}

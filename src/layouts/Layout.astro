@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import CookieConsent from '../components/ui/CookieConsent';
 import { isRTL, type Language } from '../i18n/translations';
 
 interface Props {
@@ -45,13 +46,20 @@ const basePath = Astro.url.pathname.replace(/^\/(en|tr|ar)/, '');
     <meta property="og:locale" content={lang === 'de' ? 'de_DE' : lang === 'en' ? 'en_US' : lang === 'tr' ? 'tr_TR' : 'ar_SA'} />
     <meta property="og:site_name" content="Barbier Berlin" />
 
-    <!-- Fonts -->
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Barbier Berlin" />
+
+    <!-- Fonts (optimized: subset latin+latin-ext, only needed weights) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&subset=latin,latin-ext&display=swap" rel="stylesheet" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon.svg" />
 
     <title>{title}</title>
 
@@ -66,5 +74,11 @@ const basePath = Astro.url.pathname.replace(/^\/(en|tr|ar)/, '');
       <slot />
     </main>
     <Footer lang={lang} />
+    <CookieConsent client:idle />
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
   </body>
 </html>

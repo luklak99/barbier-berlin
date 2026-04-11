@@ -1,6 +1,7 @@
 export interface Service {
   id: string;
   name: { de: string; en: string; tr: string; ar: string };
+  description?: { de: string; en?: string; tr?: string; ar?: string };
   price: number;
   duration: number;
   category: ServiceCategory;

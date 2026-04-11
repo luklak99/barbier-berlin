@@ -9,6 +9,7 @@ export const users = sqliteTable('users', {
   role: text('role', { enum: ['customer', 'admin'] }).notNull().default('customer'),
   totpSecret: text('totp_secret'),
   totpEnabled: integer('totp_enabled', { mode: 'boolean' }).notNull().default(false),
+  emailVerified: integer('email_verified', { mode: 'boolean' }).notNull().default(false),
   pointsBalance: integer('points_balance').notNull().default(0),
   language: text('language', { enum: ['de', 'en', 'tr', 'ar'] }).notNull().default('de'),
   lastVisitAt: text('last_visit_at'),
@@ -57,6 +58,23 @@ export const reviews = sqliteTable('reviews', {
   bookingId: text('booking_id').references(() => bookings.id),
   rating: integer('rating').notNull(),
   text: text('text'),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+export const passwordResetTokens = sqliteTable('password_reset_tokens', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  tokenHash: text('token_hash').notNull(),
+  expiresAt: text('expires_at').notNull(),
+  usedAt: text('used_at'),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
+export const emailVerificationTokens = sqliteTable('email_verification_tokens', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id),
+  tokenHash: text('token_hash').notNull(),
+  expiresAt: text('expires_at').notNull(),
   createdAt: text('created_at').notNull().default('(datetime())'),
 });
 

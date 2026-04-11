@@ -8,6 +8,13 @@
       "when": 1775902544636,
       "tag": "0000_easy_nebula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1775913792293,
+      "tag": "0001_right_tattoo",
+      "breakpoints": true
     }
   ]
 }

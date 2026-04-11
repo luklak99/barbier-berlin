@@ -205,6 +205,50 @@ export async function sendWelcomeEmail(env: SmtpEnv, params: WelcomeEmailParams)
   );
 }
 
+export interface PasswordResetParams {
+  to: string;
+  customerName: string;
+  resetUrl: string;
+}
+
+export async function sendPasswordResetEmail(env: SmtpEnv, params: PasswordResetParams): Promise<void> {
+  const html = `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#121212;font-family:sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#121212;padding:24px"><tr><td align="center">
+    <table width="560" style="max-width:560px;background:#2a2a4e;border-radius:12px;overflow:hidden">
+    <tr><td style="background:#1a1a2e;padding:28px 32px;text-align:center"><div style="color:#C8A55A;font-size:22px;font-weight:600">Barbier Berlin</div></td></tr>
+    <tr><td style="padding:32px"><h1 style="color:#C8A55A;font-size:22px;margin:0 0 16px">Passwort zurücksetzen</h1>
+    <p style="color:#e0e0e0;font-size:15px;line-height:1.6;margin:0 0 24px">Hallo ${params.customerName},<br>Sie haben eine Passwort-Zurücksetzung angefordert.</p>
+    <table cellpadding="0" cellspacing="0" style="margin:24px auto"><tr><td style="background:#C8A55A;border-radius:6px;padding:14px 32px">
+    <a href="${params.resetUrl}" style="color:#1a1a2e;text-decoration:none;font-weight:700;font-size:15px">Neues Passwort setzen</a>
+    </td></tr></table>
+    <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">Dieser Link ist 1 Stunde gültig. Falls Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail.</p>
+    </td></tr></table></td></tr></table></body></html>`;
+  const text = `Passwort zurücksetzen\n\nHallo ${params.customerName},\nSetzen Sie Ihr Passwort zurück: ${params.resetUrl}\n\nDieser Link ist 1 Stunde gültig.\n\nBarbier Berlin`;
+  await sendViaSMTP(env, params.to, 'Passwort zurücksetzen – Barbier Berlin', html, text);
+}
+
+export interface VerificationEmailParams {
+  to: string;
+  customerName: string;
+  verifyUrl: string;
+}
+
+export async function sendVerificationEmail(env: SmtpEnv, params: VerificationEmailParams): Promise<void> {
+  const html = `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#121212;font-family:sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#121212;padding:24px"><tr><td align="center">
+    <table width="560" style="max-width:560px;background:#2a2a4e;border-radius:12px;overflow:hidden">
+    <tr><td style="background:#1a1a2e;padding:28px 32px;text-align:center"><div style="color:#C8A55A;font-size:22px;font-weight:600">Barbier Berlin</div></td></tr>
+    <tr><td style="padding:32px"><h1 style="color:#C8A55A;font-size:22px;margin:0 0 16px">E-Mail bestätigen</h1>
+    <p style="color:#e0e0e0;font-size:15px;line-height:1.6;margin:0 0 24px">Hallo ${params.customerName},<br>Bitte bestätigen Sie Ihre E-Mail-Adresse.</p>
+    <table cellpadding="0" cellspacing="0" style="margin:24px auto"><tr><td style="background:#C8A55A;border-radius:6px;padding:14px 32px">
+    <a href="${params.verifyUrl}" style="color:#1a1a2e;text-decoration:none;font-weight:700;font-size:15px">E-Mail bestätigen</a>
+    </td></tr></table>
+    <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">Dieser Link ist 24 Stunden gültig.</p>
+    </td></tr></table></td></tr></table></body></html>`;
+  const text = `E-Mail bestätigen\n\nHallo ${params.customerName},\nBestätigen Sie Ihre E-Mail: ${params.verifyUrl}\n\nBarbier Berlin`;
+  await sendViaSMTP(env, params.to, 'E-Mail bestätigen – Barbier Berlin', html, text);
+}
+
 function formatDateShort(dateStr: string): string {
   const [year, month, day] = dateStr.split('-');
   return `${day}.${month}.${year}`;

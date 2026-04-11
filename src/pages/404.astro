@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 – Seite nicht gefunden | Barbier Berlin" description="Die angeforderte Seite wurde nicht gefunden." noindex={true}>
+  <section class="min-h-[70vh] flex items-center justify-center bg-[#050506] py-20">
+    <div class="max-w-xl mx-auto px-4 text-center">
+      <!-- 404 mit Gold-Gradient -->
+      <h1 class="text-[8rem] sm:text-[12rem] font-display font-bold leading-none bg-gradient-to-b from-[#C8A55A] via-[#E8D48B] to-[#C8A55A]/40 bg-clip-text text-transparent select-none">
+        404
+      </h1>
+
+      <!-- Glassmorphism Card -->
+      <div class="mt-2 bg-white/[0.03] backdrop-blur-xl rounded-2xl border border-white/[0.06] p-8 shadow-lg shadow-[#C8A55A]/5">
+        <h2 class="text-2xl font-display font-semibold text-[#EDEDEF]">
+          Seite nicht gefunden
+        </h2>
+        <p class="mt-3 text-[#8A8F98] leading-relaxed">
+          Die angeforderte Seite existiert leider nicht oder wurde verschoben.
+        </p>
+
+        <!-- Links -->
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="/"
+            class="px-6 py-3 rounded-full bg-[#C8A55A] text-[#050506] font-semibold text-sm hover:bg-[#E8D48B] transition-colors duration-300"
+          >
+            Zur Startseite
+          </a>
+          <a
+            href="/services"
+            class="px-6 py-3 rounded-full border border-white/[0.1] text-[#EDEDEF] text-sm font-medium hover:border-[#C8A55A]/30 hover:text-[#C8A55A] transition-all duration-300"
+          >
+            Services
+          </a>
+          <a
+            href="/contact"
+            class="px-6 py-3 rounded-full border border-white/[0.1] text-[#EDEDEF] text-sm font-medium hover:border-[#C8A55A]/30 hover:text-[#C8A55A] transition-all duration-300"
+          >
+            Kontakt
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
