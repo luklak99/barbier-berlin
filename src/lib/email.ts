@@ -7,6 +7,7 @@
  *   - SMTP_PASS: (Strato E-Mail-Passwort)
  */
 
+import { sanitizeEmailForSmtp } from './validation';
 import {
   type BookingEmailData,
   type CancellationEmailData,
@@ -39,6 +40,9 @@ async function sendViaSMTP(
   html: string,
   text: string,
 ): Promise<void> {
+  // Sanitize against SMTP header injection
+  const safeTo = sanitizeEmailForSmtp(to);
+
   const socket = connect(
     { hostname: 'smtp.strato.de', port: 465 },
     { secureTransport: 'on' },
@@ -93,7 +97,7 @@ async function sendViaSMTP(
   if (!from.startsWith('250')) throw new Error(`MAIL FROM: ${from}`);
 
   // RCPT TO
-  const rcpt = await send(`RCPT TO:<${to}>`);
+  const rcpt = await send(`RCPT TO:<${safeTo}>`);
   if (!rcpt.startsWith('250')) throw new Error(`RCPT TO: ${rcpt}`);
 
   // DATA
@@ -107,7 +111,7 @@ async function sendViaSMTP(
 
   const message = [
     `From: ${FROM_ADDRESS}`,
-    `To: ${to}`,
+    `To: ${safeTo}`,
     `Subject: ${encodedSubject}`,
     `Date: ${new Date().toUTCString()}`,
     `Message-ID: ${messageId}`,

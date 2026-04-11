@@ -17,7 +17,12 @@ import { sendWelcomeEmail } from '../../../lib/email';
 
 export async function POST(context: APIContext) {
   try {
-    const body = await context.request.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await context.request.json();
+    } catch {
+      return errorResponse('Ungültiger Request-Body.', 400);
+    }
     const email = validateEmail(body.email);
     const password = validatePassword(body.password);
     const name = validateName(body.name);
@@ -51,7 +56,7 @@ export async function POST(context: APIContext) {
 
     // Willkommens-E-Mail (fire and forget)
     if (env.SMTP_USER && env.SMTP_PASS) {
-      sendWelcomeEmail(env, { to: email, customerName: name }).catch(() => {});
+      sendWelcomeEmail(env, { to: email, customerName: name }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
     }
 
     return jsonResponse(
@@ -60,8 +65,7 @@ export async function POST(context: APIContext) {
       { 'Set-Cookie': sessionCookie(token) },
     );
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
-    console.error('Register error:', message);
-    return errorResponse(`Registrierung fehlgeschlagen: ${message}`, 500);
+    console.error('Register error:', err instanceof Error ? err.message : 'Unbekannter Fehler');
+    return errorResponse('Registrierung fehlgeschlagen.', 500);
   }
 }

@@ -65,7 +65,13 @@ export async function verifyPassword(password: string, stored: string): Promise<
   const hash = new Uint8Array(derivedBits);
   const hashHex = Array.from(hash, (b) => b.toString(16).padStart(2, '0')).join('');
 
-  return hashHex === storedHashHex;
+  // Constant-time comparison to prevent timing attacks
+  if (hashHex.length !== storedHashHex.length) return false;
+  let result = 0;
+  for (let i = 0; i < hashHex.length; i++) {
+    result |= hashHex.charCodeAt(i) ^ storedHashHex.charCodeAt(i);
+  }
+  return result === 0;
 }
 
 // --- Session Token Hashing ---

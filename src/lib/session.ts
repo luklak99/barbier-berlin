@@ -3,7 +3,8 @@ import { sessions, users } from '../db/schema';
 import { generateId, generateSessionToken, hashToken } from './crypto';
 import type { Database } from './db';
 
-const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours (reduced from 7 days)
+const COOKIE_NAME = '__Host-session';
 
 export interface SessionUser {
   id: string;
@@ -16,6 +17,9 @@ export interface SessionUser {
 }
 
 export async function createSession(db: Database, userId: string): Promise<string> {
+  // Invalidate all existing sessions for this user (session rotation)
+  await db.delete(sessions).where(eq(sessions.userId, userId));
+
   const token = generateSessionToken();
   const tokenHash = await hashToken(token);
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
@@ -71,14 +75,14 @@ export async function deleteSession(db: Database, token: string): Promise<void> 
 export function getSessionToken(request: Request): string | null {
   const cookie = request.headers.get('Cookie');
   if (!cookie) return null;
-  const match = cookie.match(/session=([^;]+)/);
+  const match = cookie.match(new RegExp(`${COOKIE_NAME}=([^;]+)`));
   return match ? match[1] : null;
 }
 
 export function sessionCookie(token: string, maxAge = SESSION_DURATION_MS / 1000): string {
-  return `session=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${Math.floor(maxAge)}`;
+  return `${COOKIE_NAME}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${Math.floor(maxAge)}`;
 }
 
 export function clearSessionCookie(): string {
-  return 'session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
+  return `${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 }

@@ -45,5 +45,8 @@ export async function GET(context: APIContext) {
     };
   });
 
+  // Audit-Log: Admin ruft Kundendaten ab
+  console.log(`[AUDIT] Admin ${user.id} (${user.email}) hat Terminliste abgerufen. Filter: date=${date ?? 'alle'}, Ergebnisse: ${enriched.length}`);
+
   return jsonResponse({ appointments: enriched });
 }

@@ -15,8 +15,37 @@ export function validateEmail(email: unknown): string | null {
 
 export function validatePassword(password: unknown): string | null {
   if (typeof password !== 'string') return null;
-  if (password.length < 8 || password.length > 128) return null;
+  if (password.length < 10 || password.length > 128) return null;
+  // Mindestens 3 von 4 Kategorien
+  let categories = 0;
+  if (/[a-z]/.test(password)) categories++;
+  if (/[A-Z]/.test(password)) categories++;
+  if (/[0-9]/.test(password)) categories++;
+  if (/[^a-zA-Z0-9]/.test(password)) categories++;
+  if (categories < 3) return null;
   return password;
+}
+
+export function validateBookingId(id: unknown): string | null {
+  if (typeof id !== 'string') return null;
+  if (id.length > 64 || id.length < 1) return null;
+  if (!/^[a-f0-9]+$/.test(id)) return null;
+  return id;
+}
+
+export function sanitizeEmailForSmtp(email: string): string {
+  if (/[\r\n\0]/.test(email)) throw new Error('Invalid email: contains control characters');
+  return email;
+}
+
+export function parseJsonBody(request: Request): Promise<Record<string, unknown>> {
+  return request.json().catch(() => {
+    throw new JsonParseError();
+  });
+}
+
+export class JsonParseError extends Error {
+  constructor() { super('Ungültiger Request-Body.'); }
 }
 
 export function validateName(name: unknown): string | null {

@@ -6,7 +6,7 @@ import { generateId } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
 import { getServiceById } from '../../../data/services';
-import { jsonResponse, errorResponse } from '../../../lib/validation';
+import { validateBookingId, jsonResponse, errorResponse } from '../../../lib/validation';
 
 export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
@@ -16,8 +16,14 @@ export async function POST(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
-  const body = await context.request.json();
-  const bookingId = typeof body.bookingId === 'string' ? body.bookingId : null;
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
+
+  const bookingId = validateBookingId(body.bookingId);
   if (!bookingId) return errorResponse('Buchungs-ID fehlt.');
 
   // Get booking
@@ -38,15 +44,24 @@ export async function POST(context: APIContext) {
   // Points needed = price in cents (1 point = 1 cent)
   const pointsNeeded = service.price * 100;
 
-  if (user.pointsBalance < pointsNeeded) {
-    return errorResponse(`Nicht genügend Punkte. Benötigt: ${pointsNeeded}, Verfügbar: ${user.pointsBalance}.`);
+  // Frischen Balance aus der DB lesen (nicht aus Session-Cache)
+  const freshUser = await db.select({ pointsBalance: users.pointsBalance }).from(users).where(eq(users.id, user.id)).limit(1);
+  if (!freshUser[0]) return errorResponse('Benutzer nicht gefunden.', 404);
+  const currentBalance = freshUser[0].pointsBalance;
+
+  if (currentBalance < pointsNeeded) {
+    return errorResponse(`Nicht genügend Punkte. Benötigt: ${pointsNeeded}, Verfügbar: ${currentBalance}.`);
   }
 
-  // Deduct points
-  await db.update(users).set({
-    pointsBalance: user.pointsBalance - pointsNeeded,
-    updatedAt: new Date().toISOString(),
-  }).where(eq(users.id, user.id));
+  // Optimistic locking: Punkte abziehen NUR wenn Balance noch ausreicht
+  const now = new Date().toISOString();
+  const deductResult = await env.DB.prepare(
+    `UPDATE users SET points_balance = points_balance - ?, updated_at = ? WHERE id = ? AND points_balance >= ?`
+  ).bind(pointsNeeded, now, user.id, pointsNeeded).run();
+
+  if (deductResult.meta.changes === 0) {
+    return errorResponse('Nicht genügend Punkte (gleichzeitige Einlösung).');
+  }
 
   // Record transaction
   await db.insert(pointsTransactions).values({
@@ -58,12 +73,18 @@ export async function POST(context: APIContext) {
     description: `Eingelöst für ${service.name.de}`,
   });
 
-  // Mark booking as paid with points
-  await db.update(bookings).set({
-    paidWithPoints: true,
-    pointsUsed: pointsNeeded,
-    updatedAt: new Date().toISOString(),
-  }).where(eq(bookings.id, bookingId));
+  // Mark booking as paid with points (optimistic locking)
+  const bookingUpdate = await env.DB.prepare(
+    `UPDATE bookings SET paid_with_points = 1, points_used = ?, updated_at = ? WHERE id = ? AND paid_with_points = 0`
+  ).bind(pointsNeeded, now, bookingId).run();
 
-  return jsonResponse({ success: true, pointsUsed: pointsNeeded, newBalance: user.pointsBalance - pointsNeeded });
+  if (bookingUpdate.meta.changes === 0) {
+    // Punkte zurückerstatten wenn Booking bereits bezahlt
+    await env.DB.prepare(
+      `UPDATE users SET points_balance = points_balance + ? WHERE id = ?`
+    ).bind(pointsNeeded, user.id).run();
+    return errorResponse('Buchung wurde bereits mit Punkten bezahlt.');
+  }
+
+  return jsonResponse({ success: true, pointsUsed: pointsNeeded, newBalance: currentBalance - pointsNeeded });
 }

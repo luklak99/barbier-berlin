@@ -16,6 +16,11 @@ export async function GET(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
+  // Blockiere wenn TOTP bereits aktiviert
+  if (user.totpEnabled) {
+    return errorResponse('2FA ist bereits aktiviert. Bitte zuerst deaktivieren.');
+  }
+
   const secret = generateTotpSecret();
   const uri = getTotpUri(secret, user.email);
 
@@ -34,7 +39,13 @@ export async function POST(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
-  const body = await context.request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
+
   const code = validateTotpCode(body.code);
   if (!code) return errorResponse('Ungültiger Code.');
 

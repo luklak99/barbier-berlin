@@ -2,9 +2,10 @@ import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { and, eq } from 'drizzle-orm';
 import { bookings, pointsTransactions, users } from '../../../db/schema';
+import { generateId } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
-import { jsonResponse, errorResponse } from '../../../lib/validation';
+import { validateBookingId, jsonResponse, errorResponse } from '../../../lib/validation';
 import { sendBookingCancellation } from '../../../lib/email';
 import { getServiceById } from '../../../data/services';
 
@@ -16,8 +17,14 @@ export async function POST(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
-  const body = await context.request.json();
-  const bookingId = typeof body.bookingId === 'string' ? body.bookingId : null;
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
+
+  const bookingId = validateBookingId(body.bookingId);
   if (!bookingId) return errorResponse('Buchungs-ID fehlt.');
 
   // Get the booking
@@ -42,11 +49,18 @@ export async function POST(context: APIContext) {
     return errorResponse('Stornierung nur bis 24 Stunden vor dem Termin möglich.');
   }
 
-  await db.update(bookings).set({ status: 'cancelled', updatedAt: new Date().toISOString() }).where(eq(bookings.id, bookingId));
+  // Optimistic locking: Update NUR wenn status noch 'confirmed' ist
+  const now = new Date().toISOString();
+  const cancelResult = await env.DB.prepare(
+    `UPDATE bookings SET status = 'cancelled', updated_at = ? WHERE id = ? AND user_id = ? AND status = 'confirmed'`
+  ).bind(now, bookingId, user.id).run();
+
+  if (cancelResult.meta.changes === 0) {
+    return errorResponse('Buchung bereits storniert oder nicht gefunden.');
+  }
 
   // Refund points if paid with points
   if (booking.paidWithPoints && booking.pointsUsed > 0) {
-    const { generateId } = await import('../../../lib/crypto');
     await db.insert(pointsTransactions).values({
       id: generateId(),
       userId: user.id,
@@ -71,7 +85,7 @@ export async function POST(context: APIContext) {
       date: booking.date,
       startTime: booking.startTime,
       bookingId,
-    }).catch(() => {});
+    }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
   }
 
   return jsonResponse({ success: true });

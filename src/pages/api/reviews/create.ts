@@ -5,7 +5,7 @@ import { bookings, reviews } from '../../../db/schema';
 import { generateId } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
-import { validateRating, validateReviewText, jsonResponse, errorResponse } from '../../../lib/validation';
+import { validateBookingId, validateRating, validateReviewText, jsonResponse, errorResponse } from '../../../lib/validation';
 
 export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
@@ -15,8 +15,14 @@ export async function POST(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
-  const body = await context.request.json();
-  const bookingId = typeof body.bookingId === 'string' ? body.bookingId : null;
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
+
+  const bookingId = validateBookingId(body.bookingId);
   const rating = validateRating(body.rating);
   const text = validateReviewText(body.text);
 

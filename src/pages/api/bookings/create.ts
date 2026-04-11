@@ -1,7 +1,5 @@
 import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
-import { and, eq } from 'drizzle-orm';
-import { bookings } from '../../../db/schema';
 import { generateId } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
@@ -23,7 +21,12 @@ export async function POST(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
-  const body = await context.request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
 
   const serviceId = validateServiceId(body.serviceId);
   const date = validateDate(body.date);
@@ -61,35 +64,21 @@ export async function POST(context: APIContext) {
     return errorResponse(`Termine nur zwischen 10:00 und ${maxHour}:00 Uhr.`);
   }
 
-  // Check for conflicts (simple overlap check)
-  const existingBookings = await db
-    .select()
-    .from(bookings)
-    .where(
-      and(
-        eq(bookings.date, date),
-        eq(bookings.status, 'confirmed'),
-      ),
-    );
+  // Atomare Konfliktprüfung + INSERT via D1 raw SQL
+  const bookingId = generateId();
+  const result = await env.DB.prepare(`
+    INSERT INTO bookings (id, user_id, service_id, date, start_time, end_time, status, paid_with_points, points_used, is_walk_in)
+    SELECT ?, ?, ?, ?, ?, ?, 'confirmed', 0, 0, 0
+    WHERE NOT EXISTS (
+      SELECT 1 FROM bookings
+      WHERE date = ? AND status = 'confirmed'
+      AND start_time < ? AND end_time > ?
+    )
+  `).bind(bookingId, user.id, serviceId, date, startTime, endTime, date, endTime, startTime).run();
 
-  const hasConflict = existingBookings.some((b) => {
-    return startTime < b.endTime && endTime > b.startTime;
-  });
-
-  if (hasConflict) {
+  if (result.meta.changes === 0) {
     return errorResponse('Dieser Zeitslot ist leider nicht verfügbar.');
   }
-
-  const bookingId = generateId();
-  await db.insert(bookings).values({
-    id: bookingId,
-    userId: user.id,
-    serviceId,
-    date,
-    startTime,
-    endTime,
-    status: 'confirmed',
-  });
 
   // E-Mail-Bestätigung (fire and forget)
   if (env.SMTP_USER && env.SMTP_PASS) {
@@ -102,7 +91,7 @@ export async function POST(context: APIContext) {
       endTime,
       price: service.price,
       bookingId,
-    }).catch(() => {});
+    }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
   }
 
   return jsonResponse({

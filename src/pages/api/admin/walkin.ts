@@ -25,7 +25,13 @@ export async function POST(context: APIContext) {
   const admin = await validateSession(db, token);
   if (!admin || admin.role !== 'admin') return errorResponse('Keine Berechtigung.', 403);
 
-  const body = await context.request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
+
   const name = validateName(body.name);
   const email = validateEmail(body.email);
   const phone = validatePhone(body.phone);
@@ -90,7 +96,7 @@ export async function POST(context: APIContext) {
     isWalkIn: true,
   });
 
-  // Award cashback points
+  // Award cashback points - atomares Balance-Update via D1
   const pointsEarned = Math.floor(service.price * 100 * CASHBACK_RATE);
   if (pointsEarned > 0) {
     await db.insert(pointsTransactions).values({
@@ -102,14 +108,9 @@ export async function POST(context: APIContext) {
       description: `5% Cashback für ${service.name.de} (Walk-in)`,
     });
 
-    const userResult = await db.select({ pointsBalance: users.pointsBalance }).from(users).where(eq(users.id, userId)).limit(1);
-    if (userResult[0]) {
-      await db.update(users).set({
-        pointsBalance: userResult[0].pointsBalance + pointsEarned,
-        lastVisitAt: now.toISOString(),
-        updatedAt: now.toISOString(),
-      }).where(eq(users.id, userId));
-    }
+    await env.DB.prepare(
+      `UPDATE users SET points_balance = points_balance + ?, last_visit_at = ?, updated_at = ? WHERE id = ?`
+    ).bind(pointsEarned, now.toISOString(), now.toISOString(), userId).run();
   }
 
   return jsonResponse({ success: true, bookingId }, 201);

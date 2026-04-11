@@ -6,7 +6,7 @@ import { generateId } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
 import { getServiceById } from '../../../data/services';
-import { jsonResponse, errorResponse } from '../../../lib/validation';
+import { validateBookingId, jsonResponse, errorResponse } from '../../../lib/validation';
 
 const CASHBACK_RATE = 0.05; // 5%
 
@@ -18,8 +18,14 @@ export async function POST(context: APIContext) {
   const admin = await validateSession(db, token);
   if (!admin || admin.role !== 'admin') return errorResponse('Keine Berechtigung.', 403);
 
-  const body = await context.request.json();
-  const bookingId = typeof body.bookingId === 'string' ? body.bookingId : null;
+  let body: Record<string, unknown>;
+  try {
+    body = await context.request.json();
+  } catch {
+    return errorResponse('Ungültiger Request-Body.', 400);
+  }
+
+  const bookingId = validateBookingId(body.bookingId);
   if (!bookingId) return errorResponse('Buchungs-ID fehlt.');
 
   // Get booking
@@ -31,11 +37,15 @@ export async function POST(context: APIContext) {
     return errorResponse('Nur bestätigte Termine können abgeschlossen werden.');
   }
 
-  // Mark as completed
-  await db.update(bookings).set({
-    status: 'completed',
-    updatedAt: new Date().toISOString(),
-  }).where(eq(bookings.id, bookingId));
+  // Optimistic locking: Update NUR wenn status noch 'confirmed' ist
+  const now = new Date().toISOString();
+  const completeResult = await env.DB.prepare(
+    `UPDATE bookings SET status = 'completed', updated_at = ? WHERE id = ? AND status = 'confirmed'`
+  ).bind(now, bookingId).run();
+
+  if (completeResult.meta.changes === 0) {
+    return errorResponse('Buchung wurde bereits abgeschlossen oder ist nicht mehr bestätigt.');
+  }
 
   // Award cashback points (only if not paid with points)
   if (!booking.paidWithPoints) {
@@ -54,15 +64,10 @@ export async function POST(context: APIContext) {
           description: `5% Cashback für ${service.name.de}`,
         });
 
-        // Update user points balance
-        const userResult = await db.select({ pointsBalance: users.pointsBalance }).from(users).where(eq(users.id, booking.userId)).limit(1);
-        if (userResult[0]) {
-          await db.update(users).set({
-            pointsBalance: userResult[0].pointsBalance + pointsEarned,
-            lastVisitAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }).where(eq(users.id, booking.userId));
-        }
+        // Atomares Balance-Update via D1
+        await env.DB.prepare(
+          `UPDATE users SET points_balance = points_balance + ?, last_visit_at = ?, updated_at = ? WHERE id = ?`
+        ).bind(pointsEarned, now, now, booking.userId).run();
       }
     }
   }

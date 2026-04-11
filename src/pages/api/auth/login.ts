@@ -15,7 +15,13 @@ import {
 
 export async function POST(context: APIContext) {
   try {
-    const body = await context.request.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await context.request.json();
+    } catch {
+      return errorResponse('Ungültiger Request-Body.', 400);
+    }
+
     const email = validateEmail(body.email);
     const password = validatePassword(body.password);
 
@@ -32,6 +38,8 @@ export async function POST(context: APIContext) {
       .limit(1);
 
     if (result.length === 0) {
+      // Brute-Force-Schutz: Delay bei ungültigen Credentials
+      await new Promise(r => setTimeout(r, 1000));
       return errorResponse('Ungültige E-Mail oder Passwort.', 401);
     }
 
@@ -39,6 +47,8 @@ export async function POST(context: APIContext) {
     const passwordValid = await verifyPassword(password, user.passwordHash);
 
     if (!passwordValid) {
+      // Brute-Force-Schutz: Delay bei falschem Passwort
+      await new Promise(r => setTimeout(r, 1000));
       return errorResponse('Ungültige E-Mail oder Passwort.', 401);
     }
 
@@ -52,6 +62,8 @@ export async function POST(context: APIContext) {
 
       const mfaValid = await verifyTotp(user.totpSecret, mfaCode);
       if (!mfaValid) {
+        // Brute-Force-Schutz: Delay bei falschem MFA-Code
+        await new Promise(r => setTimeout(r, 1000));
         return errorResponse('Ungültiger 2FA-Code.', 401);
       }
     }

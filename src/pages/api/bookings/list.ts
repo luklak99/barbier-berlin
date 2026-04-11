@@ -24,7 +24,14 @@ export async function GET(context: APIContext) {
   const enriched = userBookings.map((b) => {
     const service = getServiceById(b.serviceId);
     return {
-      ...b,
+      id: b.id,
+      serviceId: b.serviceId,
+      date: b.date,
+      startTime: b.startTime,
+      endTime: b.endTime,
+      status: b.status,
+      paidWithPoints: b.paidWithPoints,
+      pointsUsed: b.pointsUsed,
       serviceName: service?.name.de ?? b.serviceId,
       servicePrice: service?.price ?? 0,
     };
