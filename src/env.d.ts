@@ -3,7 +3,7 @@
 declare module 'cloudflare:workers' {
   interface Env {
     DB: D1Database;
-    RELAY_SECRET: string;
+    BREVO_API_KEY: string;
     CRON_SECRET: string;
   }
 }

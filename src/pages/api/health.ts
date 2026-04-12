@@ -5,7 +5,7 @@ export async function GET() {
     const info: Record<string, unknown> = {
       status: 'ok',
       hasDb: !!env.DB,
-      hasRelay: !!env.RELAY_SECRET,
+      hasBrevo: !!env.BREVO_API_KEY,
     };
 
     if (env.DB) {

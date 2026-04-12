@@ -1,7 +1,7 @@
 /**
- * E-Mail-Versand über PHP-Relay auf Strato Webspace.
- * Das Relay läuft unter https://barbier.berlin/api-relay/send.php
- * und wird per HTTP POST von Cloudflare Workers aufgerufen.
+ * E-Mail-Versand über Brevo (Sendinblue) HTTP API.
+ * EU-Server (Paris), DSGVO-konform, 300 Mails/Tag kostenlos.
+ * API-Key als Cloudflare Secret: BREVO_API_KEY
  */
 
 import { sanitizeEmailForSmtp } from './validation';
@@ -20,15 +20,15 @@ import {
   welcomeEmailText,
 } from './email-templates';
 
-const RELAY_URL = 'https://barbier.berlin/api-relay/send.php';
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const FROM_NAME = 'Barbier Berlin';
+const FROM_EMAIL = 'info@barbier.berlin';
 
 interface EmailEnv {
-  RELAY_SECRET: string;
-  SMTP_USER?: string;
-  SMTP_PASS?: string;
+  BREVO_API_KEY: string;
 }
 
-async function sendViaRelay(
+async function sendViaBrevo(
   env: EmailEnv,
   to: string,
   subject: string,
@@ -37,63 +37,59 @@ async function sendViaRelay(
 ): Promise<void> {
   const safeTo = sanitizeEmailForSmtp(to);
 
-  const res = await fetch(RELAY_URL, {
+  const res = await fetch(BREVO_API_URL, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'X-Relay-Secret': env.RELAY_SECRET,
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': env.BREVO_API_KEY,
     },
-    body: JSON.stringify({ to: safeTo, subject, html, text }),
+    body: JSON.stringify({
+      sender: { name: FROM_NAME, email: FROM_EMAIL },
+      to: [{ email: safeTo }],
+      subject,
+      htmlContent: html,
+      textContent: text,
+    }),
   });
 
   if (!res.ok) {
     const body = await res.text().catch(() => '');
-    throw new Error(`E-Mail-Relay Fehler (${res.status}): ${body}`);
+    throw new Error(`Brevo API Fehler (${res.status}): ${body}`);
   }
 }
 
 // --- Public API ---
 
-export interface BookingConfirmationParams extends BookingEmailData {
-  to: string;
-}
-
-export interface BookingCancellationParams extends CancellationEmailData {
-  to: string;
-}
-
-export interface BookingReminderParams extends ReminderEmailData {
-  to: string;
-}
-
-export interface WelcomeEmailParams extends WelcomeEmailData {
-  to: string;
-}
+export interface BookingConfirmationParams extends BookingEmailData { to: string; }
+export interface BookingCancellationParams extends CancellationEmailData { to: string; }
+export interface BookingReminderParams extends ReminderEmailData { to: string; }
+export interface WelcomeEmailParams extends WelcomeEmailData { to: string; }
 
 export async function sendBookingConfirmation(env: EmailEnv, params: BookingConfirmationParams): Promise<void> {
   const { to, ...data } = params;
-  await sendViaRelay(env, to,
-    `Buchung bestätigt: ${data.serviceName} am ${formatDateShort(data.date)}`,
+  await sendViaBrevo(env, to,
+    `Buchung bestätigt: ${data.serviceName} am ${fmtDate(data.date)}`,
     bookingConfirmationHtml(data), bookingConfirmationText(data));
 }
 
 export async function sendBookingCancellation(env: EmailEnv, params: BookingCancellationParams): Promise<void> {
   const { to, ...data } = params;
-  await sendViaRelay(env, to,
-    `Termin storniert: ${data.serviceName} am ${formatDateShort(data.date)}`,
+  await sendViaBrevo(env, to,
+    `Termin storniert: ${data.serviceName} am ${fmtDate(data.date)}`,
     bookingCancellationHtml(data), bookingCancellationText(data));
 }
 
 export async function sendBookingReminder(env: EmailEnv, params: BookingReminderParams): Promise<void> {
   const { to, ...data } = params;
-  await sendViaRelay(env, to,
+  await sendViaBrevo(env, to,
     `Erinnerung: Ihr Termin morgen um ${data.startTime} Uhr`,
     bookingReminderHtml(data), bookingReminderText(data));
 }
 
 export async function sendWelcomeEmail(env: EmailEnv, params: WelcomeEmailParams): Promise<void> {
   const { to, ...data } = params;
-  await sendViaRelay(env, to, 'Willkommen bei Barbier Berlin!',
+  await sendViaBrevo(env, to, 'Willkommen bei Barbier Berlin!',
     welcomeEmailHtml(data), welcomeEmailText(data));
 }
 
@@ -109,8 +105,8 @@ export async function sendPasswordResetEmail(env: EmailEnv, params: PasswordRese
     <table cellpadding="0" cellspacing="0" style="margin:24px auto"><tr><td style="background:#C8A55A;border-radius:6px;padding:14px 32px">
     <a href="${params.resetUrl}" style="color:#1a1a2e;text-decoration:none;font-weight:700;font-size:15px">Neues Passwort setzen</a></td></tr></table>
     <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">Dieser Link ist 1 Stunde gültig.</p></td></tr></table></td></tr></table></body></html>`;
-  const text = `Passwort zurücksetzen\n\nHallo ${params.customerName},\n${params.resetUrl}\n\n1 Stunde gültig.\n\nBarbier Berlin`;
-  await sendViaRelay(env, params.to, 'Passwort zurücksetzen – Barbier Berlin', html, text);
+  const text = `Passwort zurücksetzen\n\nHallo ${params.customerName},\n${params.resetUrl}\n\n1h gültig.\n\nBarbier Berlin`;
+  await sendViaBrevo(env, params.to, 'Passwort zurücksetzen – Barbier Berlin', html, text);
 }
 
 export interface VerificationEmailParams { to: string; customerName: string; verifyUrl: string; }
@@ -124,12 +120,9 @@ export async function sendVerificationEmail(env: EmailEnv, params: VerificationE
     <p style="color:#e0e0e0;font-size:15px;line-height:1.6;margin:0 0 24px">Hallo ${params.customerName},<br>Bitte bestätigen Sie Ihre E-Mail-Adresse.</p>
     <table cellpadding="0" cellspacing="0" style="margin:24px auto"><tr><td style="background:#C8A55A;border-radius:6px;padding:14px 32px">
     <a href="${params.verifyUrl}" style="color:#1a1a2e;text-decoration:none;font-weight:700;font-size:15px">E-Mail bestätigen</a></td></tr></table>
-    <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">Dieser Link ist 24 Stunden gültig.</p></td></tr></table></td></tr></table></body></html>`;
+    <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">24 Stunden gültig.</p></td></tr></table></td></tr></table></body></html>`;
   const text = `E-Mail bestätigen\n\nHallo ${params.customerName},\n${params.verifyUrl}\n\nBarbier Berlin`;
-  await sendViaRelay(env, params.to, 'E-Mail bestätigen – Barbier Berlin', html, text);
+  await sendViaBrevo(env, params.to, 'E-Mail bestätigen – Barbier Berlin', html, text);
 }
 
-function formatDateShort(dateStr: string): string {
-  const [year, month, day] = dateStr.split('-');
-  return `${day}.${month}.${year}`;
-}
+function fmtDate(d: string): string { const [y,m,dd] = d.split('-'); return `${dd}.${m}.${y}`; }

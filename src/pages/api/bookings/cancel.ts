@@ -77,7 +77,7 @@ export async function POST(context: APIContext) {
 
   // E-Mail-Bestätigung (fire and forget)
   const service = getServiceById(booking.serviceId);
-  if (env.RELAY_SECRET && service) {
+  if (env.BREVO_API_KEY && service) {
     sendBookingCancellation(env, {
       to: user.email,
       customerName: user.name,

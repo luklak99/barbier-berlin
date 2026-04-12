@@ -81,7 +81,7 @@ export async function POST(context: APIContext) {
   }
 
   // E-Mail-Bestätigung (fire and forget)
-  if (env.RELAY_SECRET) {
+  if (env.BREVO_API_KEY) {
     sendBookingConfirmation(env, {
       to: user.email,
       customerName: user.name,

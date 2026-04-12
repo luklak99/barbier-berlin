@@ -58,7 +58,7 @@ export async function POST(context: APIContext) {
     const token = await createSession(db, userId);
 
     // Willkommens-E-Mail (fire and forget)
-    if (env.RELAY_SECRET) {
+    if (env.BREVO_API_KEY) {
       sendWelcomeEmail(env, { to: email, customerName: name }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
     }
 

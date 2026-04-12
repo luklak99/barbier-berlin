@@ -25,7 +25,7 @@ export async function GET(context: APIContext) {
     .where(and(eq(bookings.date, tomorrowStr), eq(bookings.status, 'confirmed')));
 
   let sent = 0;
-  if (env.RELAY_SECRET) {
+  if (env.BREVO_API_KEY) {
     const { sendBookingReminder } = await import('../../../lib/email');
     for (const { booking, userName, userEmail } of tomorrowBookings) {
       const service = getServiceById(booking.serviceId);
