@@ -16,14 +16,13 @@ const tr = t(lang);
     <div class="flex items-center justify-between h-18 transition-all duration-500" id="header-inner">
       <!-- Logo -->
       <a href={`/${lang === 'de' ? '' : lang}`} class="flex items-center gap-3 group">
-        <div class="relative w-11 h-11 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-          <!-- Gold Gradient Ring -->
-          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[#C8A55A] via-[#E8D48B] to-[#C8A55A] p-[2px]">
-            <div class="w-full h-full rounded-full bg-[#050506]/90 flex items-center justify-center">
-              <span class="text-[#C8A55A] font-display font-bold text-lg">B</span>
-            </div>
-          </div>
-        </div>
+        <img
+          src="/images/logo.svg"
+          alt="Barbier Berlin Logo"
+          width="44"
+          height="44"
+          class="w-11 h-11 transition-transform duration-300 group-hover:scale-110"
+        />
         <div class="hidden sm:block">
           <span class="text-[#EDEDEF] font-display text-xl font-semibold tracking-wide">Barbier</span>
           <span class="text-[#C8A55A] font-display text-xl font-light ml-1">Berlin</span>

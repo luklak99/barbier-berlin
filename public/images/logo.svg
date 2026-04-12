@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Outer circle -->
+  <circle cx="200" cy="200" r="185" stroke="#C8A55A" stroke-width="3" fill="none"/>
+  <circle cx="200" cy="200" r="175" stroke="#C8A55A" stroke-width="1" fill="none"/>
+
+  <!-- Top text: HERREN- & KINDERHAARSCHNITT -->
+  <path id="topArc" d="M 60,200 A 140,140 0 0,1 340,200" fill="none"/>
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#C8A55A" letter-spacing="3" font-weight="600">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">HERREN- &amp; KINDERHAARSCHNITT</textPath>
+  </text>
+
+  <!-- Bottom text: BARTRASUR -->
+  <path id="bottomArc" d="M 80,230 A 130,130 0 0,0 320,230" fill="none"/>
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="18" fill="#C8A55A" letter-spacing="5" font-weight="600">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">BARTRASUR</textPath>
+  </text>
+
+  <!-- Horizontal lines left -->
+  <line x1="30" y1="195" x2="145" y2="195" stroke="#C8A55A" stroke-width="2"/>
+  <line x1="40" y1="205" x2="145" y2="205" stroke="#C8A55A" stroke-width="2"/>
+
+  <!-- Horizontal lines right -->
+  <line x1="255" y1="195" x2="370" y2="195" stroke="#C8A55A" stroke-width="2"/>
+  <line x1="255" y1="205" x2="360" y2="205" stroke="#C8A55A" stroke-width="2"/>
+
+  <!-- BARBIER text -->
+  <text x="88" y="203" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#C8A55A" font-weight="700" letter-spacing="4">BARBIER</text>
+
+  <!-- BERLIN text -->
+  <text x="258" y="203" font-family="Georgia, 'Times New Roman', serif" font-size="32" fill="#C8A55A" font-weight="700" letter-spacing="4">BERLIN</text>
+
+  <!-- Scissors (simplified) -->
+  <g transform="translate(200,160) rotate(-30)" stroke="#C8A55A" stroke-width="2.5" fill="none">
+    <!-- Blade 1 -->
+    <path d="M 0,0 L -50,50" stroke-linecap="round"/>
+    <circle cx="-55" cy="55" r="12"/>
+    <circle cx="-55" cy="55" r="6"/>
+    <!-- Blade 2 -->
+    <path d="M 0,0 L 15,65" stroke-linecap="round"/>
+    <circle cx="18" cy="72" r="12"/>
+    <circle cx="18" cy="72" r="6"/>
+    <!-- Pivot -->
+    <circle cx="0" cy="0" r="4" fill="#C8A55A"/>
+  </g>
+
+  <!-- Razor (simplified) -->
+  <g transform="translate(215,120) rotate(40)" stroke="#C8A55A" stroke-width="2" fill="none">
+    <!-- Handle -->
+    <rect x="-5" y="30" width="10" height="55" rx="3" fill="#C8A55A" opacity="0.15" stroke="#C8A55A"/>
+    <!-- Blade -->
+    <path d="M -3,30 L -3,-15 Q 0,-25 3,-15 L 3,30 Z" fill="#C8A55A" opacity="0.2" stroke="#C8A55A"/>
+    <!-- Blade edge -->
+    <line x1="0" y1="-20" x2="0" y2="30" stroke="#C8A55A" stroke-width="1"/>
+  </g>
+</svg>
