@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/home/Hero.astro';
+import Marquee from '../../components/home/Marquee.astro';
+import GoldDivider from '../../components/home/GoldDivider.astro';
+import ServicesPreview from '../../components/home/ServicesPreview.astro';
+import Features from '../../components/home/Features.astro';
+import LiveReviews from '../../components/home/LiveReviews.astro';
+import CTASection from '../../components/home/CTASection.astro';
+import { barberShopSchema, websiteSchema, webPageSchema, breadcrumbSchema } from '../../data/schema';
+const schema = [barberShopSchema, websiteSchema, webPageSchema('Barbier Berlin – Kreuzberg Premium Berber', 'Kreuzberg premium berberiniz.', '/tr'), breadcrumbSchema([{ name: 'Ana Sayfa', url: '/tr' }])];
+---
+<Layout title="Barbier Berlin | Kreuzberg'deki Premium Berberiniz" description="Barbier Berlin – Kreuzberg'deki premium berberiniz. 20€'dan başlayan saç kesimi, sakal bakımı, tıraş. 4.8★ 1.400+ değerlendirme. Online randevu alın!" lang="tr" schema={schema}>
+  <Hero /><Marquee /><Features /><GoldDivider /><ServicesPreview /><GoldDivider /><LiveReviews /><GoldDivider /><CTASection />
+</Layout>
+<script>
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });
+  document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+</script>

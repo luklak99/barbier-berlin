@@ -93,6 +93,27 @@ export default function MobileNav({ lang }: Props) {
           </a>
         </div>
 
+        <div
+          className="flex gap-3 mt-8 transition-all duration-300"
+          style={{
+            opacity: isOpen ? 1 : 0,
+            transitionDelay: isOpen ? '250ms' : '0ms',
+          }}
+        >
+          {Object.entries(languages).map(([code]) => (
+            <a
+              key={code}
+              href={code === 'de' ? '/' : `/${code}`}
+              className={`text-sm px-3 py-1.5 rounded-lg border transition-all duration-300 ${
+                code === lang
+                  ? 'text-[#C8A55A] bg-[#C8A55A]/10 border-[#C8A55A]/20'
+                  : 'text-[#8A8F98] border-white/[0.06] hover:text-[#EDEDEF] hover:border-white/[0.12]'
+              }`}
+            >
+              {code.toUpperCase()}
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );
