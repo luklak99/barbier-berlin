@@ -40,26 +40,6 @@ const tr = t(lang);
 
       <!-- Right Side -->
       <div class="hidden lg:flex items-center gap-3">
-        <!-- Language Switcher -->
-        <div class="relative group">
-          <button class="flex items-center gap-1.5 text-[#8A8F98] hover:text-[#EDEDEF] text-sm px-2 py-1 transition-colors uppercase tracking-wider font-medium">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-width="1.5" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-            {lang}
-          </button>
-          <div class="absolute right-0 top-full mt-2 bg-[#0a0a0c]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl shadow-black/40">
-            {Object.entries(languages).map(([code, name]) => (
-              <a
-                href={code === 'de' ? '/' : `/${code}`}
-                class={`block px-5 py-2 text-sm whitespace-nowrap transition-colors ${
-                  code === lang ? 'text-[#C8A55A]' : 'text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.04]'
-                }`}
-              >
-                {name}
-              </a>
-            ))}
-          </div>
-        </div>
-
         <a href="/login" class="text-[#8A8F98] hover:text-[#EDEDEF] text-sm transition-colors px-3 py-2">
           {tr.nav.login}
         </a>
