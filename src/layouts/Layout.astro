@@ -67,8 +67,22 @@ const basePath = Astro.url.pathname.replace(/^\/(en|tr|ar)/, '');
     {schema.map((s) => (
       <script type="application/ld+json" set:html={JSON.stringify(s)} />
     ))}
+    <!-- Page Transitions -->
+    <style>
+      @view-transition { navigation: auto; }
+      ::view-transition-old(root) { animation: wipeOut 0.3s ease-in both; }
+      ::view-transition-new(root) { animation: wipeIn 0.3s ease-out both; }
+      @keyframes wipeOut { to { opacity: 0; transform: translateX(-3%); } }
+      @keyframes wipeIn { from { opacity: 0; transform: translateX(3%); } }
+    </style>
   </head>
   <body class="min-h-screen flex flex-col antialiased">
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-[2px] z-[60]" style="width: 0%; background: linear-gradient(90deg, #C8A55A, #E8D48B); transform-origin: left;"></div>
+
+    <!-- Cursor Glow (desktop only) -->
+    <div id="cursor-glow" class="fixed w-[300px] h-[300px] rounded-full pointer-events-none z-[5] hidden lg:block" style="background: radial-gradient(circle, rgba(200,165,90,0.04) 0%, transparent 70%); transform: translate(-50%, -50%); transition: left 0.15s ease-out, top 0.15s ease-out;"></div>
+
     <Header lang={lang} />
     <main class="flex-1">
       <slot />
@@ -79,6 +93,38 @@ const basePath = Astro.url.pathname.replace(/^\/(en|tr|ar)/, '');
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(() => {});
       }
+
+      // Scroll Progress Bar
+      const progressBar = document.getElementById('scroll-progress');
+      if (progressBar) {
+        window.addEventListener('scroll', () => {
+          const h = document.documentElement.scrollHeight - window.innerHeight;
+          progressBar.style.width = h > 0 ? `${(window.scrollY / h) * 100}%` : '0%';
+        }, { passive: true });
+      }
+
+      // Cursor Glow (desktop)
+      const glow = document.getElementById('cursor-glow');
+      if (glow && window.innerWidth >= 1024) {
+        document.addEventListener('mousemove', (e) => {
+          glow.style.left = e.clientX + 'px';
+          glow.style.top = e.clientY + 'px';
+        });
+      }
+
+      // Magnetic Buttons
+      document.querySelectorAll('a[href="/booking"]').forEach((btn) => {
+        const el = btn as HTMLElement;
+        el.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = el.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.02)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = '';
+        });
+      });
     </script>
   </body>
 </html>

@@ -1,0 +1,36 @@
+---
+// Luxus-Brand Marquee Banner
+---
+
+<div class="relative py-6 overflow-hidden border-y border-white/[0.04]" style="background: rgba(200,165,90,0.03);">
+  <div class="marquee-track flex gap-8 whitespace-nowrap" style="width: max-content;">
+    {[...Array(3)].map(() => (
+      <div class="flex items-center gap-8 text-sm font-display font-semibold uppercase tracking-[0.25em]" style="color: rgba(200,165,90,0.35);">
+        <span>Haarschnitt</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span>Bartpflege</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span>Nassrasur</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span>Styling</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span>Premium</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span>Kreuzberg</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span>Seit 2020</span>
+        <span style="color: rgba(200,165,90,0.15);">◆</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee-track {
+    animation: marqueeScroll 25s linear infinite;
+  }
+  @keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.333%); }
+  }
+</style>

@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/home/Hero.astro';
+import Marquee from '../components/home/Marquee.astro';
+import GoldDivider from '../components/home/GoldDivider.astro';
 import ServicesPreview from '../components/home/ServicesPreview.astro';
 import Features from '../components/home/Features.astro';
 import LiveReviews from '../components/home/LiveReviews.astro';
@@ -25,9 +27,13 @@ const schema = [
   schema={schema}
 >
   <Hero />
+  <Marquee />
   <Features />
+  <GoldDivider />
   <ServicesPreview />
+  <GoldDivider />
   <LiveReviews />
+  <GoldDivider />
   <CTASection />
 </Layout>
 
