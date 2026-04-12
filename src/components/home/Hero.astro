@@ -15,7 +15,10 @@
       class="w-full h-full object-cover"
       loading="eager"
     />
-    <div class="absolute inset-0 bg-gradient-to-b from-[#050506]/85 via-[#050506]/90 to-[#050506]"></div>
+    <!-- Radial vignette: edges fade to black, center shows image -->
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 60% 50% at center, transparent 0%, #050506 100%);"></div>
+    <!-- Top/bottom extra fade -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#050506] via-transparent to-[#050506]" style="opacity: 0.7;"></div>
   </div>
 
   <!-- Noise overlay -->
