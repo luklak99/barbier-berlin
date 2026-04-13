@@ -1,5 +1,6 @@
 ---
 import { t, type Language } from '../../i18n/translations';
+import OpeningHours from '../ui/OpeningHours.astro';
 
 interface Props {
   lang?: Language;
@@ -7,6 +8,7 @@ interface Props {
 
 const { lang = 'de' } = Astro.props;
 const tr = t(lang);
+const prefix = lang === 'de' ? '' : `/${lang}`;
 ---
 
 <footer class="relative bg-[#050506] text-[#8A8F98]">
@@ -51,11 +53,11 @@ const tr = t(lang);
       <div>
         <h3 class="text-[#EDEDEF] font-semibold text-sm uppercase tracking-wider mb-4">Navigation</h3>
         <ul class="space-y-2 text-sm">
-          <li><a href="/" class="footer-link">{tr.nav.home}</a></li>
-          <li><a href="/services" class="footer-link">{tr.nav.services}</a></li>
-          <li><a href="/gallery" class="footer-link">{tr.nav.gallery}</a></li>
-          <li><a href="/about" class="footer-link">{tr.nav.about}</a></li>
-          <li><a href="/contact" class="footer-link">{tr.nav.contact}</a></li>
+          <li><a href={prefix || '/'} class="footer-link">{tr.nav.home}</a></li>
+          <li><a href={`${prefix}/services`} class="footer-link">{tr.nav.services}</a></li>
+          <li><a href={`${prefix}/gallery`} class="footer-link">{tr.nav.gallery}</a></li>
+          <li><a href={`${prefix}/about`} class="footer-link">{tr.nav.about}</a></li>
+          <li><a href={`${prefix}/contact`} class="footer-link">{tr.nav.contact}</a></li>
         </ul>
       </div>
 
@@ -81,6 +83,7 @@ const tr = t(lang);
       <!-- Hours -->
       <div>
         <h3 class="text-[#EDEDEF] font-semibold text-sm uppercase tracking-wider mb-4">{tr.contact.hours}</h3>
+        <OpeningHours lang={lang} />
         <ul class="space-y-2 text-sm">
           <li class="flex justify-between"><span>{tr.common.monday} - {tr.common.friday}</span><span class="text-[#EDEDEF]">10:00 - 18:00</span></li>
           <li class="flex justify-between"><span>{tr.common.saturday}</span><span class="text-[#EDEDEF]">10:00 - 17:00</span></li>
@@ -93,8 +96,8 @@ const tr = t(lang);
     <div class="relative border-t border-white/[0.06] mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
       <p>&copy; {new Date().getFullYear()} Barbier Berlin. {tr.footer.rights}</p>
       <div class="flex gap-6">
-        <a href="/impressum" class="footer-link">{tr.footer.imprint}</a>
-        <a href="/datenschutz" class="footer-link">{tr.footer.privacy}</a>
+        <a href={`${prefix}/impressum`} class="footer-link">{tr.footer.imprint}</a>
+        <a href={`${prefix}/datenschutz`} class="footer-link">{tr.footer.privacy}</a>
       </div>
     </div>
   </div>

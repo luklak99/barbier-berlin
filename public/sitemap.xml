@@ -1,49 +1,341 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home -->
   <url>
     <loc>https://barbier.berlin/</loc>
     <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en" />
     <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/" />
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://barbier.berlin/en</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Services -->
+  <url>
     <loc>https://barbier.berlin/services</loc>
     <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/services" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/services" />
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://barbier.berlin/en/services</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/services" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/services" />
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr/services</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/services" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/services" />
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/services</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/services" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/services" />
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Gallery -->
+  <url>
     <loc>https://barbier.berlin/gallery</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/gallery" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/gallery" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/gallery" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/gallery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/gallery" />
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://barbier.berlin/en/gallery</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/gallery" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/gallery" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/gallery" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/gallery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/gallery" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr/gallery</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/gallery" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/gallery" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/gallery" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/gallery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/gallery" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/gallery</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/gallery" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/gallery" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/gallery" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/gallery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/gallery" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- About -->
   <url>
     <loc>https://barbier.berlin/about</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/about" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/about" />
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://barbier.berlin/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/about" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr/about</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/about" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/about</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/about" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Contact -->
+  <url>
     <loc>https://barbier.berlin/contact</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/contact" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/contact" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://barbier.berlin/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/contact" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr/contact</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/contact" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/contact</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/contact" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Booking -->
+  <url>
     <loc>https://barbier.berlin/booking</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/booking" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/booking" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/booking" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/booking" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/booking" />
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://barbier.berlin/en/booking</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/booking" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/booking" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/booking" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/booking" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/booking" />
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr/booking</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/booking" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/booking" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/booking" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/booking" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/booking" />
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/booking</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/booking" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/booking" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/booking" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/booking" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/booking" />
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Impressum (DE only — legal page) -->
+  <url>
     <loc>https://barbier.berlin/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/impressum" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/impressum" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/impressum" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/impressum" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/impressum" />
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://barbier.berlin/datenschutz</loc>
+    <loc>https://barbier.berlin/en/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/impressum" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/impressum" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/impressum" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/impressum" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/impressum" />
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://barbier.berlin/tr/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/impressum" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/impressum" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/impressum" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/impressum" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/impressum" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/impressum" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/impressum" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/impressum" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/impressum" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/impressum" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Datenschutz -->
+  <url>
+    <loc>https://barbier.berlin/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/datenschutz" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/en/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/datenschutz" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/tr/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/datenschutz" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://barbier.berlin/ar/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://barbier.berlin/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://barbier.berlin/en/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://barbier.berlin/tr/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://barbier.berlin/ar/datenschutz" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barbier.berlin/datenschutz" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>

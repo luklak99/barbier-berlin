@@ -1,0 +1,57 @@
+---
+import { type Language } from '../../i18n/translations';
+interface Props { lang?: Language; }
+const { lang = 'de' } = Astro.props;
+
+const labels = {
+  open: { de: 'Jetzt geöffnet', en: 'Open Now', tr: 'Şu an açık', ar: 'مفتوح الآن' },
+  closed: { de: 'Geschlossen', en: 'Closed', tr: 'Kapalı', ar: 'مغلق' },
+  opensAt: { de: 'Öffnet', en: 'Opens', tr: 'Açılır', ar: 'يفتح' },
+  at: { de: 'um', en: 'at', tr: 'saat', ar: 'الساعة' },
+  tomorrow: { de: 'morgen', en: 'tomorrow', tr: 'yarın', ar: 'غداً' },
+  monday: { de: 'Mo', en: 'Mon', tr: 'Pzt', ar: 'الإث' },
+};
+---
+<span id="opening-status" class="text-sm font-medium" style="color: #8A8F98;">
+  <!-- filled by JS -->
+</span>
+
+<script define:vars={{ lang, labels }}>
+  function getOpenStatus() {
+    // Berlin timezone: Europe/Berlin
+    const now = new Date();
+    const berlinTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
+    const day = berlinTime.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    const hour = berlinTime.getHours();
+    const minute = berlinTime.getMinutes();
+    const timeNum = hour * 60 + minute;
+
+    // Hours: Mon-Fri 10:00-18:00, Sat 10:00-17:00, Sun closed
+    const scheduleClose = day === 6 ? 17 * 60 : 18 * 60;
+    const isOpenToday = day >= 1 && day <= 6 && timeNum >= 10 * 60 && timeNum < scheduleClose;
+
+    const el = document.getElementById('opening-status');
+    if (!el) return;
+
+    if (isOpenToday) {
+      el.style.color = '#4ade80';
+      el.textContent = `● ${labels.open[lang]}`;
+    } else {
+      el.style.color = '#ef4444';
+      // Find next open day
+      let nextDay = day === 0 ? 1 : (day === 6 ? 1 : null); // Sun → Mon, Sat after 17 → Mon
+      const tomorrow = day + 1;
+      if (!nextDay && tomorrow >= 1 && tomorrow <= 6) nextDay = tomorrow;
+
+      const isTomorrow = nextDay === (day + 1 > 6 ? 0 : day + 1);
+      const whenText = isTomorrow ? labels.tomorrow[lang] : labels.monday[lang];
+      el.textContent = `● ${labels.closed[lang]} · ${labels.opensAt[lang]} ${whenText} 10:00`;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', getOpenStatus);
+  } else {
+    getOpenStatus();
+  }
+</script>

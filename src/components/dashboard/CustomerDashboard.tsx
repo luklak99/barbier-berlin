@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { api, getUser, type User } from '../../lib/api';
+import { t, type Language } from '../../i18n/translations';
 
 type Tab = 'appointments' | 'points' | 'reviews' | 'settings';
 
@@ -30,14 +31,211 @@ interface PointsData {
   }[];
 }
 
-const statusLabels = {
-  confirmed: { text: 'Bestätigt', class: 'bg-green-500/10 text-green-400' },
-  completed: { text: 'Abgeschlossen', class: 'bg-white/5 text-white/40' },
-  cancelled: { text: 'Storniert', class: 'bg-red-500/10 text-red-400' },
-  no_show: { text: 'Nicht erschienen', class: 'bg-orange-500/10 text-orange-400' },
+interface Props {
+  lang?: Language;
+}
+
+const statusLabelsMap: Record<Language, Record<string, { text: string; class: string }>> = {
+  de: {
+    confirmed: { text: 'Bestätigt', class: 'bg-green-500/10 text-green-400' },
+    completed: { text: 'Abgeschlossen', class: 'bg-white/5 text-white/40' },
+    cancelled: { text: 'Storniert', class: 'bg-red-500/10 text-red-400' },
+    no_show: { text: 'Nicht erschienen', class: 'bg-orange-500/10 text-orange-400' },
+  },
+  en: {
+    confirmed: { text: 'Confirmed', class: 'bg-green-500/10 text-green-400' },
+    completed: { text: 'Completed', class: 'bg-white/5 text-white/40' },
+    cancelled: { text: 'Cancelled', class: 'bg-red-500/10 text-red-400' },
+    no_show: { text: 'No Show', class: 'bg-orange-500/10 text-orange-400' },
+  },
+  tr: {
+    confirmed: { text: 'Onaylandı', class: 'bg-green-500/10 text-green-400' },
+    completed: { text: 'Tamamlandı', class: 'bg-white/5 text-white/40' },
+    cancelled: { text: 'İptal edildi', class: 'bg-red-500/10 text-red-400' },
+    no_show: { text: 'Gelmedi', class: 'bg-orange-500/10 text-orange-400' },
+  },
+  ar: {
+    confirmed: { text: 'مؤكد', class: 'bg-green-500/10 text-green-400' },
+    completed: { text: 'مكتمل', class: 'bg-white/5 text-white/40' },
+    cancelled: { text: 'ملغى', class: 'bg-red-500/10 text-red-400' },
+    no_show: { text: 'لم يحضر', class: 'bg-orange-500/10 text-orange-400' },
+  },
 };
 
-export default function CustomerDashboard() {
+const extraLabels: Record<Language, {
+  welcomeBack: string;
+  newAppointment: string;
+  totalVisits: string;
+  noAppointments: string;
+  bookNow: string;
+  redeemLoading: string;
+  redeemPoints: string;
+  cancelLoading: string;
+  settingsLabel: string;
+  profile: string;
+  twoFactor: string;
+  twoFactorEnabled: string;
+  twoFactorDisabled: string;
+  setup2FA: string;
+  transactionsLabel: string;
+  transactionFallback: string;
+  noTransactions: string;
+  yourPoints: string;
+  pointsUnit: string;
+  reviewWriting: string;
+  ratingLabel: string;
+  commentLabel: string;
+  commentPlaceholder: string;
+  reviewSubmitLoading: string;
+  reviewSubmit: string;
+  reviewSuccess: string;
+  selectCompleted: string;
+  noCompleted: string;
+  bookingsLoading: string;
+  pointsLoading: string;
+}> = {
+  de: {
+    welcomeBack: 'Willkommen zurück,',
+    newAppointment: 'Neuer Termin',
+    totalVisits: 'Besuche gesamt',
+    noAppointments: 'Noch keine Termine vorhanden.',
+    bookNow: 'Jetzt Termin buchen',
+    redeemLoading: 'Wird eingelöst...',
+    redeemPoints: 'Punkte einlösen',
+    cancelLoading: 'Wird storniert...',
+    settingsLabel: 'Einstellungen',
+    profile: 'Profil',
+    twoFactor: 'Zwei-Faktor-Authentifizierung',
+    twoFactorEnabled: 'Zwei-Faktor-Authentifizierung ist aktiviert.',
+    twoFactorDisabled: 'Schützen Sie Ihr Konto mit einem zusätzlichen Sicherheitscode.',
+    setup2FA: '2FA einrichten',
+    transactionsLabel: 'Transaktionen',
+    transactionFallback: 'Transaktion',
+    noTransactions: 'Noch keine Transaktionen.',
+    yourPoints: 'Ihr Punktestand',
+    pointsUnit: 'Punkte',
+    reviewWriting: 'Bewertung schreiben',
+    ratingLabel: 'Bewertung',
+    commentLabel: 'Kommentar (optional)',
+    commentPlaceholder: 'Wie war Ihr Erlebnis?',
+    reviewSubmitLoading: 'Wird gesendet...',
+    reviewSubmit: 'Bewertung abgeben',
+    reviewSuccess: 'Bewertung erfolgreich abgegeben!',
+    selectCompleted: 'Wählen Sie einen abgeschlossenen Termin, um eine Bewertung zu schreiben.',
+    noCompleted: 'Noch keine abgeschlossenen Termine zum Bewerten.',
+    bookingsLoading: 'Termine werden geladen...',
+    pointsLoading: 'Punkte werden geladen...',
+  },
+  en: {
+    welcomeBack: 'Welcome back,',
+    newAppointment: 'New Appointment',
+    totalVisits: 'Total visits',
+    noAppointments: 'No appointments yet.',
+    bookNow: 'Book Appointment',
+    redeemLoading: 'Redeeming...',
+    redeemPoints: 'Redeem Points',
+    cancelLoading: 'Cancelling...',
+    settingsLabel: 'Settings',
+    profile: 'Profile',
+    twoFactor: 'Two-Factor Authentication',
+    twoFactorEnabled: 'Two-factor authentication is enabled.',
+    twoFactorDisabled: 'Protect your account with an additional security code.',
+    setup2FA: 'Set Up 2FA',
+    transactionsLabel: 'Transactions',
+    transactionFallback: 'Transaction',
+    noTransactions: 'No transactions yet.',
+    yourPoints: 'Your Points Balance',
+    pointsUnit: 'Points',
+    reviewWriting: 'Write Review',
+    ratingLabel: 'Rating',
+    commentLabel: 'Comment (optional)',
+    commentPlaceholder: 'How was your experience?',
+    reviewSubmitLoading: 'Sending...',
+    reviewSubmit: 'Submit Review',
+    reviewSuccess: 'Review submitted successfully!',
+    selectCompleted: 'Select a completed appointment to write a review.',
+    noCompleted: 'No completed appointments to review yet.',
+    bookingsLoading: 'Loading appointments...',
+    pointsLoading: 'Loading points...',
+  },
+  tr: {
+    welcomeBack: 'Tekrar hoş geldiniz,',
+    newAppointment: 'Yeni Randevu',
+    totalVisits: 'Toplam ziyaret',
+    noAppointments: 'Henüz randevu yok.',
+    bookNow: 'Randevu Al',
+    redeemLoading: 'Kullanılıyor...',
+    redeemPoints: 'Puan Kullan',
+    cancelLoading: 'İptal ediliyor...',
+    settingsLabel: 'Ayarlar',
+    profile: 'Profil',
+    twoFactor: 'İki Faktörlü Doğrulama',
+    twoFactorEnabled: 'İki faktörlü doğrulama etkin.',
+    twoFactorDisabled: 'Hesabınızı ek bir güvenlik koduyla koruyun.',
+    setup2FA: '2FA Kur',
+    transactionsLabel: 'İşlemler',
+    transactionFallback: 'İşlem',
+    noTransactions: 'Henüz işlem yok.',
+    yourPoints: 'Puan Bakiyeniz',
+    pointsUnit: 'Puan',
+    reviewWriting: 'Değerlendirme Yaz',
+    ratingLabel: 'Değerlendirme',
+    commentLabel: 'Yorum (isteğe bağlı)',
+    commentPlaceholder: 'Deneyiminiz nasıldı?',
+    reviewSubmitLoading: 'Gönderiliyor...',
+    reviewSubmit: 'Değerlendirme Gönder',
+    reviewSuccess: 'Değerlendirme başarıyla gönderildi!',
+    selectCompleted: 'Değerlendirme yazmak için tamamlanmış bir randevu seçin.',
+    noCompleted: 'Henüz değerlendirilecek tamamlanmış randevu yok.',
+    bookingsLoading: 'Randevular yükleniyor...',
+    pointsLoading: 'Puanlar yükleniyor...',
+  },
+  ar: {
+    welcomeBack: 'مرحباً بعودتك،',
+    newAppointment: 'موعد جديد',
+    totalVisits: 'إجمالي الزيارات',
+    noAppointments: 'لا توجد مواعيد بعد.',
+    bookNow: 'احجز موعداً',
+    redeemLoading: 'جارٍ الاسترداد...',
+    redeemPoints: 'استرداد النقاط',
+    cancelLoading: 'جارٍ الإلغاء...',
+    settingsLabel: 'الإعدادات',
+    profile: 'الملف الشخصي',
+    twoFactor: 'المصادقة الثنائية',
+    twoFactorEnabled: 'المصادقة الثنائية مفعّلة.',
+    twoFactorDisabled: 'احمِ حسابك برمز أمان إضافي.',
+    setup2FA: 'إعداد 2FA',
+    transactionsLabel: 'المعاملات',
+    transactionFallback: 'معاملة',
+    noTransactions: 'لا توجد معاملات بعد.',
+    yourPoints: 'رصيد نقاطك',
+    pointsUnit: 'نقاط',
+    reviewWriting: 'اكتب تقييم',
+    ratingLabel: 'التقييم',
+    commentLabel: 'تعليق (اختياري)',
+    commentPlaceholder: 'كيف كانت تجربتك؟',
+    reviewSubmitLoading: 'جارٍ الإرسال...',
+    reviewSubmit: 'إرسال التقييم',
+    reviewSuccess: 'تم إرسال التقييم بنجاح!',
+    selectCompleted: 'اختر موعداً مكتملاً لكتابة تقييم.',
+    noCompleted: 'لا توجد مواعيد مكتملة للتقييم بعد.',
+    bookingsLoading: 'جارٍ تحميل المواعيد...',
+    pointsLoading: 'جارٍ تحميل النقاط...',
+  },
+};
+
+function getLocale(lang: Language): string {
+  if (lang === 'de') return 'de-DE';
+  if (lang === 'en') return 'en-US';
+  if (lang === 'tr') return 'tr-TR';
+  return 'ar-SA';
+}
+
+export default function CustomerDashboard({ lang = 'de' }: Props) {
+  const tr = t(lang);
+  const xl = extraLabels[lang];
+  const statusLabels = statusLabelsMap[lang];
+
   const [activeTab, setActiveTab] = useState<Tab>('appointments');
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -66,7 +264,7 @@ export default function CustomerDashboard() {
   useEffect(() => {
     getUser().then((u) => {
       if (!u) {
-        window.location.href = '/login';
+        window.location.href = lang === 'de' ? '/login' : `/${lang}/login`;
       } else {
         setUser(u);
         setAuthChecked(true);
@@ -93,7 +291,7 @@ export default function CustomerDashboard() {
       const data = await api<{ bookings: Booking[] }>('/api/bookings/list');
       setBookings(data.bookings);
     } catch (err) {
-      setBookingsError(err instanceof Error ? err.message : 'Fehler beim Laden der Termine.');
+      setBookingsError(err instanceof Error ? err.message : tr.common.error);
     } finally {
       setBookingsLoading(false);
     }
@@ -106,7 +304,7 @@ export default function CustomerDashboard() {
       const data = await api<PointsData>('/api/points/balance');
       setPointsData(data);
     } catch (err) {
-      setPointsError(err instanceof Error ? err.message : 'Fehler beim Laden der Punkte.');
+      setPointsError(err instanceof Error ? err.message : tr.common.error);
     } finally {
       setPointsLoading(false);
     }
@@ -126,7 +324,7 @@ export default function CustomerDashboard() {
         prev.map((b) => (b.id === bookingId ? { ...b, status: 'cancelled' as const } : b))
       );
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Fehler beim Stornieren.');
+      alert(err instanceof Error ? err.message : tr.common.error);
     } finally {
       setCancellingId(null);
     }
@@ -145,7 +343,7 @@ export default function CustomerDashboard() {
       await loadBookings();
       await loadPoints();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Fehler beim Einlösen der Punkte.');
+      alert(err instanceof Error ? err.message : tr.common.error);
     } finally {
       setRedeemingId(null);
     }
@@ -168,12 +366,12 @@ export default function CustomerDashboard() {
           text: reviewText || undefined,
         }),
       });
-      setReviewSuccess('Bewertung erfolgreich abgegeben!');
+      setReviewSuccess(xl.reviewSuccess);
       setReviewBookingId(null);
       setReviewRating(5);
       setReviewText('');
     } catch (err) {
-      setReviewError(err instanceof Error ? err.message : 'Fehler beim Erstellen der Bewertung.');
+      setReviewError(err instanceof Error ? err.message : tr.common.error);
     } finally {
       setReviewLoading(false);
     }
@@ -185,22 +383,22 @@ export default function CustomerDashboard() {
   const tabs: { key: Tab; label: string; icon: JSX.Element }[] = [
     {
       key: 'appointments',
-      label: 'Termine',
+      label: tr.dashboard.appointments,
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
     },
     {
       key: 'points',
-      label: 'Punkte',
+      label: tr.dashboard.points,
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>,
     },
     {
       key: 'reviews',
-      label: 'Bewertungen',
+      label: tr.dashboard.reviews,
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>,
     },
     {
       key: 'settings',
-      label: 'Einstellungen',
+      label: xl.settingsLabel,
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
     },
   ];
@@ -218,36 +416,36 @@ export default function CustomerDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white">Mein Bereich</h1>
-          <p className="text-white/40 mt-1">Willkommen zurück, {user?.name?.split(' ')[0] ?? ''}!</p>
+          <h1 className="text-3xl font-display font-bold text-white">{tr.dashboard.title}</h1>
+          <p className="text-white/40 mt-1">{xl.welcomeBack} {user?.name?.split(' ')[0] ?? ''}!</p>
         </div>
         <a
-          href="/booking"
+          href={lang === 'de' ? '/booking' : `/${lang}/booking`}
           className="bg-gold-500 text-surface-950 font-semibold px-6 py-2.5 rounded-full hover:bg-gold-400 transition-colors text-sm"
         >
-          Neuer Termin
+          {xl.newAppointment}
         </a>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div className="bg-white/5 rounded-xl p-5 border border-white/5">
-          <p className="text-white/40 text-sm">Anstehende Termine</p>
+          <p className="text-white/40 text-sm">{tr.dashboard.upcoming}</p>
           <p className="text-2xl font-display font-bold text-white mt-1">
             {bookingsLoading ? '...' : upcomingCount}
           </p>
         </div>
         <div className="bg-white/5 rounded-xl p-5 border border-white/5">
-          <p className="text-white/40 text-sm">Punktestand</p>
+          <p className="text-white/40 text-sm">{tr.dashboard.pointsBalance}</p>
           <p className="text-2xl font-display font-bold text-gold-400 mt-1">
             {pointsData ? pointsData.balance : user?.pointsBalance ?? 0}
           </p>
           <p className="text-white/30 text-xs">
-            Wert: {pointsData ? pointsData.valueEur : ((user?.pointsBalance ?? 0) / 100).toFixed(2)}€
+            {tr.dashboard.pointsValue}: {pointsData ? pointsData.valueEur : ((user?.pointsBalance ?? 0) / 100).toFixed(2)}€
           </p>
         </div>
         <div className="bg-white/5 rounded-xl p-5 border border-white/5">
-          <p className="text-white/40 text-sm">Besuche gesamt</p>
+          <p className="text-white/40 text-sm">{xl.totalVisits}</p>
           <p className="text-2xl font-display font-bold text-white mt-1">
             {bookingsLoading ? '...' : completedCount}
           </p>
@@ -280,7 +478,7 @@ export default function CustomerDashboard() {
             {bookingsLoading && (
               <div className="flex items-center justify-center py-12">
                 <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
-                <span className="ml-3 text-white/40 text-sm">Termine werden geladen...</span>
+                <span className="ml-3 text-white/40 text-sm">{xl.bookingsLoading}</span>
               </div>
             )}
 
@@ -292,9 +490,12 @@ export default function CustomerDashboard() {
 
             {!bookingsLoading && !bookingsError && bookings.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-white/40">Noch keine Termine vorhanden.</p>
-                <a href="/booking" className="text-gold-400 hover:text-gold-300 text-sm mt-2 inline-block">
-                  Jetzt Termin buchen
+                <p className="text-white/40">{xl.noAppointments}</p>
+                <a
+                  href={lang === 'de' ? '/booking' : `/${lang}/booking`}
+                  className="text-gold-400 hover:text-gold-300 text-sm mt-2 inline-block"
+                >
+                  {xl.bookNow}
                 </a>
               </div>
             )}
@@ -306,7 +507,7 @@ export default function CustomerDashboard() {
                     <div>
                       <h3 className="text-white font-medium">{apt.serviceName}</h3>
                       <p className="text-white/40 text-sm mt-0.5">
-                        {new Date(apt.date).toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long' })} um {apt.startTime} Uhr
+                        {new Date(apt.date).toLocaleDateString(getLocale(lang), { weekday: 'short', day: 'numeric', month: 'long' })} {apt.startTime} Uhr
                       </p>
                     </div>
                     <div className="flex items-center gap-3 flex-wrap">
@@ -315,7 +516,7 @@ export default function CustomerDashboard() {
                       </span>
                       {apt.paidWithPoints && (
                         <span className="px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-xs font-medium">
-                          Mit Punkten bezahlt
+                          {tr.admin.paidWithPoints}
                         </span>
                       )}
                       <span className="text-gold-400 font-display font-bold">{apt.servicePrice}€</span>
@@ -325,7 +526,7 @@ export default function CustomerDashboard() {
                           disabled={redeemingId === apt.id}
                           className="text-gold-400 hover:text-gold-300 text-sm transition-colors disabled:opacity-50"
                         >
-                          {redeemingId === apt.id ? 'Wird eingelöst...' : 'Punkte einlösen'}
+                          {redeemingId === apt.id ? xl.redeemLoading : xl.redeemPoints}
                         </button>
                       )}
                       {apt.status === 'confirmed' && (
@@ -334,7 +535,7 @@ export default function CustomerDashboard() {
                           disabled={cancellingId === apt.id}
                           className="text-white/30 hover:text-red-400 text-sm transition-colors disabled:opacity-50"
                         >
-                          {cancellingId === apt.id ? 'Wird storniert...' : 'Stornieren'}
+                          {cancellingId === apt.id ? xl.cancelLoading : tr.booking.cancel}
                         </button>
                       )}
                       {apt.status === 'completed' && (
@@ -342,7 +543,7 @@ export default function CustomerDashboard() {
                           onClick={() => setReviewBookingId(apt.id)}
                           className="text-gold-400 hover:text-gold-300 text-sm transition-colors"
                         >
-                          Bewerten
+                          {tr.dashboard.writeReview}
                         </button>
                       )}
                     </div>
@@ -359,7 +560,7 @@ export default function CustomerDashboard() {
             {pointsLoading && (
               <div className="flex items-center justify-center py-12">
                 <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
-                <span className="ml-3 text-white/40 text-sm">Punkte werden geladen...</span>
+                <span className="ml-3 text-white/40 text-sm">{xl.pointsLoading}</span>
               </div>
             )}
 
@@ -372,27 +573,27 @@ export default function CustomerDashboard() {
             {!pointsLoading && !pointsError && pointsData && (
               <>
                 <div className="bg-gradient-to-r from-gold-500/20 to-gold-600/10 rounded-2xl p-8 border border-gold-500/20 mb-6">
-                  <p className="text-gold-400/60 text-sm uppercase tracking-wider">Ihr Punktestand</p>
+                  <p className="text-gold-400/60 text-sm uppercase tracking-wider">{xl.yourPoints}</p>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-5xl font-display font-bold text-gold-400">{pointsData.balance}</span>
-                    <span className="text-gold-400/60">Punkte</span>
+                    <span className="text-gold-400/60">{xl.pointsUnit}</span>
                   </div>
-                  <p className="text-gold-400/60 text-sm mt-1">Wert: {pointsData.valueEur}€</p>
+                  <p className="text-gold-400/60 text-sm mt-1">{tr.dashboard.pointsValue}: {pointsData.valueEur}€</p>
                   <p className="text-white/30 text-xs mt-4">
-                    Punkte verfallen nach 6 Monaten ohne Besuch. 1 Punkt = 1 Cent. Sie erhalten 5% Cashback auf jede Buchung.
+                    {tr.dashboard.pointsExpiry}
                   </p>
                 </div>
 
                 {pointsData.transactions.length > 0 && (
                   <>
-                    <h3 className="text-white font-semibold mb-3">Transaktionen</h3>
+                    <h3 className="text-white font-semibold mb-3">{xl.transactionsLabel}</h3>
                     <div className="space-y-2">
                       {pointsData.transactions.map((tx) => (
                         <div key={tx.id} className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
                           <div>
-                            <p className="text-white text-sm">{tx.description ?? 'Transaktion'}</p>
+                            <p className="text-white text-sm">{tx.description ?? xl.transactionFallback}</p>
                             <p className="text-white/30 text-xs">
-                              {new Date(tx.createdAt).toLocaleDateString('de-DE')}
+                              {new Date(tx.createdAt).toLocaleDateString(getLocale(lang))}
                             </p>
                           </div>
                           <span className={`font-semibold ${tx.type === 'earned' ? 'text-green-400' : 'text-red-400'}`}>
@@ -405,7 +606,7 @@ export default function CustomerDashboard() {
                 )}
 
                 {pointsData.transactions.length === 0 && (
-                  <p className="text-white/40 text-sm text-center py-4">Noch keine Transaktionen.</p>
+                  <p className="text-white/40 text-sm text-center py-4">{xl.noTransactions}</p>
                 )}
               </>
             )}
@@ -424,10 +625,10 @@ export default function CustomerDashboard() {
             {/* Bewertungsformular */}
             {reviewBookingId ? (
               <div className="bg-white/5 rounded-2xl p-6 border border-white/10 mb-6">
-                <h3 className="text-white font-semibold mb-4">Bewertung schreiben</h3>
+                <h3 className="text-white font-semibold mb-4">{xl.reviewWriting}</h3>
                 <form onSubmit={handleReview}>
                   <div className="mb-4">
-                    <label className="text-white/40 text-sm block mb-2">Bewertung</label>
+                    <label className="text-white/40 text-sm block mb-2">{xl.ratingLabel}</label>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -448,14 +649,14 @@ export default function CustomerDashboard() {
                     </div>
                   </div>
                   <div className="mb-4">
-                    <label className="text-white/40 text-sm block mb-2">Kommentar (optional)</label>
+                    <label className="text-white/40 text-sm block mb-2">{xl.commentLabel}</label>
                     <textarea
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                       maxLength={1000}
                       rows={3}
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gold-500 resize-none"
-                      placeholder="Wie war Ihr Erlebnis?"
+                      placeholder={xl.commentPlaceholder}
                     />
                   </div>
                   {reviewError && (
@@ -472,14 +673,14 @@ export default function CustomerDashboard() {
                       }}
                       className="flex-1 py-2.5 rounded-lg border border-white/10 text-white/60 hover:text-white text-sm transition-colors"
                     >
-                      Abbrechen
+                      {tr.common.cancel}
                     </button>
                     <button
                       type="submit"
                       disabled={reviewLoading}
                       className="flex-1 py-2.5 rounded-lg bg-gold-500 text-surface-950 font-semibold text-sm hover:bg-gold-400 transition-colors disabled:opacity-50"
                     >
-                      {reviewLoading ? 'Wird gesendet...' : 'Bewertung abgeben'}
+                      {reviewLoading ? xl.reviewSubmitLoading : xl.reviewSubmit}
                     </button>
                   </div>
                 </form>
@@ -490,7 +691,7 @@ export default function CustomerDashboard() {
                 {bookings.filter((b) => b.status === 'completed').length > 0 ? (
                   <div className="space-y-3">
                     <p className="text-white/40 text-sm mb-3">
-                      Wählen Sie einen abgeschlossenen Termin, um eine Bewertung zu schreiben.
+                      {xl.selectCompleted}
                     </p>
                     {bookings.filter((b) => b.status === 'completed').map((apt) => (
                       <button
@@ -500,7 +701,7 @@ export default function CustomerDashboard() {
                       >
                         <h4 className="text-white font-medium">{apt.serviceName}</h4>
                         <p className="text-white/40 text-sm">
-                          {new Date(apt.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          {new Date(apt.date).toLocaleDateString(getLocale(lang), { day: 'numeric', month: 'long', year: 'numeric' })}
                         </p>
                       </button>
                     ))}
@@ -510,7 +711,7 @@ export default function CustomerDashboard() {
                     <svg className="w-12 h-12 text-white/20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
-                    <p className="text-white/40">Noch keine abgeschlossenen Termine zum Bewerten.</p>
+                    <p className="text-white/40">{xl.noCompleted}</p>
                   </div>
                 )}
               </div>
@@ -522,7 +723,7 @@ export default function CustomerDashboard() {
         {activeTab === 'settings' && (
           <div className="space-y-6">
             <div className="bg-white/5 rounded-xl p-6 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">Profil</h3>
+              <h3 className="text-white font-semibold mb-4">{xl.profile}</h3>
               <div className="space-y-3">
                 <div>
                   <label className="text-white/40 text-sm">Name</label>
@@ -535,15 +736,13 @@ export default function CustomerDashboard() {
               </div>
             </div>
             <div className="bg-white/5 rounded-xl p-6 border border-white/5">
-              <h3 className="text-white font-semibold mb-2">Zwei-Faktor-Authentifizierung</h3>
+              <h3 className="text-white font-semibold mb-2">{xl.twoFactor}</h3>
               <p className="text-white/40 text-sm mb-4">
-                {user?.totpEnabled
-                  ? 'Zwei-Faktor-Authentifizierung ist aktiviert.'
-                  : 'Schützen Sie Ihr Konto mit einem zusätzlichen Sicherheitscode.'}
+                {user?.totpEnabled ? xl.twoFactorEnabled : xl.twoFactorDisabled}
               </p>
               {!user?.totpEnabled && (
                 <button className="px-4 py-2 rounded-lg bg-gold-500/10 text-gold-400 text-sm font-medium hover:bg-gold-500/20 transition-colors">
-                  2FA einrichten
+                  {xl.setup2FA}
                 </button>
               )}
             </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { services, type Service, type ServiceCategory } from '../../data/services';
 import { api, getUser } from '../../lib/api';
+import { t, type Language } from '../../i18n/translations';
 
 type Step = 'service' | 'datetime' | 'confirm' | 'success';
 
@@ -20,16 +21,84 @@ interface CreateBookingResponse {
   booking: { id: string; serviceId: string; date: string; startTime: string; endTime: string; price: number };
 }
 
-const categoryLabels: Record<ServiceCategory, string> = {
-  haircut: 'Haarschnitte',
-  beard: 'Bart & Rasur',
-  face: 'Gesicht & Pflege',
-  color: 'Farbe & Styling',
-  kids: 'Kinder & Jugend',
-  specials: 'Angebote',
+interface Props {
+  lang?: Language;
+}
+
+const summaryLabels: Record<Language, { summary: string; date: string; time: string; duration: string; price: string; booked: string; payment: string; email: string; noSlots: string; slotsLoading: string; change: string }> = {
+  de: {
+    summary: 'Zusammenfassung',
+    date: 'Datum',
+    time: 'Uhrzeit',
+    duration: 'Dauer',
+    price: 'Preis',
+    booked: 'Termin gebucht!',
+    payment: 'Bezahlung erfolgt im Salon.',
+    email: 'Sie erhalten eine Bestätigung per E-Mail.',
+    noSlots: 'Keine Zeitslots verfügbar an diesem Tag (ggf. Sonntag oder Feiertag).',
+    slotsLoading: 'Zeitslots werden geladen...',
+    change: 'Ändern',
+  },
+  en: {
+    summary: 'Summary',
+    date: 'Date',
+    time: 'Time',
+    duration: 'Duration',
+    price: 'Price',
+    booked: 'Appointment booked!',
+    payment: 'Payment in salon.',
+    email: 'You will receive a confirmation by email.',
+    noSlots: 'No time slots available for this day.',
+    slotsLoading: 'Loading time slots...',
+    change: 'Change',
+  },
+  tr: {
+    summary: 'Özet',
+    date: 'Tarih',
+    time: 'Saat',
+    duration: 'Süre',
+    price: 'Fiyat',
+    booked: 'Randevu alındı!',
+    payment: 'Ödeme salonda yapılır.',
+    email: 'E-posta ile onay alacaksınız.',
+    noSlots: 'Bu gün için mevcut zaman dilimi yok.',
+    slotsLoading: 'Zaman dilimleri yükleniyor...',
+    change: 'Değiştir',
+  },
+  ar: {
+    summary: 'ملخص',
+    date: 'التاريخ',
+    time: 'الوقت',
+    duration: 'المدة',
+    price: 'السعر',
+    booked: 'تم الحجز!',
+    payment: 'الدفع في الصالون.',
+    email: 'ستصلك رسالة تأكيد بالبريد الإلكتروني.',
+    noSlots: 'لا توجد مواعيد متاحة لهذا اليوم.',
+    slotsLoading: 'جارٍ تحميل المواعيد...',
+    change: 'تغيير',
+  },
 };
 
-export default function BookingFlow() {
+const dashboardLabels: Record<Language, { toDashboard: string; toHome: string }> = {
+  de: { toDashboard: 'Zum Dashboard', toHome: 'Zur Startseite' },
+  en: { toDashboard: 'To Dashboard', toHome: 'To Home' },
+  tr: { toDashboard: 'Panele Git', toHome: 'Ana Sayfaya Git' },
+  ar: { toDashboard: 'إلى لوحة التحكم', toHome: 'إلى الرئيسية' },
+};
+
+function getLocale(lang: Language): string {
+  if (lang === 'de') return 'de-DE';
+  if (lang === 'en') return 'en-US';
+  if (lang === 'tr') return 'tr-TR';
+  return 'ar-SA';
+}
+
+export default function BookingFlow({ lang = 'de' }: Props) {
+  const tr = t(lang);
+  const labels = summaryLabels[lang];
+  const dbLabels = dashboardLabels[lang];
+
   const [step, setStep] = useState<Step>('service');
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -48,7 +117,7 @@ export default function BookingFlow() {
   useEffect(() => {
     getUser().then((user) => {
       if (!user) {
-        window.location.href = '/login';
+        window.location.href = lang === 'de' ? '/login' : `/${lang}/login`;
       } else {
         setAuthChecked(true);
       }
@@ -88,9 +157,9 @@ export default function BookingFlow() {
   }, [selectedDate, selectedService]);
 
   const steps: { key: Step; label: string; num: number }[] = [
-    { key: 'service', label: 'Service', num: 1 },
-    { key: 'datetime', label: 'Termin', num: 2 },
-    { key: 'confirm', label: 'Bestätigung', num: 3 },
+    { key: 'service', label: tr.booking.selectService, num: 1 },
+    { key: 'datetime', label: tr.booking.selectDate, num: 2 },
+    { key: 'confirm', label: tr.booking.confirm, num: 3 },
   ];
 
   const getMinDate = () => {
@@ -176,7 +245,7 @@ export default function BookingFlow() {
           >
             {/* Category Tabs */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {(Object.keys(categoryLabels) as ServiceCategory[]).map((cat) => (
+              {(Object.keys(tr.services.categories) as ServiceCategory[]).map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
@@ -186,7 +255,7 @@ export default function BookingFlow() {
                       : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  {categoryLabels[cat]}
+                  {tr.services.categories[cat]}
                 </button>
               ))}
             </div>
@@ -208,8 +277,8 @@ export default function BookingFlow() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-white font-medium">{service.name.de}</h3>
-                      <p className="text-white/40 text-sm mt-0.5">ca. {service.duration} Min.</p>
+                      <h3 className="text-white font-medium">{service.name[lang]}</h3>
+                      <p className="text-white/40 text-sm mt-0.5">{`ca. ${service.duration} ${tr.services.duration}`}</p>
                     </div>
                     <span className="text-gold-400 font-display font-bold text-xl">{service.price}€</span>
                   </div>
@@ -230,17 +299,17 @@ export default function BookingFlow() {
             {/* Selected Service Summary */}
             <div className="bg-white/5 rounded-xl p-4 mb-6 flex items-center justify-between">
               <div>
-                <p className="text-white font-medium">{selectedService?.name.de}</p>
-                <p className="text-white/40 text-sm">{selectedService?.duration} Min. · {selectedService?.price}€</p>
+                <p className="text-white font-medium">{selectedService?.name[lang]}</p>
+                <p className="text-white/40 text-sm">{selectedService?.duration} {tr.services.duration} · {selectedService?.price}€</p>
               </div>
               <button onClick={() => setStep('service')} className="text-gold-400 text-sm hover:text-gold-300">
-                Ändern
+                {labels.change}
               </button>
             </div>
 
             {/* Date Picker */}
             <div className="mb-6">
-              <label className="block text-white/60 text-sm mb-2">Datum wählen</label>
+              <label className="block text-white/60 text-sm mb-2">{tr.booking.selectDate}</label>
               <input
                 type="date"
                 min={getMinDate()}
@@ -253,12 +322,12 @@ export default function BookingFlow() {
             {/* Time Slots */}
             {selectedDate && (
               <div>
-                <label className="block text-white/60 text-sm mb-2">Uhrzeit wählen</label>
+                <label className="block text-white/60 text-sm mb-2">{tr.booking.selectTime}</label>
 
                 {slotsLoading && (
                   <div className="flex items-center justify-center py-8">
                     <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
-                    <span className="ml-3 text-white/40 text-sm">Zeitslots werden geladen...</span>
+                    <span className="ml-3 text-white/40 text-sm">{labels.slotsLoading}</span>
                   </div>
                 )}
 
@@ -270,7 +339,7 @@ export default function BookingFlow() {
 
                 {!slotsLoading && !slotsError && slots.length === 0 && (
                   <p className="text-white/40 text-sm py-4">
-                    Keine Zeitslots verfügbar an diesem Tag (ggf. Sonntag oder Feiertag).
+                    {labels.noSlots}
                   </p>
                 )}
 
@@ -303,14 +372,14 @@ export default function BookingFlow() {
                 onClick={() => setStep('service')}
                 className="flex-1 py-3 rounded-full border border-white/10 text-white/60 hover:text-white hover:border-white/20 transition-colors"
               >
-                Zurück
+                {tr.common.back}
               </button>
               <button
                 onClick={() => selectedDate && selectedTime && setStep('confirm')}
                 disabled={!selectedDate || !selectedTime}
                 className="flex-1 py-3 rounded-full bg-gold-500 text-surface-950 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gold-400 transition-colors"
               >
-                Weiter
+                {tr.common.next}
               </button>
             </div>
           </motion.div>
@@ -325,16 +394,16 @@ export default function BookingFlow() {
             exit={{ opacity: 0, x: -20 }}
           >
             <div className="bg-white/5 rounded-2xl p-6 space-y-4 mb-6">
-              <h3 className="text-white font-semibold text-lg">Zusammenfassung</h3>
+              <h3 className="text-white font-semibold text-lg">{labels.summary}</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-white/50">Service</span>
-                  <span className="text-white font-medium">{selectedService?.name.de}</span>
+                  <span className="text-white font-medium">{selectedService?.name[lang]}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/50">Datum</span>
+                  <span className="text-white/50">{labels.date}</span>
                   <span className="text-white font-medium">
-                    {selectedDate && new Date(selectedDate).toLocaleDateString('de-DE', {
+                    {selectedDate && new Date(selectedDate).toLocaleDateString(getLocale(lang), {
                       weekday: 'long',
                       day: 'numeric',
                       month: 'long',
@@ -343,15 +412,15 @@ export default function BookingFlow() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/50">Uhrzeit</span>
+                  <span className="text-white/50">{labels.time}</span>
                   <span className="text-white font-medium">{selectedTime} Uhr</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/50">Dauer</span>
-                  <span className="text-white font-medium">ca. {selectedService?.duration} Min.</span>
+                  <span className="text-white/50">{labels.duration}</span>
+                  <span className="text-white font-medium">{`ca. ${selectedService?.duration} ${tr.services.duration}`}</span>
                 </div>
                 <div className="border-t border-white/10 pt-3 flex justify-between">
-                  <span className="text-white font-medium">Preis</span>
+                  <span className="text-white font-medium">{labels.price}</span>
                   <span className="text-gold-400 font-display font-bold text-xl">{selectedService?.price}€</span>
                 </div>
               </div>
@@ -364,8 +433,8 @@ export default function BookingFlow() {
             )}
 
             <p className="text-white/40 text-xs text-center mb-6">
-              Kostenlose Stornierung bis 24 Stunden vor dem Termin.
-              Bezahlung erfolgt im Salon.
+              {tr.booking.cancelPolicy}{' '}
+              {labels.payment}
             </p>
 
             <div className="flex gap-3">
@@ -374,7 +443,7 @@ export default function BookingFlow() {
                 disabled={bookingLoading}
                 className="flex-1 py-3 rounded-full border border-white/10 text-white/60 hover:text-white hover:border-white/20 transition-colors disabled:opacity-50"
               >
-                Zurück
+                {tr.common.back}
               </button>
               <button
                 onClick={handleConfirm}
@@ -384,10 +453,10 @@ export default function BookingFlow() {
                 {bookingLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-surface-950 border-t-transparent rounded-full animate-spin" />
-                    Wird gebucht...
+                    {tr.common.loading}
                   </>
                 ) : (
-                  'Termin bestätigen'
+                  tr.booking.confirm
                 )}
               </button>
             </div>
@@ -412,24 +481,29 @@ export default function BookingFlow() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </motion.div>
-            <h2 className="text-2xl font-display font-bold text-white">Termin gebucht!</h2>
+            <h2 className="text-2xl font-display font-bold text-white">{labels.booked}</h2>
             <p className="mt-2 text-white/50">
-              Ihr Termin am{' '}
-              {selectedDate && new Date(selectedDate).toLocaleDateString('de-DE', {
+              {selectedDate && new Date(selectedDate).toLocaleDateString(getLocale(lang), {
                 day: 'numeric',
                 month: 'long',
               })}{' '}
-              um {selectedTime} Uhr wurde bestätigt.
+              {selectedTime} Uhr
             </p>
             <p className="mt-1 text-white/40 text-sm">
-              Sie erhalten eine Bestätigung per E-Mail.
+              {labels.email}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="/dashboard" className="px-6 py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors">
-                Zum Dashboard
+              <a
+                href={lang === 'de' ? '/dashboard' : '/' + lang + '/dashboard'}
+                className="px-6 py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors"
+              >
+                {dbLabels.toDashboard}
               </a>
-              <a href="/" className="px-6 py-3 rounded-full border border-white/10 text-white/60 hover:text-white transition-colors">
-                Zur Startseite
+              <a
+                href={lang === 'de' ? '/' : '/' + lang}
+                className="px-6 py-3 rounded-full border border-white/10 text-white/60 hover:text-white transition-colors"
+              >
+                {dbLabels.toHome}
               </a>
             </div>
           </motion.div>

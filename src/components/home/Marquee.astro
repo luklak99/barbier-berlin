@@ -18,7 +18,7 @@ const currentItems = items[lang];
 ---
 
 <div class="relative py-6 overflow-hidden border-y border-white/[0.04]" style="background: rgba(200,165,90,0.03);">
-  <div class="marquee-track flex gap-8 whitespace-nowrap" style="width: max-content;">
+  <div class={`marquee-track flex gap-8 whitespace-nowrap ${lang === 'ar' ? 'marquee-rtl' : ''}`} style="width: max-content;">
     {[...Array(3)].map(() => (
       <div class="flex items-center gap-8 text-sm font-display font-semibold uppercase tracking-[0.25em]" style="color: rgba(200,165,90,0.35);">
         {currentItems.map((item, i) => (
@@ -39,8 +39,15 @@ const currentItems = items[lang];
   .marquee-track {
     animation: marqueeScroll 25s linear infinite;
   }
+  .marquee-rtl {
+    animation: marqueeScrollRtl 25s linear infinite;
+  }
   @keyframes marqueeScroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-33.333%); }
+  }
+  @keyframes marqueeScrollRtl {
+    0% { transform: translateX(-33.333%); }
+    100% { transform: translateX(0); }
   }
 </style>

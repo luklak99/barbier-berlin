@@ -1,11 +1,50 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { t, type Language } from '../../i18n/translations';
 
 interface Props {
   mode: 'login' | 'register';
+  lang?: Language;
 }
 
-export default function AuthForm({ mode }: Props) {
+const namePlaceholders: Record<Language, string> = {
+  de: 'Max Mustermann',
+  en: 'John Doe',
+  tr: 'Ahmet Yılmaz',
+  ar: 'محمد العلي',
+};
+
+const passwordPlaceholders: Record<Language, string> = {
+  de: 'Mindestens 8 Zeichen',
+  en: 'At least 8 characters',
+  tr: 'En az 8 karakter',
+  ar: '8 أحرف على الأقل',
+};
+
+const passwordRepeatPlaceholders: Record<Language, string> = {
+  de: 'Passwort wiederholen',
+  en: 'Repeat password',
+  tr: 'Şifreyi tekrarlayın',
+  ar: 'أعد كلمة المرور',
+};
+
+const passwordMismatchErrors: Record<Language, string> = {
+  de: 'Passwörter stimmen nicht überein.',
+  en: 'Passwords do not match.',
+  tr: 'Şifreler eşleşmiyor.',
+  ar: 'كلمتا المرور غير متطابقتين.',
+};
+
+const connectionErrors: Record<Language, string> = {
+  de: 'Verbindungsfehler. Bitte versuchen Sie es erneut.',
+  en: 'Connection error. Please try again.',
+  tr: 'Bağlantı hatası. Lütfen tekrar deneyin.',
+  ar: 'خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
+};
+
+export default function AuthForm({ mode, lang = 'de' }: Props) {
+  const tr = t(lang);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,13 +55,16 @@ export default function AuthForm({ mode }: Props) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const registerHref = lang === 'de' ? '/register' : '/' + lang + '/register';
+  const loginHref = lang === 'de' ? '/login' : '/' + lang + '/login';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     if (mode === 'register' && password !== confirmPassword) {
-      setError('Passwörter stimmen nicht überein.');
+      setError(passwordMismatchErrors[lang]);
       setLoading(false);
       return;
     }
@@ -47,14 +89,14 @@ export default function AuthForm({ mode }: Props) {
           setLoading(false);
           return;
         }
-        setError(data.error || 'Ein Fehler ist aufgetreten.');
+        setError(data.error || tr.common.error);
         setLoading(false);
         return;
       }
 
-      window.location.href = data.redirect || '/dashboard';
+      window.location.href = data.redirect || (lang === 'de' ? '/dashboard' : `/${lang}/dashboard`);
     } catch {
-      setError('Verbindungsfehler. Bitte versuchen Sie es erneut.');
+      setError(connectionErrors[lang]);
       setLoading(false);
     }
   };
@@ -75,18 +117,18 @@ export default function AuthForm({ mode }: Props) {
       {mode === 'register' && (
         <>
           <div>
-            <label className="block text-white/60 text-sm mb-1.5">Vollständiger Name</label>
+            <label className="block text-white/60 text-sm mb-1.5">{tr.auth.name}</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
-              placeholder="Max Mustermann"
+              placeholder={namePlaceholders[lang]}
             />
           </div>
           <div>
-            <label className="block text-white/60 text-sm mb-1.5">Telefonnummer</label>
+            <label className="block text-white/60 text-sm mb-1.5">{tr.auth.phone}</label>
             <input
               type="tel"
               value={phone}
@@ -99,7 +141,7 @@ export default function AuthForm({ mode }: Props) {
       )}
 
       <div>
-        <label className="block text-white/60 text-sm mb-1.5">E-Mail-Adresse</label>
+        <label className="block text-white/60 text-sm mb-1.5">{tr.auth.email}</label>
         <input
           type="email"
           required
@@ -111,7 +153,7 @@ export default function AuthForm({ mode }: Props) {
       </div>
 
       <div>
-        <label className="block text-white/60 text-sm mb-1.5">Passwort</label>
+        <label className="block text-white/60 text-sm mb-1.5">{tr.auth.password}</label>
         <input
           type="password"
           required
@@ -119,27 +161,27 @@ export default function AuthForm({ mode }: Props) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
-          placeholder="Mindestens 8 Zeichen"
+          placeholder={passwordPlaceholders[lang]}
         />
       </div>
 
       {mode === 'register' && (
         <div>
-          <label className="block text-white/60 text-sm mb-1.5">Passwort bestätigen</label>
+          <label className="block text-white/60 text-sm mb-1.5">{tr.auth.confirmPassword}</label>
           <input
             type="password"
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
-            placeholder="Passwort wiederholen"
+            placeholder={passwordRepeatPlaceholders[lang]}
           />
         </div>
       )}
 
       {showMfa && (
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-          <label className="block text-white/60 text-sm mb-1.5">2FA-Code</label>
+          <label className="block text-white/60 text-sm mb-1.5">{tr.auth.mfaCode}</label>
           <input
             type="text"
             inputMode="numeric"
@@ -159,21 +201,21 @@ export default function AuthForm({ mode }: Props) {
         disabled={loading}
         className="w-full py-3.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-surface-950 font-semibold hover:from-gold-400 hover:to-gold-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? 'Laden...' : mode === 'login' ? 'Anmelden' : 'Konto erstellen'}
+        {loading ? tr.common.loading : mode === 'login' ? tr.auth.login : tr.auth.register}
       </button>
 
       {mode === 'login' ? (
         <p className="text-center text-white/40 text-sm">
-          Noch kein Konto?{' '}
-          <a href="/register" className="text-gold-400 hover:text-gold-300 transition-colors">
-            Jetzt registrieren
+          {tr.auth.noAccount}{' '}
+          <a href={registerHref} className="text-gold-400 hover:text-gold-300 transition-colors">
+            {tr.auth.register}
           </a>
         </p>
       ) : (
         <p className="text-center text-white/40 text-sm">
-          Bereits ein Konto?{' '}
-          <a href="/login" className="text-gold-400 hover:text-gold-300 transition-colors">
-            Anmelden
+          {tr.auth.hasAccount}{' '}
+          <a href={loginHref} className="text-gold-400 hover:text-gold-300 transition-colors">
+            {tr.auth.login}
           </a>
         </p>
       )}

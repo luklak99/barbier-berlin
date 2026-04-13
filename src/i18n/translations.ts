@@ -9,6 +9,22 @@ export type Language = keyof typeof languages;
 
 export const defaultLang: Language = 'de';
 
+type TranslationShape = {
+  nav: { home: string; services: string; gallery: string; about: string; contact: string; booking: string; login: string; dashboard: string; admin: string };
+  hero: { title: string; subtitle: string; cta: string; secondaryCta: string; stats: { rating: string; reviews: string; experience: string } };
+  services: { title: string; subtitle: string; bookNow: string; duration: string; categories: { haircut: string; beard: string; face: string; color: string; kids: string; specials: string } };
+  gallery: { title: string; subtitle: string };
+  about: { title: string; subtitle: string; story: string; values: string; owner: string };
+  contact: { title: string; subtitle: string; address: string; phone: string; email: string; hours: string; getDirections: string };
+  booking: { title: string; selectService: string; selectDate: string; selectTime: string; confirm: string; success: string; cancel: string; reschedule: string; cancelPolicy: string };
+  auth: { login: string; register: string; email: string; password: string; confirmPassword: string; name: string; phone: string; mfaSetup: string; mfaCode: string; forgotPassword: string; noAccount: string; hasAccount: string };
+  dashboard: { title: string; appointments: string; points: string; reviews: string; upcoming: string; past: string; pointsBalance: string; pointsValue: string; pointsExpiry: string; writeReview: string };
+  admin: { title: string; todayAppointments: string; allAppointments: string; customers: string; walkIn: string; paymentStatus: string; paidWithPoints: string; paymentPending: string };
+  home: { servicesLabel: string; servicesTitle: string; servicesSubtitle: string; viewAllServices: string; ctaPre: string; ctaHighlight: string; ctaSubtitle: string; ctaButton: string; reviewsLabel: string; reviewsTitle: string; reviewsRating: string };
+  footer: { rights: string; imprint: string; privacy: string; followUs: string };
+  common: { loading: string; error: string; save: string; cancel: string; back: string; next: string; close: string; monday: string; tuesday: string; wednesday: string; thursday: string; friday: string; saturday: string; sunday: string; closed: string };
+};
+
 export const translations = {
   de: {
     nav: {
@@ -574,7 +590,7 @@ export const translations = {
       closed: 'مغلق',
     },
   },
-} as const;
+} as const satisfies Record<Language, TranslationShape>;
 
 export function t(lang: Language) {
   return translations[lang] || translations.de;

@@ -27,6 +27,10 @@ export async function POST(context: APIContext) {
   const bookingId = validateBookingId(body.bookingId);
   if (!bookingId) return errorResponse('Buchungs-ID fehlt.');
 
+  const lang = (['de', 'en', 'tr', 'ar'] as const).includes(body.lang as 'de' | 'en' | 'tr' | 'ar')
+    ? (body.lang as 'de' | 'en' | 'tr' | 'ar')
+    : ('de' as const);
+
   // Get the booking
   const result = await db
     .select()
@@ -85,6 +89,7 @@ export async function POST(context: APIContext) {
       date: booking.date,
       startTime: booking.startTime,
       bookingId,
+      lang,
     }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
   }
 

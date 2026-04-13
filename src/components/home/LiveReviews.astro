@@ -81,7 +81,7 @@ const allReviews = [...reviews, ...reviews, ...reviews];
       <div class="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style="background: linear-gradient(to left, #0a0a0c, transparent);"></div>
 
       <div class="overflow-hidden">
-        <div id="reviews-scroll-track" class="flex gap-6" style="animation: scroll-testimonials 40s linear infinite; width: max-content;">
+        <div id="reviews-scroll-track" class="flex gap-6" style={`animation: ${lang === 'ar' ? 'scroll-testimonials-rtl' : 'scroll-testimonials'} 40s linear infinite; width: max-content;`}>
           {allReviews.map((review) => (
             <div
               class="flex-shrink-0 w-80 rounded-2xl p-6"
@@ -110,6 +110,10 @@ const allReviews = [...reviews, ...reviews, ...reviews];
   @keyframes scroll-testimonials {
     0% { transform: translateX(0); }
     100% { transform: translateX(calc(-344px * 6)); }
+  }
+  @keyframes scroll-testimonials-rtl {
+    0% { transform: translateX(calc(-344px * 6)); }
+    100% { transform: translateX(0); }
   }
 </style>
 

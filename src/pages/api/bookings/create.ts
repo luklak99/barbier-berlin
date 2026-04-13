@@ -31,6 +31,9 @@ export async function POST(context: APIContext) {
   const serviceId = validateServiceId(body.serviceId);
   const date = validateDate(body.date);
   const startTime = validateTime(body.startTime);
+  const lang = (['de', 'en', 'tr', 'ar'] as const).includes(body.lang as 'de' | 'en' | 'tr' | 'ar')
+    ? (body.lang as 'de' | 'en' | 'tr' | 'ar')
+    : ('de' as const);
 
   if (!serviceId) return errorResponse('Ungültiger Service.');
   if (!date) return errorResponse('Ungültiges Datum.');
@@ -91,6 +94,7 @@ export async function POST(context: APIContext) {
       endTime,
       price: service.price,
       bookingId,
+      lang,
     }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
   }
 

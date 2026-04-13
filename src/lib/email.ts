@@ -61,29 +61,60 @@ async function sendViaBrevo(
 
 // --- Public API ---
 
-export interface BookingConfirmationParams extends BookingEmailData { to: string; }
-export interface BookingCancellationParams extends CancellationEmailData { to: string; }
-export interface BookingReminderParams extends ReminderEmailData { to: string; }
+type EmailLang = 'de' | 'en' | 'tr' | 'ar';
+
+function confirmationSubject(serviceName: string, date: string, lang: EmailLang): string {
+  const d = fmtDate(date);
+  switch (lang) {
+    case 'en': return `Booking confirmed: ${serviceName} on ${d}`;
+    case 'tr': return `Randevu onaylandı: ${serviceName} - ${d}`;
+    case 'ar': return `تأكيد الحجز: ${serviceName} في ${d}`;
+    default:   return `Buchung bestätigt: ${serviceName} am ${d}`;
+  }
+}
+
+function cancellationSubject(serviceName: string, date: string, lang: EmailLang): string {
+  const d = fmtDate(date);
+  switch (lang) {
+    case 'en': return `Appointment cancelled: ${serviceName} on ${d}`;
+    case 'tr': return `Randevu iptal edildi: ${serviceName} - ${d}`;
+    case 'ar': return `تم إلغاء الموعد: ${serviceName} في ${d}`;
+    default:   return `Termin storniert: ${serviceName} am ${d}`;
+  }
+}
+
+function reminderSubject(startTime: string, lang: EmailLang): string {
+  switch (lang) {
+    case 'en': return `Reminder: Your appointment tomorrow at ${startTime}`;
+    case 'tr': return `Hatırlatma: Randevunuz yarın saat ${startTime}`;
+    case 'ar': return `تذكير: موعدك غداً الساعة ${startTime}`;
+    default:   return `Erinnerung: Ihr Termin morgen um ${startTime} Uhr`;
+  }
+}
+
+export interface BookingConfirmationParams extends BookingEmailData { to: string; lang?: EmailLang; }
+export interface BookingCancellationParams extends CancellationEmailData { to: string; lang?: EmailLang; }
+export interface BookingReminderParams extends ReminderEmailData { to: string; lang?: EmailLang; }
 export interface WelcomeEmailParams extends WelcomeEmailData { to: string; }
 
 export async function sendBookingConfirmation(env: EmailEnv, params: BookingConfirmationParams): Promise<void> {
-  const { to, ...data } = params;
+  const { to, lang = 'de', ...data } = params;
   await sendViaBrevo(env, to,
-    `Buchung bestätigt: ${data.serviceName} am ${fmtDate(data.date)}`,
+    confirmationSubject(data.serviceName, data.date, lang),
     bookingConfirmationHtml(data), bookingConfirmationText(data));
 }
 
 export async function sendBookingCancellation(env: EmailEnv, params: BookingCancellationParams): Promise<void> {
-  const { to, ...data } = params;
+  const { to, lang = 'de', ...data } = params;
   await sendViaBrevo(env, to,
-    `Termin storniert: ${data.serviceName} am ${fmtDate(data.date)}`,
+    cancellationSubject(data.serviceName, data.date, lang),
     bookingCancellationHtml(data), bookingCancellationText(data));
 }
 
 export async function sendBookingReminder(env: EmailEnv, params: BookingReminderParams): Promise<void> {
-  const { to, ...data } = params;
+  const { to, lang = 'de', ...data } = params;
   await sendViaBrevo(env, to,
-    `Erinnerung: Ihr Termin morgen um ${data.startTime} Uhr`,
+    reminderSubject(data.startTime, lang),
     bookingReminderHtml(data), bookingReminderText(data));
 }
 
