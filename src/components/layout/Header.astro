@@ -8,6 +8,20 @@ interface Props {
 
 const { lang = 'de' } = Astro.props;
 const tr = t(lang);
+
+// Compute base path (without language prefix) for language switcher
+const currentPath = Astro.url.pathname;
+const basePath = currentPath.replace(/^\/(en|tr|ar)(\/|$)/, '/');
+const basePage = basePath === '/' ? '' : basePath;
+const prefix = lang === 'de' ? '' : `/${lang}`;
+const homeHref = prefix || '/';
+
+// Build href for switching to a target language while staying on the same page
+function langUrl(code: string): string {
+  const p = code === 'de' ? '' : `/${code}`;
+  return `${p}${basePage}` || '/';
+}
+const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, langUrl(code)])) as Record<string, string>;
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="main-header">
@@ -15,7 +29,7 @@ const tr = t(lang);
   <nav class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-18 transition-all duration-500" id="header-inner">
       <!-- Logo -->
-      <a href={`/${lang === 'de' ? '' : lang}`} class="flex items-center gap-3 group">
+      <a href={homeHref} class="flex items-center gap-3 group">
         <img
           src="/images/logo.svg"
           alt="Barbier Berlin Logo"
@@ -31,11 +45,11 @@ const tr = t(lang);
 
       <!-- Desktop Navigation -->
       <div class="hidden lg:flex items-center gap-1">
-        <a href="/" class="nav-link">{tr.nav.home}</a>
-        <a href="/services" class="nav-link">{tr.nav.services}</a>
-        <a href="/gallery" class="nav-link">{tr.nav.gallery}</a>
-        <a href="/about" class="nav-link">{tr.nav.about}</a>
-        <a href="/contact" class="nav-link">{tr.nav.contact}</a>
+        <a href={homeHref} class="nav-link">{tr.nav.home}</a>
+        <a href={`${prefix}/services`} class="nav-link">{tr.nav.services}</a>
+        <a href={`${prefix}/gallery`} class="nav-link">{tr.nav.gallery}</a>
+        <a href={`${prefix}/about`} class="nav-link">{tr.nav.about}</a>
+        <a href={`${prefix}/contact`} class="nav-link">{tr.nav.contact}</a>
       </div>
 
       <!-- Right Side -->
@@ -49,7 +63,7 @@ const tr = t(lang);
           <div class="absolute right-0 top-full mt-2 bg-[#0a0a0c]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl shadow-black/40">
             {Object.entries(languages).map(([code, name]) => (
               <a
-                href={code === 'de' ? '/' : `/${code}`}
+                href={langUrls[code]}
                 class={`block px-5 py-2 text-sm whitespace-nowrap transition-colors ${
                   code === lang ? 'text-[#C8A55A]' : 'text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.04]'
                 }`}
@@ -60,11 +74,11 @@ const tr = t(lang);
           </div>
         </div>
 
-        <a href="/login" class="text-[#8A8F98] hover:text-[#EDEDEF] text-sm transition-colors px-3 py-2">
+        <a href={`${prefix}/login`} class="text-[#8A8F98] hover:text-[#EDEDEF] text-sm transition-colors px-3 py-2">
           {tr.nav.login}
         </a>
         <a
-          href="/booking"
+          href={`${prefix}/booking`}
           class="bg-gradient-to-r from-[#C8A55A] to-[#B8953A] hover:from-[#D8B56A] hover:to-[#C8A55A] text-[#050506] font-semibold text-sm px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg shadow-[#C8A55A]/20 hover:shadow-xl hover:shadow-[#C8A55A]/30 active:scale-95"
         >
           {tr.nav.booking}
@@ -72,7 +86,7 @@ const tr = t(lang);
       </div>
 
       <!-- Mobile Menu Button -->
-      <MobileNav lang={lang} client:load />
+      <MobileNav lang={lang} prefix={prefix} langUrls={langUrls} client:load />
     </div>
   </nav>
 </header>

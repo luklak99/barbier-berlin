@@ -24,9 +24,14 @@ export const translations = {
     },
     hero: {
       title: 'Barbier Berlin',
-      subtitle: 'Ihr Premium-Barbershop in Kreuzberg',
+      subtitle: 'Erstklassige Haarschnitte, präzise Rasur und premium Pflege — seit 2020 Ihr Barbershop im Herzen von Berlin-Kreuzberg.',
       cta: 'Jetzt Termin buchen',
       secondaryCta: 'Unsere Services',
+      stats: {
+        rating: 'Bewertung',
+        reviews: 'Bewertungen',
+        experience: 'Jahre Erfahrung',
+      },
     },
     services: {
       title: 'Services & Preise',
@@ -109,6 +114,19 @@ export const translations = {
       paidWithPoints: 'Mit Punkten bezahlt',
       paymentPending: 'Zahlung ausstehend',
     },
+    home: {
+      servicesLabel: 'Unsere Services',
+      servicesTitle: 'Erstklassige Pflege',
+      servicesSubtitle: 'Von präzisen Haarschnitten bis zur klassischen Nassrasur — wir bieten das volle Programm für den modernen Mann.',
+      viewAllServices: 'Alle Services & Preise ansehen',
+      ctaPre: 'Bereit für einen',
+      ctaHighlight: 'neuen Look',
+      ctaSubtitle: 'Buchen Sie Ihren Termin in wenigen Sekunden — online, einfach und bequem.',
+      ctaButton: 'Termin buchen',
+      reviewsLabel: 'Bewertungen',
+      reviewsTitle: 'Was unsere Kunden sagen',
+      reviewsRating: '/ 5 — über 1.400 Bewertungen',
+    },
     footer: {
       rights: 'Alle Rechte vorbehalten.',
       imprint: 'Impressum',
@@ -147,9 +165,14 @@ export const translations = {
     },
     hero: {
       title: 'Barbier Berlin',
-      subtitle: 'Your Premium Barbershop in Kreuzberg',
+      subtitle: 'First-class haircuts, precise shaves and premium care — your barbershop in the heart of Berlin-Kreuzberg since 2020.',
       cta: 'Book Appointment',
       secondaryCta: 'Our Services',
+      stats: {
+        rating: 'Rating',
+        reviews: 'Reviews',
+        experience: 'Years Experience',
+      },
     },
     services: {
       title: 'Services & Prices',
@@ -232,6 +255,19 @@ export const translations = {
       paidWithPoints: 'Paid with Points',
       paymentPending: 'Payment Pending',
     },
+    home: {
+      servicesLabel: 'Our Services',
+      servicesTitle: 'First-class Grooming',
+      servicesSubtitle: 'From precise haircuts to classic wet shaves — we offer the full programme for the modern man.',
+      viewAllServices: 'View all services & prices',
+      ctaPre: 'Ready for a',
+      ctaHighlight: 'new look',
+      ctaSubtitle: 'Book your appointment in seconds — online, easy and convenient.',
+      ctaButton: 'Book Appointment',
+      reviewsLabel: 'Reviews',
+      reviewsTitle: 'What our customers say',
+      reviewsRating: '/ 5 — over 1,400 reviews',
+    },
     footer: {
       rights: 'All rights reserved.',
       imprint: 'Imprint',
@@ -270,9 +306,14 @@ export const translations = {
     },
     hero: {
       title: 'Barbier Berlin',
-      subtitle: "Kreuzberg'deki Premium Berberiniz",
+      subtitle: 'Birinci sınıf saç kesimleri, hassas tıraş ve premium bakım — 2020\'den beri Berlin-Kreuzberg\'in kalbindeki berberiniz.',
       cta: 'Randevu Al',
       secondaryCta: 'Hizmetlerimiz',
+      stats: {
+        rating: 'Değerlendirme',
+        reviews: 'Yorumlar',
+        experience: 'Yıllık Deneyim',
+      },
     },
     services: {
       title: 'Hizmetler & Fiyatlar',
@@ -355,6 +396,19 @@ export const translations = {
       paidWithPoints: 'Puanla Odendi',
       paymentPending: 'Odeme Bekliyor',
     },
+    home: {
+      servicesLabel: 'Hizmetlerimiz',
+      servicesTitle: 'Birinci Sınıf Bakım',
+      servicesSubtitle: 'Hassas saç kesimlerinden klasik ıslak tıraşa kadar — modern erkek için tüm programı sunuyoruz.',
+      viewAllServices: 'Tüm hizmetler & fiyatlar',
+      ctaPre: 'Yeni bir görünüme',
+      ctaHighlight: 'hazır mısınız',
+      ctaSubtitle: 'Randevunuzu saniyeler içinde alın — online, kolay ve rahat.',
+      ctaButton: 'Randevu Al',
+      reviewsLabel: 'Değerlendirmeler',
+      reviewsTitle: 'Müşterilerimiz ne diyor',
+      reviewsRating: '/ 5 — 1.400\'den fazla değerlendirme',
+    },
     footer: {
       rights: 'Tum haklari saklidir.',
       imprint: 'Kunye',
@@ -393,9 +447,14 @@ export const translations = {
     },
     hero: {
       title: 'باربير برلين',
-      subtitle: 'صالون الحلاقة المميز في كرويتسبرغ',
+      subtitle: 'قصات شعر من الدرجة الأولى، حلاقة دقيقة وعناية ممتازة — صالون الحلاقة الخاص بكم في قلب برلين-كرويتسبرغ منذ عام 2020.',
       cta: 'احجز موعدك',
       secondaryCta: 'خدماتنا',
+      stats: {
+        rating: 'تقييم',
+        reviews: 'تقييمات',
+        experience: 'سنوات خبرة',
+      },
     },
     services: {
       title: 'الخدمات والأسعار',
@@ -477,6 +536,19 @@ export const translations = {
       paymentStatus: 'حالة الدفع',
       paidWithPoints: 'مدفوع بالنقاط',
       paymentPending: 'في انتظار الدفع',
+    },
+    home: {
+      servicesLabel: 'خدماتنا',
+      servicesTitle: 'عناية راقية',
+      servicesSubtitle: 'من قصات الشعر الدقيقة إلى الحلاقة الكلاسيكية الرطبة — نقدم البرنامج الكامل للرجل العصري.',
+      viewAllServices: 'عرض جميع الخدمات والأسعار',
+      ctaPre: 'مستعد لـ',
+      ctaHighlight: 'إطلالة جديدة',
+      ctaSubtitle: 'احجز موعدك في ثوانٍ — أونلاين، سهل ومريح.',
+      ctaButton: 'احجز موعدًا',
+      reviewsLabel: 'التقييمات',
+      reviewsTitle: 'ماذا يقول عملاؤنا',
+      reviewsRating: '/ 5 — أكثر من 1,400 تقييم',
     },
     footer: {
       rights: 'جميع الحقوق محفوظة.',

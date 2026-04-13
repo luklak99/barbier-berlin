@@ -1,31 +1,48 @@
 ---
 // Features Section — Pure Astro, no React, no Framer Motion
+import type { Language } from '../../i18n/translations';
 
-const features = [
-  {
-    iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
-    title: 'Online Buchung',
-    description: 'Buchen Sie Ihren Termin bequem online — 24/7, ohne Anruf.',
-  },
-  {
-    iconPath: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z',
-    title: 'Bonuspunkte',
-    description: '5% Cashback als Punkte auf jede Buchung. Sammeln und einlösen.',
-  },
-  {
-    iconPath: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
-    title: 'Premium Qualität',
-    description: 'Hochwertige Produkte und präzise Handwerkskunst — ohne Kompromisse.',
-  },
-  {
-    iconPaths: [
-      'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z',
-      'M15 11a3 3 0 11-6 0 3 3 0 016 0z',
-    ],
-    title: 'Kreuzberg',
-    description: 'Zentral gelegen in der Markgrafenstraße — perfekt erreichbar mit U-Bahn.',
-  },
+interface Props {
+  lang?: Language;
+}
+
+const { lang = 'de' } = Astro.props;
+
+const featureTranslations: Record<Language, { title: string; description: string }[]> = {
+  de: [
+    { title: 'Online Buchung', description: 'Buchen Sie Ihren Termin bequem online — 24/7, ohne Anruf.' },
+    { title: 'Bonuspunkte', description: '5% Cashback als Punkte auf jede Buchung. Sammeln und einlösen.' },
+    { title: 'Premium Qualität', description: 'Hochwertige Produkte und präzise Handwerkskunst — ohne Kompromisse.' },
+    { title: 'Kreuzberg', description: 'Zentral gelegen in der Markgrafenstraße — perfekt erreichbar mit U-Bahn.' },
+  ],
+  en: [
+    { title: 'Online Booking', description: 'Book your appointment online conveniently — 24/7, no phone call needed.' },
+    { title: 'Bonus Points', description: '5% cashback as points on every booking. Collect and redeem.' },
+    { title: 'Premium Quality', description: 'High-quality products and precise craftsmanship — without compromise.' },
+    { title: 'Kreuzberg', description: 'Centrally located on Markgrafenstraße — easily accessible by U-Bahn.' },
+  ],
+  tr: [
+    { title: 'Online Randevu', description: 'Randevunuzu online kolayca alın — 7/24, telefon araması gerekmez.' },
+    { title: 'Bonus Puanlar', description: 'Her rezervasyonda %5 geri ödeme puan olarak. Biriktir ve kullan.' },
+    { title: 'Premium Kalite', description: 'Yüksek kaliteli ürünler ve hassas ustalık — taviz vermeksizin.' },
+    { title: 'Kreuzberg', description: "Markgrafenstraße'da merkezi konumda — metro ile kolayca ulaşılabilir." },
+  ],
+  ar: [
+    { title: 'الحجز أونلاين', description: 'احجز موعدك أونلاين بكل سهولة — 24/7، دون الحاجة للاتصال.' },
+    { title: 'نقاط المكافأة', description: 'استرداد 5% كنقاط على كل حجز. اجمع واسترد.' },
+    { title: 'جودة مميزة', description: 'منتجات عالية الجودة وحرفية دقيقة — دون تنازلات.' },
+    { title: 'كرويتسبرغ', description: 'موقع مركزي في Markgrafenstraße — يمكن الوصول إليه بسهولة بالمترو.' },
+  ],
+};
+
+const iconPaths = [
+  { single: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { single: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' },
+  { single: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+  { multi: ['M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z', 'M15 11a3 3 0 11-6 0 3 3 0 016 0z'] },
 ];
+
+const features = featureTranslations[lang];
 ---
 
 <section
@@ -57,12 +74,12 @@ const features = [
             style="background: rgba(200,165,90,0.08); border: 1px solid rgba(200,165,90,0.15); color: #C8A55A; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 0 20px rgba(200,165,90,0.08), inset 0 1px 0 0 rgba(200,165,90,0.1);"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {feature.iconPaths ? (
-                feature.iconPaths.map((p) => (
+              {'multi' in iconPaths[i] ? (
+                (iconPaths[i] as { multi: string[] }).multi.map((p) => (
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={p} />
                 ))
               ) : (
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={feature.iconPath} />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={(iconPaths[i] as { single: string }).single} />
               )}
             </svg>
           </div>

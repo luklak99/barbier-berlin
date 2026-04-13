@@ -1,17 +1,53 @@
 ---
 // LiveReviews Section — Pure Astro, no React, no Framer Motion
+import { t, type Language } from '../../i18n/translations';
 
-const fallbackReviews = [
-  { id: 'f1', rating: 5, text: 'Bester Barbershop in ganz Berlin! Mohammed nimmt sich immer Zeit und das Ergebnis ist jedes Mal perfekt.', userName: 'Marco S.' },
-  { id: 'f2', rating: 5, text: 'Seit Jahren mein Stammfriseur. Faire Preise, top Qualität und immer eine angenehme Atmosphäre.', userName: 'Ahmet K.' },
-  { id: 'f3', rating: 5, text: 'Die Nassrasur ist ein Erlebnis! Dazu Tee und nette Unterhaltung — besser geht es nicht.', userName: 'Jonas W.' },
-  { id: 'f4', rating: 5, text: 'Professionell, freundlich und präzise. Kann ich jedem nur empfehlen.', userName: 'David M.' },
-  { id: 'f5', rating: 5, text: 'Hervorragendes Preis-Leistungsverhältnis. Die Bartpflege hier ist die beste.', userName: 'Kemal Y.' },
-  { id: 'f6', rating: 5, text: 'Kreuzbergs Geheimtipp! Komme extra aus Charlottenburg hierher.', userName: 'Stefan R.' },
-];
+interface Props {
+  lang?: Language;
+}
 
-// SSR: Render fallback reviews tripled for seamless infinite scroll
-const allReviews = [...fallbackReviews, ...fallbackReviews, ...fallbackReviews];
+const { lang = 'de' } = Astro.props;
+const tr = t(lang);
+
+type Review = { id: string; rating: number; text: string; userName: string };
+
+const fallbackReviews: Record<Language, Review[]> = {
+  de: [
+    { id: 'f1', rating: 5, text: 'Bester Barbershop in ganz Berlin! Mohammed nimmt sich immer Zeit und das Ergebnis ist jedes Mal perfekt.', userName: 'Marco S.' },
+    { id: 'f2', rating: 5, text: 'Seit Jahren mein Stammfriseur. Faire Preise, top Qualität und immer eine angenehme Atmosphäre.', userName: 'Ahmet K.' },
+    { id: 'f3', rating: 5, text: 'Die Nassrasur ist ein Erlebnis! Dazu Tee und nette Unterhaltung — besser geht es nicht.', userName: 'Jonas W.' },
+    { id: 'f4', rating: 5, text: 'Professionell, freundlich und präzise. Kann ich jedem nur empfehlen.', userName: 'David M.' },
+    { id: 'f5', rating: 5, text: 'Hervorragendes Preis-Leistungsverhältnis. Die Bartpflege hier ist die beste.', userName: 'Kemal Y.' },
+    { id: 'f6', rating: 5, text: 'Kreuzbergs Geheimtipp! Komme extra aus Charlottenburg hierher.', userName: 'Stefan R.' },
+  ],
+  en: [
+    { id: 'f1', rating: 5, text: 'Best barbershop in all of Berlin! Mohammed always takes his time and the result is perfect every time.', userName: 'Marco S.' },
+    { id: 'f2', rating: 5, text: 'My go-to barber for years. Fair prices, top quality and always a pleasant atmosphere.', userName: 'James K.' },
+    { id: 'f3', rating: 5, text: 'The wet shave is an experience! Tea and great conversation — it doesn\'t get better than this.', userName: 'Jonas W.' },
+    { id: 'f4', rating: 5, text: 'Professional, friendly and precise. I recommend it to everyone.', userName: 'David M.' },
+    { id: 'f5', rating: 5, text: 'Excellent value for money. The beard grooming here is the best.', userName: 'Michael Y.' },
+    { id: 'f6', rating: 5, text: 'Kreuzberg\'s hidden gem! I come all the way from Charlottenburg for this.', userName: 'Stefan R.' },
+  ],
+  tr: [
+    { id: 'f1', rating: 5, text: "Berlin'in en iyi berberi! Mohammed her zaman zaman ayırıyor ve sonuç her seferinde mükemmel.", userName: 'Marco S.' },
+    { id: 'f2', rating: 5, text: 'Yıllardır benim berberim. Uygun fiyatlar, üst kalite ve her zaman keyifli bir atmosfer.', userName: 'Ahmet K.' },
+    { id: 'f3', rating: 5, text: 'Islak tıraş gerçekten bir deneyim! Çay ve güzel sohbet eşliğinde — bundan iyisi olmaz.', userName: 'Jonas W.' },
+    { id: 'f4', rating: 5, text: 'Profesyonel, güler yüzlü ve hassas. Herkese tavsiye ederim.', userName: 'David M.' },
+    { id: 'f5', rating: 5, text: 'Mükemmel fiyat-kalite oranı. Buradaki sakal bakımı en iyisi.', userName: 'Kemal Y.' },
+    { id: 'f6', rating: 5, text: "Kreuzberg'in saklı cevheri! Charlottenburg'dan özellikle buraya geliyorum.", userName: 'Stefan R.' },
+  ],
+  ar: [
+    { id: 'f1', rating: 5, text: 'أفضل صالون حلاقة في برلين كلها! محمد يأخذ وقته دائماً والنتيجة مثالية في كل مرة.', userName: 'ماركو س.' },
+    { id: 'f2', rating: 5, text: 'حلاقي المفضل منذ سنوات. أسعار عادلة، جودة ممتازة وأجواء رائعة دائماً.', userName: 'أحمد ك.' },
+    { id: 'f3', rating: 5, text: 'الحلاقة الرطبة تجربة لا تُنسى! مع الشاي والحديث الممتع — لا يوجد أفضل من هذا.', userName: 'يوناس و.' },
+    { id: 'f4', rating: 5, text: 'محترف، ودود ودقيق. أنصح به الجميع.', userName: 'داود م.' },
+    { id: 'f5', rating: 5, text: 'قيمة ممتازة مقابل المال. العناية باللحية هنا هي الأفضل.', userName: 'كمال ي.' },
+    { id: 'f6', rating: 5, text: 'جوهرة كرويتسبرغ الخفية! آتي خصيصاً من شارلوتنبورغ إلى هنا.', userName: 'شتيفان ر.' },
+  ],
+};
+
+const reviews = fallbackReviews[lang];
+const allReviews = [...reviews, ...reviews, ...reviews];
 ---
 
 <section
@@ -21,10 +57,10 @@ const allReviews = [...fallbackReviews, ...fallbackReviews, ...fallbackReviews];
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="animate-on-scroll text-center mb-16">
       <span class="text-sm uppercase tracking-widest font-medium" style="color: #C8A55A;">
-        Bewertungen
+        {tr.home.reviewsLabel}
       </span>
       <h2 class="mt-3 text-4xl sm:text-5xl font-display font-bold" style="color: #EDEDEF;">
-        Was unsere Kunden sagen
+        {tr.home.reviewsTitle}
       </h2>
       <div class="mt-4 flex items-center justify-center gap-2">
         <div class="flex" style="color: #C8A55A;">
@@ -35,7 +71,7 @@ const allReviews = [...fallbackReviews, ...fallbackReviews, ...fallbackReviews];
           ))}
         </div>
         <span class="font-semibold text-lg" style="color: #C8A55A;">4.8</span>
-        <span class="text-sm" style="color: #8A8F98;">/ 5 &mdash; &uuml;ber 1.400 Bewertungen</span>
+        <span class="text-sm" style="color: #8A8F98;">{tr.home.reviewsRating}</span>
       </div>
     </div>
 
@@ -46,7 +82,7 @@ const allReviews = [...fallbackReviews, ...fallbackReviews, ...fallbackReviews];
 
       <div class="overflow-hidden">
         <div id="reviews-scroll-track" class="flex gap-6" style="animation: scroll-testimonials 40s linear infinite; width: max-content;">
-          {allReviews.map((review, i) => (
+          {allReviews.map((review) => (
             <div
               class="flex-shrink-0 w-80 rounded-2xl p-6"
               style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"

@@ -11,7 +11,7 @@ import { barberShopSchema, websiteSchema, webPageSchema, breadcrumbSchema } from
 const schema = [barberShopSchema, websiteSchema, webPageSchema('باربير برلين – صالون الحلاقة المميز في كرويتسبرغ', 'صالون الحلاقة المميز في كرويتسبرغ.', '/ar'), breadcrumbSchema([{ name: 'الرئيسية', url: '/ar' }])];
 ---
 <Layout title="باربير برلين | صالون حلاقة في كرويتسبرغ" description="باربير برلين – صالون الحلاقة المميز في كرويتسبرغ. قصات شعر من 20€، عناية باللحية، حلاقة بالموس. 4.8★ من 1,400+ تقييم. احجز الآن!" lang="ar" schema={schema}>
-  <Hero /><Marquee /><Features /><GoldDivider /><ServicesPreview /><GoldDivider /><LiveReviews /><GoldDivider /><CTASection />
+  <Hero lang="ar" /><Marquee lang="ar" /><Features lang="ar" /><GoldDivider /><ServicesPreview lang="ar" /><GoldDivider /><LiveReviews lang="ar" /><GoldDivider /><CTASection lang="ar" />
 </Layout>
 <script>
   const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });

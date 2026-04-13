@@ -1,5 +1,14 @@
 ---
 // CTA Section — Pure Astro, no React, no Framer Motion
+import { t, type Language } from '../../i18n/translations';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = 'de' } = Astro.props;
+const tr = t(lang);
+const prefix = lang === 'de' ? '' : `/${lang}`;
 ---
 
 <section
@@ -41,23 +50,23 @@
       ></div>
 
       <h2 class="text-4xl sm:text-5xl font-display font-bold" style="color: #EDEDEF;">
-        Bereit f&uuml;r einen<span
+        {tr.home.ctaPre}<span
           class="inline"
           style="background: linear-gradient(135deg, #d4b86a 0%, #C8A55A 40%, #b8943e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"
-        > neuen Look</span>?
+        > {tr.home.ctaHighlight}</span>?
       </h2>
 
       <p class="mt-4 text-lg" style="color: #8A8F98;">
-        Buchen Sie Ihren Termin in wenigen Sekunden &mdash; online, einfach und bequem.
+        {tr.home.ctaSubtitle}
       </p>
 
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
         <a
-          href="/booking"
+          href={`${prefix}/booking`}
           class="relative inline-flex items-center gap-2 font-semibold px-8 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
           style="background: linear-gradient(135deg, #C8A55A 0%, #d4b86a 50%, #b8943e 100%); color: #050506; box-shadow: 0 0 30px rgba(200,165,90,0.15), 0 4px 20px rgba(200,165,90,0.2);"
         >
-          Termin buchen
+          {tr.home.ctaButton}
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>

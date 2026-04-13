@@ -1,0 +1,12 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdminPortal from '../../components/admin/AdminPortal';
+---
+
+<Layout title="Yönetim Paneli – Barbier Berlin" lang="tr">
+  <section class="pt-32 pb-16 min-h-screen bg-surface-950">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <AdminPortal client:load />
+    </div>
+  </section>
+</Layout>

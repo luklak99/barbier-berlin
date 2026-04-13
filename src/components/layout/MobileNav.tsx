@@ -3,18 +3,21 @@ import { t, languages, type Language } from '../../i18n/translations';
 
 interface Props {
   lang: Language;
+  prefix: string;
+  langUrls: Record<string, string>;
 }
 
-export default function MobileNav({ lang }: Props) {
+export default function MobileNav({ lang, prefix, langUrls }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const tr = t(lang);
+  const homeHref = prefix || '/';
 
   const navItems = [
-    { href: '/', label: tr.nav.home },
-    { href: '/services', label: tr.nav.services },
-    { href: '/gallery', label: tr.nav.gallery },
-    { href: '/about', label: tr.nav.about },
-    { href: '/contact', label: tr.nav.contact },
+    { href: homeHref, label: tr.nav.home },
+    { href: `${prefix}/services`, label: tr.nav.services },
+    { href: `${prefix}/gallery`, label: tr.nav.gallery },
+    { href: `${prefix}/about`, label: tr.nav.about },
+    { href: `${prefix}/contact`, label: tr.nav.contact },
   ];
 
   return (
@@ -78,14 +81,14 @@ export default function MobileNav({ lang }: Props) {
           }}
         >
           <a
-            href="/booking"
+            href={`${prefix}/booking`}
             className="bg-gradient-to-r from-[#C8A55A] to-[#B8953A] text-[#050506] font-semibold text-lg px-8 py-3 rounded-full shadow-lg shadow-[#C8A55A]/20 active:scale-95 transition-transform"
             onClick={() => setIsOpen(false)}
           >
             {tr.nav.booking}
           </a>
           <a
-            href="/login"
+            href={`${prefix}/login`}
             className="text-[#8A8F98] hover:text-[#EDEDEF] text-sm transition-colors duration-300"
             onClick={() => setIsOpen(false)}
           >
@@ -103,7 +106,7 @@ export default function MobileNav({ lang }: Props) {
           {Object.entries(languages).map(([code]) => (
             <a
               key={code}
-              href={code === 'de' ? '/' : `/${code}`}
+              href={langUrls[code]}
               className={`text-sm px-3 py-1.5 rounded-lg border transition-all duration-300 ${
                 code === lang
                   ? 'text-[#C8A55A] bg-[#C8A55A]/10 border-[#C8A55A]/20'

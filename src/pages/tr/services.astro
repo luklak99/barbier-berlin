@@ -1,0 +1,148 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { services, type ServiceCategory } from '../../data/services';
+import { webPageSchema, breadcrumbSchema, serviceSchema } from '../../data/schema';
+
+const categoryLabels: Record<ServiceCategory, string> = {
+  haircut: 'Saç Kesimi',
+  beard: 'Sakal & Tıraş',
+  face: 'Yüz & Bakım',
+  color: 'Renk & Styling',
+  kids: 'Çocuk & Gençler',
+  specials: 'Özel Teklifler',
+};
+
+const categories: ServiceCategory[] = ['haircut', 'beard', 'face', 'color', 'kids', 'specials'];
+
+const schema = [
+  webPageSchema('Hizmetler & Fiyatlar – Barbier Berlin', 'Barbier Berlin Kreuzberg hizmetleri ve fiyatları. 20€\'dan saç kesimi, 17€\'dan sakal bakımı, tıraş. Kreuzberg.', '/tr/services'),
+  breadcrumbSchema([{ name: 'Ana Sayfa', url: '/tr' }, { name: 'Hizmetler & Fiyatlar', url: '/tr/services' }]),
+  ...services.slice(0, 8).map(s => serviceSchema(s.name.tr || s.name.de, s.price)),
+];
+---
+
+<Layout title="Hizmetler & Fiyatlar | Barbier Berlin Kreuzberg | 17€'dan" description="Barbier Berlin Kreuzberg'de 22 bakım hizmeti. 20€'dan saç kesimi, 17€'dan sakal bakımı, tıraş, renk & styling. Tüm fiyatlar danışmanlık dahil. Online rezervasyon!" lang="tr" schema={schema}>
+  <!-- Hero -->
+  <section class="pt-32 pb-16 bg-[#050506]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Hizmetlerimiz</span>
+      <h1 class="mt-3 text-4xl sm:text-6xl font-display font-bold text-[#EDEDEF]">Hizmetler & Fiyatlar</h1>
+      <p class="mt-4 text-[#8A8F98] max-w-2xl mx-auto text-lg">
+        Modern erkek için birinci sınıf bakım hizmetleri.
+        Tüm fiyatlar danışmanlık ve premium ürünler dahildir.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sticky Category Nav -->
+  <nav class="sticky top-[3.5rem] z-30 bg-[#0a0a0c]/90 backdrop-blur-xl border-b border-white/[0.06]" id="services-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex gap-1 overflow-x-auto py-3 scrollbar-hide">
+        {categories.map((category) => (
+          <a
+            href={`#${category}`}
+            class="shrink-0 px-4 py-2 rounded-full text-sm font-medium text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.05] border border-transparent hover:border-white/[0.08] transition-all duration-300 whitespace-nowrap"
+          >
+            {categoryLabels[category]}
+          </a>
+        ))}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Services -->
+  <section class="py-16 bg-[#050506]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {categories.map((category) => {
+        const categoryServices = services.filter(s => s.category === category);
+        if (categoryServices.length === 0) return null;
+        return (
+          <div class="mb-20 last:mb-0" id={category}>
+            <div class="flex items-center gap-4 mb-10">
+              <div class="w-12 h-12 rounded-xl bg-[#C8A55A]/10 border border-[#C8A55A]/20 flex items-center justify-center shrink-0">
+                {category === 'haircut' && (
+                  <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.848 8.25l1.536.887M7.848 8.25a3 3 0 11-5.196-3 3 3 0 015.196 3zm1.536.887a2.165 2.165 0 011.083 1.839c.005.351.054.695.14 1.024M9.384 9.137l2.077 1.199M7.848 15.75l1.536-.887m-1.536.887a3 3 0 01-5.196 3 3 3 0 015.196-3zm1.536-.887a2.165 2.165 0 001.083-1.838c.005-.352.054-.696.14-1.025m-1.223 2.863l2.077-1.199m0-3.328a4.323 4.323 0 012.068-1.379l5.325-1.628a4.5 4.5 0 012.48-.044l.803.215-7.794 4.5m-2.882-1.664A4.331 4.331 0 0010.607 12m3.736 0l7.794 4.5-.802.215a4.5 4.5 0 01-2.48-.043l-5.326-1.629a4.324 4.324 0 01-2.068-1.379M14.343 12l-2.882 1.664" /></svg>
+                )}
+                {category === 'beard' && (
+                  <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 8.25h16.5M3.75 8.25V6a2.25 2.25 0 012.25-2.25h12A2.25 2.25 0 0120.25 6v2.25M3.75 8.25l1.5 10.5a2.25 2.25 0 002.227 1.95h9.046a2.25 2.25 0 002.227-1.95l1.5-10.5" /><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6V3.75m3 2.25V3.75" /></svg>
+                )}
+                {category === 'face' && (
+                  <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>
+                )}
+                {category === 'color' && (
+                  <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h3.75c.621 0 1.125.504 1.125 1.125V8.25M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.5" /></svg>
+                )}
+                {category === 'kids' && (
+                  <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                )}
+                {category === 'specials' && (
+                  <svg class="w-6 h-6 text-[#C8A55A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" /></svg>
+                )}
+              </div>
+              <div>
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-[#EDEDEF]">{categoryLabels[category]}</h2>
+                <div class="mt-1 h-0.5 w-12 bg-gradient-to-r from-[#C8A55A] to-transparent rounded-full"></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {categoryServices.map((service) => (
+                <div class="group relative bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/[0.06] hover:border-[#C8A55A]/30 hover:shadow-lg hover:shadow-[#C8A55A]/5 transition-all duration-300">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1">
+                      <h3 class="font-semibold text-[#EDEDEF] group-hover:text-[#C8A55A] transition-colors duration-300">
+                        {service.name.tr || service.name.de}
+                      </h3>
+                      <p class="mt-1 text-[#8A8F98] text-sm">yakl. {service.duration} dk.</p>
+                    </div>
+                    <div class="text-2xl font-display font-bold text-[#C8A55A] whitespace-nowrap">
+                      {service.price}&euro;
+                    </div>
+                  </div>
+                  <a
+                    href="/tr/booking"
+                    class="mt-4 inline-flex items-center gap-1 text-[#C8A55A] text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0"
+                  >
+                    Rezerve et
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative py-20 bg-[#0a0a0c]">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#050506] to-[#0a0a0c]"></div>
+    <div class="relative max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-display font-bold text-[#EDEDEF]">Randevu Al</h2>
+      <p class="mt-3 text-[#8A8F98] text-lg">İstediğiniz randevuyu kolayca online alın.</p>
+      <a
+        href="/tr/booking"
+        class="mt-8 inline-flex items-center gap-2 bg-gradient-to-r from-[#C8A55A] to-[#B8953A] text-[#050506] font-semibold px-8 py-4 rounded-full hover:shadow-2xl hover:shadow-[#C8A55A]/30 transition-all duration-300 active:scale-95"
+      >
+        Şimdi Randevu Al
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  @reference "../../styles/global.css";
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>

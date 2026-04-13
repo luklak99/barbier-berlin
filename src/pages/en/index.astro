@@ -11,7 +11,7 @@ import { barberShopSchema, websiteSchema, webPageSchema, breadcrumbSchema } from
 const schema = [barberShopSchema, websiteSchema, webPageSchema('Barbier Berlin – Premium Barbershop in Kreuzberg', 'Your premium barbershop in Berlin-Kreuzberg.', '/en'), breadcrumbSchema([{ name: 'Home', url: '/en' }])];
 ---
 <Layout title="Barbier Berlin | Barbershop Berlin-Kreuzberg" description="Barbier Berlin – Your premium barbershop in Kreuzberg. Haircuts from 20€, beard care, wet shave & styling. 4.8★ from 1,400+ reviews. Book online!" lang="en" schema={schema}>
-  <Hero /><Marquee /><Features /><GoldDivider /><ServicesPreview /><GoldDivider /><LiveReviews /><GoldDivider /><CTASection />
+  <Hero lang="en" /><Marquee lang="en" /><Features lang="en" /><GoldDivider /><ServicesPreview lang="en" /><GoldDivider /><LiveReviews lang="en" /><GoldDivider /><CTASection lang="en" />
 </Layout>
 <script>
   const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });

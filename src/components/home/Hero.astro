@@ -1,5 +1,12 @@
 ---
-// Hero Section — Pure Astro, no React, no Framer Motion
+import { t, type Language } from '../../i18n/translations';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = 'de' } = Astro.props;
+const translations = t(lang);
 ---
 
 <section
@@ -54,7 +61,7 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: #C8A55A;"></span>
           <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: #C8A55A;"></span>
         </span>
-        Premium Barbershop in Kreuzberg
+        {translations.hero.subtitle}
       </span>
     </div>
 
@@ -80,8 +87,7 @@
         class="hero-fade-in mt-6 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed"
         style="--delay: 0.3s; color: #8A8F98;"
       >
-        Erstklassige Haarschnitte, pr&auml;zise Rasur und premium Pflege &mdash;
-        seit 2020 Ihr Barbershop im Herzen von Berlin-Kreuzberg.
+        {translations.hero.subtitle}
       </p>
     </div>
 
@@ -92,7 +98,7 @@
         class="group relative inline-flex items-center gap-2 font-semibold px-8 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
         style="background: linear-gradient(135deg, #C8A55A 0%, #d4b86a 50%, #b8943e 100%); color: #050506; box-shadow: 0 0 30px rgba(200,165,90,0.15), 0 4px 20px rgba(200,165,90,0.2);"
       >
-        Jetzt Termin buchen
+        {translations.hero.cta}
         <svg
           class="w-5 h-5 transition-transform group-hover:translate-x-1"
           fill="none"
@@ -107,7 +113,7 @@
         class="inline-flex items-center gap-2 font-medium px-6 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
         style="color: rgba(237,237,239,0.7); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
       >
-        Unsere Services
+        {translations.hero.secondaryCta}
       </a>
     </div>
 
@@ -121,7 +127,7 @@
           <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
             <span class="countup" data-target="48">0</span><span class="text-lg">/10</span>
           </div>
-          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">Bewertung</div>
+          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">{translations.hero.stats.rating}</div>
         </div>
         <div
           class="text-center rounded-2xl px-4 py-5 hero-fade-in"
@@ -130,7 +136,7 @@
           <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
             <span class="countup" data-target="1400" data-suffix="+">0</span>
           </div>
-          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">Bewertungen</div>
+          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">{translations.hero.stats.reviews}</div>
         </div>
         <div
           class="text-center rounded-2xl px-4 py-5 hero-fade-in"
@@ -139,7 +145,7 @@
           <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
             <span class="countup" data-target="5" data-suffix="+">0</span>
           </div>
-          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">Jahre Erfahrung</div>
+          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">{translations.hero.stats.experience}</div>
         </div>
       </div>
     </div>

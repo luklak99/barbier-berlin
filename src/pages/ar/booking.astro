@@ -1,0 +1,20 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BookingFlow from '../../components/booking/BookingFlow';
+---
+
+<Layout title="حجز موعد – باربير برلين" description="احجز موعدك أونلاين في باربير برلين." lang="ar">
+  <section class="pt-32 pb-8 bg-surface-950">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-gold-400 font-medium text-sm uppercase tracking-widest">الحجز الإلكتروني</span>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-display font-bold text-white">حجز موعد</h1>
+      <p class="mt-4 text-white/50">اختر خدمتك والوقت المفضل واحجز في ثوانٍ.</p>
+    </div>
+  </section>
+
+  <section class="pb-16 bg-surface-950 min-h-[60vh]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <BookingFlow client:load />
+    </div>
+  </section>
+</Layout>

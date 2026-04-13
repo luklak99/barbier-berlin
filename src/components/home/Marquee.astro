@@ -1,24 +1,34 @@
 ---
-// Luxus-Brand Marquee Banner
+import type { Language } from '../../i18n/translations';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = 'de' } = Astro.props;
+
+const items: Record<Language, string[]> = {
+  de: ['Haarschnitt', 'Bartpflege', 'Nassrasur', 'Styling', 'Premium', 'Kreuzberg', 'Seit 2020'],
+  en: ['Haircut', 'Beard Care', 'Wet Shave', 'Styling', 'Premium', 'Kreuzberg', 'Since 2020'],
+  tr: ['Saç Kesimi', 'Sakal Bakımı', 'Islak Tıraş', 'Styling', 'Premium', 'Kreuzberg', "2020'den Beri"],
+  ar: ['قص الشعر', 'العناية باللحية', 'الحلاقة الرطبة', 'تصفيف', 'مميز', 'كرويتسبرغ', 'منذ 2020'],
+};
+
+const currentItems = items[lang];
 ---
 
 <div class="relative py-6 overflow-hidden border-y border-white/[0.04]" style="background: rgba(200,165,90,0.03);">
   <div class="marquee-track flex gap-8 whitespace-nowrap" style="width: max-content;">
     {[...Array(3)].map(() => (
       <div class="flex items-center gap-8 text-sm font-display font-semibold uppercase tracking-[0.25em]" style="color: rgba(200,165,90,0.35);">
-        <span>Haarschnitt</span>
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
-        <span>Bartpflege</span>
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
-        <span>Nassrasur</span>
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
-        <span>Styling</span>
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
-        <span>Premium</span>
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
-        <span>Kreuzberg</span>
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
-        <span>Seit 2020</span>
+        {currentItems.map((item, i) => (
+          <>
+            <span>{item}</span>
+            {i < currentItems.length - 1 && (
+              <span style="color: rgba(200,165,90,0.15);">◆</span>
+            )}
+          </>
+        ))}
         <span style="color: rgba(200,165,90,0.15);">◆</span>
       </div>
     ))}

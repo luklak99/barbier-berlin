@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GalleryGrid from '../../components/gallery/GalleryGrid';
+import { webPageSchema, breadcrumbSchema } from '../../data/schema';
+
+const gallerySchema = [
+  webPageSchema('Galeri – Barbier Berlin', 'Barbier Berlin: saç kesimleri, sakal bakımı, styling. Kreuzberg.', '/tr/gallery'),
+  breadcrumbSchema([{ name: 'Ana Sayfa', url: '/tr' }, { name: 'Galeri', url: '/tr/gallery' }]),
+];
+
+const images = [
+  { src: '/images/gallery/v2.i1470510.w1280.h800.x433899B3.webp', alt: 'Barbier Berlin – Kreuzberg Markgrafenstraße dış görünüm' },
+  { src: '/images/gallery/v2.i1470502.w1280.h800.xF3148E0E.webp', alt: 'Salonumuz – Klasik berber koltukları ve premium ekipman' },
+  { src: '/images/gallery/v2.i1470504.w1280.h800.x49C07302.webp', alt: 'Markgrafenstraße manzaralı çalışma istasyonları' },
+  { src: '/images/gallery/v2.i1470505.w1280.h800.xBFE612BC.webp', alt: 'Yıkama istasyonu ve berber koltukları' },
+  { src: '/images/gallery/v2.i1470509.w1280.h800.xD6594E03.webp', alt: 'H.ZONE Essential Sakal Yağı – Premium sakal bakım ürünleri' },
+  { src: '/images/gallery/v2.i1470506.w1280.h800.x36F238B7.webp', alt: 'Profesyonel berber aksesuarları – Sprey şişeler ve tıraş fırçaları' },
+];
+---
+
+<Layout title="Galeri | Barbier Berlin Kreuzberg | Çalışmalarımız" description="Barbier Berlin galerimiz — Kreuzberg'de saç kesimleri, sakal bakımı ve styling. Salonumuzdan ve çalışmalarımızdan görüntüler." lang="tr" schema={gallerySchema}>
+  <section class="pt-32 pb-16 bg-[#050506]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-[#C8A55A] font-medium text-sm uppercase tracking-widest">Çalışmalarımız</span>
+      <h1 class="mt-3 text-4xl sm:text-6xl font-display font-bold text-[#EDEDEF]">Galeri</h1>
+      <p class="mt-4 text-[#8A8F98] max-w-2xl mx-auto text-lg">
+        Salonumuzdan ve çalışmalarımızdan kareler.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 bg-[#0a0a0c]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <GalleryGrid images={images} client:visible />
+    </div>
+  </section>
+</Layout>
