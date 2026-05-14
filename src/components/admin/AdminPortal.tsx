@@ -540,11 +540,11 @@ export default function AdminPortal({ lang = 'de' }: AdminPortalProps) {
 
       {/* Walk-in Modal */}
       {showWalkInModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-950/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bg)]/80 backdrop-blur-sm p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface-900 rounded-2xl p-6 max-w-md w-full border border-[var(--border)]"
+            className="bg-[var(--bg-elevated)] rounded-2xl p-6 max-w-md w-full border border-[var(--border)]"
           >
             <h3 className="text-[var(--text)] font-semibold text-lg mb-4">{labels.walkInTitle}</h3>
             <form onSubmit={handleWalkIn}>
@@ -586,7 +586,7 @@ export default function AdminPortal({ lang = 'de' }: AdminPortalProps) {
                     value={walkInServiceId}
                     onChange={(e) => setWalkInServiceId(e.target.value)}
                     required
-                    className="w-full mt-1 bg-[var(--glass)] border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--text)] text-sm focus:outline-none focus:border-gold-500 [&>option]:bg-surface-900"
+                    className="w-full mt-1 bg-[var(--glass)] border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--text)] text-sm focus:outline-none focus:border-gold-500 [&>option]:bg-[var(--bg-elevated)]"
                   >
                     <option value="">{labels.walkInServicePlaceholder}</option>
                     {services.map((s) => (

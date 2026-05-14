@@ -66,6 +66,10 @@ const extraLabels: Record<Language, {
   welcomeBack: string;
   newAppointment: string;
   totalVisits: string;
+  upcomingHeading: string;
+  pastHeading: string;
+  noUpcoming: string;
+  noPast: string;
   noAppointments: string;
   bookNow: string;
   redeemLoading: string;
@@ -111,6 +115,10 @@ const extraLabels: Record<Language, {
     welcomeBack: 'Willkommen zurück,',
     newAppointment: 'Neuer Termin',
     totalVisits: 'Besuche gesamt',
+    upcomingHeading: 'Anstehende Termine',
+    pastHeading: 'Vergangene Termine',
+    noUpcoming: 'Keine anstehenden Termine.',
+    noPast: 'Noch keine vergangenen Termine.',
     noAppointments: 'Noch keine Termine vorhanden.',
     bookNow: 'Jetzt Termin buchen',
     redeemLoading: 'Wird eingelöst...',
@@ -154,6 +162,10 @@ const extraLabels: Record<Language, {
     welcomeBack: 'Welcome back,',
     newAppointment: 'New Appointment',
     totalVisits: 'Total visits',
+    upcomingHeading: 'Upcoming Appointments',
+    pastHeading: 'Past Appointments',
+    noUpcoming: 'No upcoming appointments.',
+    noPast: 'No past appointments yet.',
     noAppointments: 'No appointments yet.',
     bookNow: 'Book Appointment',
     redeemLoading: 'Redeeming...',
@@ -197,6 +209,10 @@ const extraLabels: Record<Language, {
     welcomeBack: 'Tekrar hoş geldiniz,',
     newAppointment: 'Yeni Randevu',
     totalVisits: 'Toplam ziyaret',
+    upcomingHeading: 'Yaklaşan Randevular',
+    pastHeading: 'Geçmiş Randevular',
+    noUpcoming: 'Yaklaşan randevu yok.',
+    noPast: 'Henüz geçmiş randevu yok.',
     noAppointments: 'Henüz randevu yok.',
     bookNow: 'Randevu Al',
     redeemLoading: 'Kullanılıyor...',
@@ -240,6 +256,10 @@ const extraLabels: Record<Language, {
     welcomeBack: 'مرحباً بعودتك،',
     newAppointment: 'موعد جديد',
     totalVisits: 'إجمالي الزيارات',
+    upcomingHeading: 'المواعيد القادمة',
+    pastHeading: 'المواعيد السابقة',
+    noUpcoming: 'لا توجد مواعيد قادمة.',
+    noPast: 'لا توجد مواعيد سابقة بعد.',
     noAppointments: 'لا توجد مواعيد بعد.',
     bookNow: 'احجز موعداً',
     redeemLoading: 'جارٍ الاسترداد...',
@@ -485,8 +505,17 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
     setTwoFAVerifyLoading(false);
   };
 
-  const upcomingCount = bookings.filter((b) => b.status === 'confirmed').length;
-  const completedCount = bookings.filter((b) => b.status === 'completed').length;
+  const nowMs = Date.now();
+  const bookingTime = (b: Booking) => new Date(`${b.date}T${b.startTime}`).getTime();
+  const isUpcoming = (b: Booking) => b.status !== 'cancelled' && bookingTime(b) > nowMs;
+  const upcomingBookings = bookings
+    .filter(isUpcoming)
+    .sort((a, b) => bookingTime(a) - bookingTime(b));
+  const pastBookings = bookings
+    .filter((b) => !isUpcoming(b))
+    .sort((a, b) => bookingTime(b) - bookingTime(a));
+  const upcomingCount = upcomingBookings.length;
+  const completedCount = pastBookings.filter((b) => b.status !== 'cancelled').length;
 
   const tabs: { key: Tab; label: string; icon: JSX.Element }[] = [
     {
@@ -608,77 +637,119 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
               </div>
             )}
 
-            {!bookingsLoading && !bookingsError && bookings.length > 0 && (
-              <div className="space-y-3">
-                {bookings.map((apt) => (
-                  <div key={apt.id} className="bg-[var(--glass)] rounded-xl p-5 border border-[var(--border)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-[var(--text)] font-medium">{apt.serviceName}</h3>
-                      <p className="text-[var(--text-muted)] text-sm mt-0.5">
-                        {new Date(apt.date).toLocaleDateString(getLocale(lang), { weekday: 'short', day: 'numeric', month: 'long' })} {apt.startTime} Uhr
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusLabels[apt.status]?.class ?? 'bg-[var(--glass)] text-[var(--text-muted)]'}`}>
-                        {statusLabels[apt.status]?.text ?? apt.status}
-                      </span>
-                      {apt.paidWithPoints && (
-                        <span className="px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-xs font-medium">
-                          {tr.admin.paidWithPoints}
-                        </span>
-                      )}
-                      <span className="text-gold-400 font-display font-bold">{apt.servicePrice}€</span>
-                      {apt.status === 'confirmed' && !apt.paidWithPoints && (
-                        <button
-                          onClick={() => handleRedeem(apt.id)}
-                          disabled={redeemingId === apt.id}
-                          className="text-gold-400 hover:text-gold-300 text-sm transition-colors disabled:opacity-50"
-                        >
-                          {redeemingId === apt.id ? xl.redeemLoading : xl.redeemPoints}
-                        </button>
-                      )}
-                      {apt.status === 'confirmed' && (() => {
-                        const apptMs = new Date(`${apt.date}T${apt.startTime}`).getTime();
-                        const hoursRemaining = (apptMs - Date.now()) / 1000 / 3600 - 24;
-                        const canCancel = hoursRemaining > 0;
-                        const showCountdown = hoursRemaining > 0 && hoursRemaining < 48;
-                        const isUrgent = hoursRemaining < 1;
-                        return (
-                          <div className="flex items-center gap-2 flex-wrap">
-                            {showCountdown && (
-                              <span className={`text-xs ${isUrgent ? 'text-red-400' : 'text-[var(--text-muted)]'}`}>
-                                {xl.cancelableFor} {Math.floor(hoursRemaining)}{xl.cancelableHours}
-                              </span>
-                            )}
-                            {canCancel ? (
-                              <button
-                                onClick={() => handleCancel(apt.id)}
-                                disabled={cancellingId === apt.id}
-                                className="text-[var(--text-muted)] hover:text-red-400 text-sm transition-colors disabled:opacity-50"
-                              >
-                                {cancellingId === apt.id ? xl.cancelLoading : tr.booking.cancel}
-                              </button>
-                            ) : (
-                              <span className="text-[var(--text-muted)] text-sm cursor-not-allowed">
-                                {xl.noLongerCancelable}
-                              </span>
-                            )}
-                          </div>
-                        );
-                      })()}
-                      {apt.status === 'completed' && (
-                        <button
-                          onClick={() => setReviewBookingId(apt.id)}
-                          className="text-gold-400 hover:text-gold-300 text-sm transition-colors"
-                        >
-                          {tr.dashboard.writeReview}
-                        </button>
-                      )}
-                    </div>
+            {!bookingsLoading && !bookingsError && bookings.length > 0 && (() => {
+              const renderCard = (apt: Booking, opts: { past: boolean }) => (
+                <div
+                  key={apt.id}
+                  className="rounded-xl p-5 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-opacity"
+                  style={{
+                    background: 'var(--glass)',
+                    borderColor: 'var(--border)',
+                    opacity: opts.past ? 0.75 : 1,
+                  }}
+                >
+                  <div>
+                    <h3 className="text-[var(--text)] font-medium">{apt.serviceName}</h3>
+                    <p className="text-[var(--text-muted)] text-sm mt-0.5">
+                      {new Date(apt.date).toLocaleDateString(getLocale(lang), { weekday: 'short', day: 'numeric', month: 'long', year: opts.past ? 'numeric' : undefined })} {apt.startTime} Uhr
+                    </p>
                   </div>
-                ))}
-              </div>
-            )}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusLabels[apt.status]?.class ?? 'bg-[var(--glass)] text-[var(--text-muted)]'}`}>
+                      {statusLabels[apt.status]?.text ?? apt.status}
+                    </span>
+                    {apt.paidWithPoints && (
+                      <span className="px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-xs font-medium">
+                        {tr.admin.paidWithPoints}
+                      </span>
+                    )}
+                    <span className="text-gold-400 font-display font-bold">{apt.servicePrice}€</span>
+                    {!opts.past && apt.status === 'confirmed' && !apt.paidWithPoints && (
+                      <button
+                        onClick={() => handleRedeem(apt.id)}
+                        disabled={redeemingId === apt.id}
+                        className="text-gold-400 hover:text-gold-300 text-sm transition-colors disabled:opacity-50"
+                      >
+                        {redeemingId === apt.id ? xl.redeemLoading : xl.redeemPoints}
+                      </button>
+                    )}
+                    {!opts.past && apt.status === 'confirmed' && (() => {
+                      const apptMs = new Date(`${apt.date}T${apt.startTime}`).getTime();
+                      const hoursRemaining = (apptMs - Date.now()) / 1000 / 3600 - 24;
+                      const canCancel = hoursRemaining > 0;
+                      const showCountdown = hoursRemaining > 0 && hoursRemaining < 48;
+                      const isUrgent = hoursRemaining < 1;
+                      return (
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {showCountdown && (
+                            <span className={`text-xs ${isUrgent ? 'text-red-400' : 'text-[var(--text-muted)]'}`}>
+                              {xl.cancelableFor} {Math.floor(hoursRemaining)}{xl.cancelableHours}
+                            </span>
+                          )}
+                          {canCancel ? (
+                            <button
+                              onClick={() => handleCancel(apt.id)}
+                              disabled={cancellingId === apt.id}
+                              className="text-[var(--text-muted)] hover:text-red-400 text-sm transition-colors disabled:opacity-50"
+                            >
+                              {cancellingId === apt.id ? xl.cancelLoading : tr.booking.cancel}
+                            </button>
+                          ) : (
+                            <span className="text-[var(--text-muted)] text-sm cursor-not-allowed">
+                              {xl.noLongerCancelable}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })()}
+                    {opts.past && (apt.status === 'completed' || apt.status === 'confirmed') && (
+                      <button
+                        onClick={() => setReviewBookingId(apt.id)}
+                        className="text-gold-400 hover:text-gold-300 text-sm transition-colors"
+                      >
+                        {tr.dashboard.writeReview}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+
+              return (
+                <div className="space-y-8">
+                  <section>
+                    <h2 className="text-[var(--text)] font-display text-lg font-semibold mb-3 flex items-center gap-2">
+                      {xl.upcomingHeading}
+                      <span className="text-[var(--text-muted)] text-sm font-body font-normal">
+                        ({upcomingBookings.length})
+                      </span>
+                    </h2>
+                    {upcomingBookings.length === 0 ? (
+                      <p className="text-[var(--text-muted)] text-sm">{xl.noUpcoming}</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {upcomingBookings.map((apt) => renderCard(apt, { past: false }))}
+                      </div>
+                    )}
+                  </section>
+
+                  <section>
+                    <h2 className="text-[var(--text)] font-display text-lg font-semibold mb-3 flex items-center gap-2">
+                      {xl.pastHeading}
+                      <span className="text-[var(--text-muted)] text-sm font-body font-normal">
+                        ({pastBookings.length})
+                      </span>
+                    </h2>
+                    {pastBookings.length === 0 ? (
+                      <p className="text-[var(--text-muted)] text-sm">{xl.noPast}</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {pastBookings.map((apt) => renderCard(apt, { past: true }))}
+                      </div>
+                    )}
+                  </section>
+                </div>
+              );
+            })()}
           </div>
         )}
 
