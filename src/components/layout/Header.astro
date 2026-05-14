@@ -1,6 +1,7 @@
 ---
 import { t, languages, type Language } from '../../i18n/translations';
 import MobileNav from './MobileNav';
+import ThemeToggle from '../ui/ThemeToggle.astro';
 
 interface Props {
   lang?: Language;
@@ -25,7 +26,7 @@ const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, la
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="main-header">
-  <div class="absolute inset-0 bg-[#050506]/80 backdrop-blur-2xl border-b border-white/[0.06]"></div>
+  <div class="absolute inset-0 header-surface"></div>
   <nav class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-18 transition-all duration-500" id="header-inner">
       <!-- Logo -->
@@ -38,8 +39,8 @@ const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, la
           class="w-11 h-11 transition-transform duration-300 group-hover:scale-110"
         />
         <div class="hidden sm:block">
-          <span class="text-[#EDEDEF] font-display text-xl font-semibold tracking-wide">Barbier</span>
-          <span class="text-[#C8A55A] font-display text-xl font-light ml-1">Berlin</span>
+          <span class="font-display text-xl font-semibold tracking-wide" style="color: var(--text);">Barbier</span>
+          <span class="font-display text-xl font-light ml-1" style="color: var(--gold);">Berlin</span>
         </div>
       </a>
 
@@ -54,18 +55,21 @@ const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, la
 
       <!-- Right Side -->
       <div class="hidden lg:flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <ThemeToggle lang={lang} />
+
         <!-- Language Switcher -->
         <div class="relative group">
-          <button class="flex items-center gap-1.5 text-[#8A8F98] hover:text-[#EDEDEF] text-sm px-2 py-1 transition-colors uppercase tracking-wider font-medium">
+          <button class="flex items-center gap-1.5 text-sm px-2 py-1 transition-colors uppercase tracking-wider font-medium" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path stroke-width="1.5" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
             {lang}
           </button>
-          <div class="absolute right-0 top-full mt-2 bg-[#0a0a0c]/95 backdrop-blur-xl border border-white/[0.08] rounded-xl py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-2xl shadow-black/40">
+          <div class="absolute right-0 top-full mt-2 rounded-xl py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 lang-menu">
             {Object.entries(languages).map(([code, name]) => (
               <a
                 href={langUrls[code]}
-                class={`block px-5 py-2 text-sm whitespace-nowrap transition-colors ${
-                  code === lang ? 'text-[#C8A55A]' : 'text-[#8A8F98] hover:text-[#EDEDEF] hover:bg-white/[0.04]'
+                class={`block px-5 py-2 text-sm whitespace-nowrap transition-colors lang-item ${
+                  code === lang ? 'lang-item--active' : ''
                 }`}
               >
                 {name}
@@ -74,12 +78,12 @@ const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, la
           </div>
         </div>
 
-        <a href={`${prefix}/login`} class="text-[#8A8F98] hover:text-[#EDEDEF] text-sm transition-colors px-3 py-2">
+        <a href={`${prefix}/login`} class="text-sm transition-colors px-3 py-2" style="color: var(--text-muted);" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">
           {tr.nav.login}
         </a>
         <a
           href={`${prefix}/booking`}
-          class="bg-gradient-to-r from-[#C8A55A] to-[#B8953A] hover:from-[#D8B56A] hover:to-[#C8A55A] text-[#050506] font-semibold text-sm px-5 py-2.5 rounded-full transition-all duration-300 shadow-lg shadow-[#C8A55A]/20 hover:shadow-xl hover:shadow-[#C8A55A]/30 active:scale-95"
+          class="cta-gold font-semibold text-sm px-5 py-2.5 rounded-full transition-all duration-300 active:scale-95"
         >
           {tr.nav.booking}
         </a>
@@ -93,22 +97,51 @@ const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, la
 
 <style>
   @reference "../../styles/global.css";
-  .nav-link {
-    @apply relative text-[#8A8F98] hover:text-[#EDEDEF] text-sm font-medium px-3 py-2 transition-colors duration-300;
+  .header-surface {
+    background: var(--header-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.25s ease, border-color 0.25s ease;
   }
+  .nav-link {
+    @apply relative text-sm font-medium px-3 py-2 transition-colors duration-300;
+    color: var(--text-muted);
+  }
+  .nav-link:hover { color: var(--text); }
   .nav-link::after {
     content: '';
-    @apply absolute bottom-0 left-3 right-3 h-[2px] bg-[#C8A55A] scale-x-0 origin-left transition-transform duration-300;
+    @apply absolute bottom-0 left-3 right-3 h-[2px] scale-x-0 origin-left transition-transform duration-300;
+    background: var(--gold);
   }
   .nav-link:hover::after {
     @apply scale-x-100;
+  }
+  .lang-menu {
+    background: var(--bg-elevated);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 40px var(--shadow-color);
+  }
+  .lang-item { color: var(--text-muted); }
+  .lang-item:hover { color: var(--text); background: var(--glass); }
+  .lang-item--active { color: var(--gold); }
+  .lang-item--active:hover { color: var(--gold); }
+  .cta-gold {
+    background: linear-gradient(90deg, var(--gold), var(--gold-deep));
+    color: #050506;
+    box-shadow: 0 8px 24px rgba(200, 165, 90, 0.2);
+  }
+  .cta-gold:hover {
+    background: linear-gradient(90deg, var(--gold-light), var(--gold));
+    box-shadow: 0 12px 32px rgba(200, 165, 90, 0.3);
   }
 </style>
 
 <script>
   const header = document.getElementById('main-header');
   const headerInner = document.getElementById('header-inner');
-  let lastScroll = 0;
 
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
@@ -121,6 +154,5 @@ const langUrls = Object.fromEntries(Object.keys(languages).map(code => [code, la
         header.classList.remove('header-scrolled');
       }
     }
-    lastScroll = scrollY;
   });
 </script>

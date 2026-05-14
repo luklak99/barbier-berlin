@@ -82,6 +82,23 @@ export const emailVerificationTokens = sqliteTable('email_verification_tokens', 
   createdAt: text('created_at').notNull().default('(datetime())'),
 });
 
+// Gastbuchungen (ohne Konto)
+export const guestBookings = sqliteTable('guest_bookings', {
+  id: text('id').primaryKey(),
+  serviceId: text('service_id').notNull(),
+  date: text('date').notNull(),
+  startTime: text('start_time').notNull(),
+  endTime: text('end_time').notNull(),
+  status: text('status', {
+    enum: ['confirmed', 'cancelled'],
+  }).notNull().default('confirmed'),
+  guestName: text('guest_name').notNull(),
+  guestEmail: text('guest_email').notNull(),
+  guestPhone: text('guest_phone'),
+  cancelToken: text('cancel_token').notNull().unique(),
+  createdAt: text('created_at').notNull().default('(datetime())'),
+});
+
 // Warteliste für ausgebuchte Slots
 export const waitlist = sqliteTable('waitlist', {
   id: text('id').primaryKey(),

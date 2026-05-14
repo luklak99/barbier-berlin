@@ -46,7 +46,7 @@ export default function LiveReviews() {
   return (
     <section
       className="relative py-24 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #050506 0%, #0a0a0c 50%, #050506 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 50%, var(--bg) 100%)' }}
     >
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -58,7 +58,7 @@ export default function LiveReviews() {
           <span className="text-sm uppercase tracking-widest font-medium" style={{ color: '#C8A55A' }}>
             Bewertungen
           </span>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-display font-bold" style={{ color: '#EDEDEF' }}>
+          <h2 className="mt-3 text-4xl sm:text-5xl font-display font-bold" style={{ color: 'var(--text)' }}>
             Was unsere Kunden sagen
           </h2>
           <div className="mt-4 flex items-center justify-center gap-2">
@@ -66,14 +66,14 @@ export default function LiveReviews() {
               {[...Array(5)].map((_, i) => <StarIcon key={i} className="w-5 h-5" />)}
             </div>
             <span className="font-semibold text-lg" style={{ color: '#C8A55A' }}>4.8</span>
-            <span className="text-sm" style={{ color: '#8A8F98' }}>/ 5 — über 1.400 Bewertungen</span>
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/ 5 — über 1.400 Bewertungen</span>
           </div>
         </motion.div>
 
         {/* Scrolling reviews */}
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #0a0a0c, transparent)' }} />
-          <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, #0a0a0c, transparent)' }} />
+          <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--bg-elevated), transparent)' }} />
+          <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, var(--bg-elevated), transparent)' }} />
 
           <div className="overflow-hidden">
             <div className="flex gap-6" style={{ animation: 'scroll-testimonials 40s linear infinite', width: 'max-content' }}>
@@ -82,17 +82,17 @@ export default function LiveReviews() {
                   key={`${review.id}-${i}`}
                   className="flex-shrink-0 w-80 rounded-2xl p-6"
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
+                    background: 'var(--glass)',
                     backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'inset 0 1px 0 0 var(--glass-strong)',
                   }}
                 >
                   <div className="flex gap-1 mb-3" style={{ color: '#C8A55A' }}>
                     {[...Array(review.rating)].map((_, j) => <StarIcon key={j} className="w-4 h-4" />)}
                   </div>
                   {review.text && (
-                    <p className="text-sm leading-relaxed" style={{ color: 'rgba(237,237,239,0.7)' }}>{review.text}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-subtle)' }}>{review.text}</p>
                   )}
                   <p className="mt-4 text-sm font-medium" style={{ color: '#C8A55A' }}>{review.userName}</p>
                 </div>

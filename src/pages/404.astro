@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="404 – Seite nicht gefunden | Barbier Berlin" description="Die angeforderte Seite wurde nicht gefunden." noindex={true}>
-  <section class="min-h-[70vh] flex items-center justify-center bg-[#050506] py-20">
+  <section class="min-h-[70vh] flex items-center justify-center bg-[var(--bg)] py-20">
     <div class="max-w-xl mx-auto px-4 text-center">
       <!-- 404 mit Gold-Gradient -->
       <h1 class="text-[8rem] sm:text-[12rem] font-display font-bold leading-none bg-gradient-to-b from-[#C8A55A] via-[#E8D48B] to-[#C8A55A]/40 bg-clip-text text-transparent select-none">
@@ -11,31 +11,34 @@ import Layout from '../layouts/Layout.astro';
       </h1>
 
       <!-- Glassmorphism Card -->
-      <div class="mt-2 bg-white/[0.03] backdrop-blur-xl rounded-2xl border border-white/[0.06] p-8 shadow-lg shadow-[#C8A55A]/5">
-        <h2 class="text-2xl font-display font-semibold text-[#EDEDEF]">
+      <div class="mt-2 bg-[var(--glass)] backdrop-blur-xl rounded-2xl border border-[var(--border)] p-8 shadow-lg shadow-[#C8A55A]/5">
+        <h2 id="err-title" class="text-2xl font-display font-semibold text-[var(--text)]">
           Seite nicht gefunden
         </h2>
-        <p class="mt-3 text-[#8A8F98] leading-relaxed">
+        <p id="err-desc" class="mt-3 text-[var(--text-muted)] leading-relaxed">
           Die angeforderte Seite existiert leider nicht oder wurde verschoben.
         </p>
 
         <!-- Links -->
         <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <a
+            id="link-home"
             href="/"
             class="px-6 py-3 rounded-full bg-[#C8A55A] text-[#050506] font-semibold text-sm hover:bg-[#E8D48B] transition-colors duration-300"
           >
             Zur Startseite
           </a>
           <a
+            id="link-services"
             href="/services"
-            class="px-6 py-3 rounded-full border border-white/[0.1] text-[#EDEDEF] text-sm font-medium hover:border-[#C8A55A]/30 hover:text-[#C8A55A] transition-all duration-300"
+            class="px-6 py-3 rounded-full border border-[var(--border-strong)] text-[var(--text)] text-sm font-medium hover:border-[#C8A55A]/30 hover:text-[#C8A55A] transition-all duration-300"
           >
             Services
           </a>
           <a
+            id="link-contact"
             href="/contact"
-            class="px-6 py-3 rounded-full border border-white/[0.1] text-[#EDEDEF] text-sm font-medium hover:border-[#C8A55A]/30 hover:text-[#C8A55A] transition-all duration-300"
+            class="px-6 py-3 rounded-full border border-[var(--border-strong)] text-[var(--text)] text-sm font-medium hover:border-[#C8A55A]/30 hover:text-[#C8A55A] transition-all duration-300"
           >
             Kontakt
           </a>
@@ -44,3 +47,67 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 </Layout>
+
+<script>
+  const i18n = {
+    en: {
+      title: 'Page not found',
+      desc: 'The requested page does not exist or has been moved.',
+      home: 'Back to Home',
+      services: 'Services',
+      contact: 'Contact',
+      prefix: '/en',
+    },
+    tr: {
+      title: 'Sayfa bulunamadı',
+      desc: 'İstenen sayfa mevcut değil veya taşınmış.',
+      home: 'Ana Sayfaya Dön',
+      services: 'Hizmetler',
+      contact: 'İletişim',
+      prefix: '/tr',
+    },
+    ar: {
+      title: 'الصفحة غير موجودة',
+      desc: 'الصفحة المطلوبة غير موجودة أو تم نقلها.',
+      home: 'العودة إلى الرئيسية',
+      services: 'الخدمات',
+      contact: 'اتصل بنا',
+      prefix: '/ar',
+    },
+  } as const;
+
+  type Lang = keyof typeof i18n;
+
+  function detectLang(): Lang | null {
+    const path = window.location.pathname;
+    if (path.startsWith('/en')) return 'en';
+    if (path.startsWith('/tr')) return 'tr';
+    if (path.startsWith('/ar')) return 'ar';
+    // Fallback: check browser language
+    const browserLang = (navigator.language || '').split('-')[0];
+    if (browserLang === 'en') return 'en';
+    if (browserLang === 'tr') return 'tr';
+    if (browserLang === 'ar') return 'ar';
+    return null;
+  }
+
+  const lang = detectLang();
+  if (lang) {
+    const l = i18n[lang];
+    const title = document.getElementById('err-title');
+    const desc = document.getElementById('err-desc');
+    const linkHome = document.getElementById('link-home') as HTMLAnchorElement | null;
+    const linkServices = document.getElementById('link-services') as HTMLAnchorElement | null;
+    const linkContact = document.getElementById('link-contact') as HTMLAnchorElement | null;
+
+    if (title) title.textContent = l.title;
+    if (desc) desc.textContent = l.desc;
+    if (linkHome) { linkHome.textContent = l.home; linkHome.href = l.prefix + '/'; }
+    if (linkServices) { linkServices.textContent = l.services; linkServices.href = l.prefix + '/services'; }
+    if (linkContact) { linkContact.textContent = l.contact; linkContact.href = l.prefix + '/contact'; }
+
+    if (lang === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl');
+    }
+  }
+</script>

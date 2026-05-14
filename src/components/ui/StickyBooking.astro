@@ -7,13 +7,13 @@ const prefix = lang === 'de' ? '' : `/${lang}`;
 <div
   id="sticky-booking"
   class="fixed bottom-0 left-0 right-0 z-40 lg:hidden translate-y-full transition-transform duration-300"
-  style="background: rgba(5,5,6,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(200,165,90,0.15); padding-bottom: env(safe-area-inset-bottom);"
+  style="background: var(--header-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border-gold); padding-bottom: env(safe-area-inset-bottom);"
 >
   <div class="px-4 py-3">
     <a
       href={`${prefix}/booking`}
       class="block w-full text-center py-3.5 rounded-full font-semibold text-base transition-all active:scale-[0.97]"
-      style="background: linear-gradient(135deg, #C8A55A 0%, #d4b86a 50%, #b8943e 100%); color: #050506;"
+      style="background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 50%, var(--gold-darker) 100%); color: #050506;"
     >
       {t(lang).nav.booking}
     </a>

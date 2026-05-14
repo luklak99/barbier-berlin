@@ -12,7 +12,7 @@ const translations = t(lang);
 <section
   id="hero-section"
   class="relative min-h-screen flex items-center justify-center overflow-hidden"
-  style="background: linear-gradient(180deg, #050506 0%, #0a0a0f 50%, #050506 100%);"
+  style="background: linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated-2) 50%, var(--bg) 100%);"
 >
   <!-- Background salon image -->
   <div class="absolute inset-0 z-0">
@@ -21,11 +21,12 @@ const translations = t(lang);
       alt=""
       class="w-full h-full object-cover"
       loading="eager"
+      fetchpriority="high"
     />
-    <!-- Radial vignette: edges fade to black, center shows image subtly -->
-    <div class="absolute inset-0" style="background: radial-gradient(ellipse 55% 45% at center, rgba(5,5,6,0.65) 0%, #050506 100%);"></div>
+    <!-- Radial vignette: edges fade to bg, center shows image subtly -->
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 55% 45% at center, var(--scrim-1) 0%, var(--scrim-2) 100%);"></div>
     <!-- Top/bottom extra fade -->
-    <div class="absolute inset-0 bg-gradient-to-b from-[#050506] via-transparent to-[#050506]" style="opacity: 0.8;"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--bg), transparent, var(--bg)); opacity: 0.8;"></div>
   </div>
 
   <!-- Noise overlay -->
@@ -52,14 +53,14 @@ const translations = t(lang);
 
   <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
     <!-- Badge -->
-    <div class="hero-fade-in" style="--delay: 0s;">
+    <div class="hero-fade-in" style="--delay: 0.05s;">
       <span
         class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-sm font-medium"
-        style="background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); color: #C8A55A; box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+        style="background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); color: var(--gold); box-shadow: inset 0 1px 0 0 var(--glass-inner);"
       >
         <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: #C8A55A;"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: #C8A55A;"></span>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--gold);"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: var(--gold);"></span>
         </span>
         {translations.hero.subtitle}
       </span>
@@ -69,12 +70,12 @@ const translations = t(lang);
     <div id="hero-title-parallax">
       <h1
         class="mt-8 text-5xl sm:text-7xl lg:text-8xl font-display font-bold leading-[0.95]"
-        style="color: #EDEDEF; text-shadow: 0 0 80px rgba(200,165,90,0.15), 0 0 40px rgba(200,165,90,0.05);"
+        style="color: var(--text); text-shadow: 0 0 80px rgba(200,165,90,0.15), 0 0 40px rgba(200,165,90,0.05);"
       >
         <span class="hero-text-reveal" style="--char-delay: 0;">B</span><span class="hero-text-reveal" style="--char-delay: 1;">a</span><span class="hero-text-reveal" style="--char-delay: 2;">r</span><span class="hero-text-reveal" style="--char-delay: 3;">b</span><span class="hero-text-reveal" style="--char-delay: 4;">i</span><span class="hero-text-reveal" style="--char-delay: 5;">e</span><span class="hero-text-reveal" style="--char-delay: 6;">r</span>
         <span
           class="block hero-shimmer-text"
-          style="background: linear-gradient(135deg, #d4b86a 0%, #C8A55A 40%, #b8943e 70%, #d4b86a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(200,165,90,0.3));"
+          style="background: linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 40%, var(--gold-darker) 70%, var(--gold-soft) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"
         >
           <span class="hero-text-reveal" style="--char-delay: 7;">B</span><span class="hero-text-reveal" style="--char-delay: 8;">e</span><span class="hero-text-reveal" style="--char-delay: 9;">r</span><span class="hero-text-reveal" style="--char-delay: 10;">l</span><span class="hero-text-reveal" style="--char-delay: 11;">i</span><span class="hero-text-reveal" style="--char-delay: 12;">n</span>
         </span>
@@ -85,18 +86,18 @@ const translations = t(lang);
     <div id="hero-subtitle-parallax">
       <p
         class="hero-fade-in mt-6 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed"
-        style="--delay: 0.3s; color: #8A8F98;"
+        style="--delay: 0.2s; color: var(--text-muted);"
       >
         {translations.hero.subtitle}
       </p>
     </div>
 
     <!-- CTAs -->
-    <div class="hero-fade-in mt-10 flex flex-col sm:flex-row items-center justify-center gap-4" style="--delay: 0.45s;">
+    <div class="hero-fade-in mt-10 flex flex-col sm:flex-row items-center justify-center gap-4" style="--delay: 0.3s;">
       <a
         href="/booking"
         class="group relative inline-flex items-center gap-2 font-semibold px-8 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
-        style="background: linear-gradient(135deg, #C8A55A 0%, #d4b86a 50%, #b8943e 100%); color: #050506; box-shadow: 0 0 30px rgba(200,165,90,0.15), 0 4px 20px rgba(200,165,90,0.2);"
+        style="background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 50%, var(--gold-darker) 100%); color: #050506; box-shadow: 0 0 30px rgba(200,165,90,0.15), 0 4px 20px rgba(200,165,90,0.2);"
       >
         {translations.hero.cta}
         <svg
@@ -111,7 +112,7 @@ const translations = t(lang);
       <a
         href="/services"
         class="inline-flex items-center gap-2 font-medium px-6 py-4 rounded-full transition-all hover:scale-[1.02] active:scale-[0.97]"
-        style="color: rgba(237,237,239,0.7); border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
+        style="color: var(--text-subtle); border: 1px solid var(--border-strong); background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
       >
         {translations.hero.secondaryCta}
       </a>
@@ -119,45 +120,45 @@ const translations = t(lang);
 
     <!-- Stats in glassmorphism cards -->
     <div id="hero-stats-parallax">
-      <div class="hero-fade-in mt-20 grid grid-cols-3 gap-4 sm:gap-6 max-w-xl mx-auto" style="--delay: 0.7s;">
+      <div class="hero-fade-in mt-20 grid grid-cols-3 gap-4 sm:gap-6 max-w-xl mx-auto" style="--delay: 0.4s;">
         <div
           class="text-center rounded-2xl px-4 py-5 hero-fade-in"
-          style="--delay: 0.8s; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+          style="--delay: 0.45s; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); box-shadow: inset 0 1px 0 0 var(--glass-inner);"
         >
-          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
+          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: var(--gold);">
             <span class="countup" data-target="48">0</span><span class="text-lg">/10</span>
           </div>
-          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">{translations.hero.stats.rating}</div>
+          <div class="text-xs sm:text-sm mt-1" style="color: var(--text-muted);">{translations.hero.stats.rating}</div>
         </div>
         <div
           class="text-center rounded-2xl px-4 py-5 hero-fade-in"
-          style="--delay: 0.85s; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+          style="--delay: 0.5s; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); box-shadow: inset 0 1px 0 0 var(--glass-inner);"
         >
-          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
+          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: var(--gold);">
             <span class="countup" data-target="1400" data-suffix="+">0</span>
           </div>
-          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">{translations.hero.stats.reviews}</div>
+          <div class="text-xs sm:text-sm mt-1" style="color: var(--text-muted);">{translations.hero.stats.reviews}</div>
         </div>
         <div
           class="text-center rounded-2xl px-4 py-5 hero-fade-in"
-          style="--delay: 0.9s; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);"
+          style="--delay: 0.55s; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); box-shadow: inset 0 1px 0 0 var(--glass-inner);"
         >
-          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: #C8A55A;">
+          <div class="text-2xl sm:text-3xl font-display font-bold" style="color: var(--gold);">
             <span class="countup" data-target="5" data-suffix="+">0</span>
           </div>
-          <div class="text-xs sm:text-sm mt-1" style="color: #8A8F98;">{translations.hero.stats.experience}</div>
+          <div class="text-xs sm:text-sm mt-1" style="color: var(--text-muted);">{translations.hero.stats.experience}</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Scroll indicator -->
-  <div class="hero-fade-in absolute bottom-8 left-1/2 -translate-x-1/2" style="--delay: 1.5s;">
+  <div class="hero-fade-in absolute bottom-8 left-1/2 -translate-x-1/2" style="--delay: 0.7s;">
     <div
       class="w-7 h-11 rounded-full flex items-start justify-center p-2 hero-scroll-bounce"
-      style="border: 2px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.02);"
+      style="border: 2px solid var(--border-strong); background: var(--glass);"
     >
-      <div class="w-1.5 h-2.5 rounded-full hero-scroll-dot" style="background-color: #C8A55A;"></div>
+      <div class="w-1.5 h-2.5 rounded-full hero-scroll-dot" style="background-color: var(--gold);"></div>
     </div>
   </div>
 </section>
@@ -166,9 +167,10 @@ const translations = t(lang);
   /* Fade-in on mount animation */
   .hero-fade-in {
     opacity: 0;
-    transform: translateY(20px);
-    animation: heroFadeIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: translateY(16px);
+    animation: heroFadeIn 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
     animation-delay: var(--delay, 0s);
+    will-change: opacity, transform;
   }
 
   @keyframes heroFadeIn {
@@ -209,9 +211,10 @@ const translations = t(lang);
   .hero-text-reveal {
     display: inline-block;
     opacity: 0;
-    transform: translateY(40px);
-    animation: charReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    animation-delay: calc(0.2s + var(--char-delay) * 0.04s);
+    transform: translateY(28px);
+    animation: charReveal 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: calc(0.08s + var(--char-delay) * 0.022s);
+    will-change: opacity, transform;
   }
   @keyframes charReveal {
     to { opacity: 1; transform: translateY(0); }

@@ -41,6 +41,86 @@
   --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
+/* ============================================
+   THEME TOKENS — Dark (default) & Light
+   ============================================ */
+:root,
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --bg: #050506;
+  --bg-deep: #080809;
+  --bg-elevated: #0a0a0c;
+  --bg-elevated-2: #0e0e10;
+  /* Text */
+  --text: #EDEDEF;
+  --text-muted: #8A8F98;
+  --text-subtle: rgba(237, 237, 239, 0.7);
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-gold: rgba(200, 165, 90, 0.2);
+  /* Glass / overlays */
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-strong: rgba(255, 255, 255, 0.05);
+  --glass-inner: rgba(255, 255, 255, 0.05);
+  /* Scrim used over hero image */
+  --scrim-1: rgba(5, 5, 6, 0.65);
+  --scrim-2: #050506;
+  /* Header */
+  --header-bg: rgba(5, 5, 6, 0.8);
+  /* Shadows */
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  /* Gold (theme-stable) */
+  --gold: #C8A55A;
+  --gold-light: #E8D48B;
+  --gold-soft: #d4b86a;
+  --gold-deep: #B8953A;
+  --gold-darker: #b8943e;
+  /* Status */
+  --whatsapp: #25D366;
+  --success: #4ade80;
+  --danger: #ef4444;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  /* Surfaces */
+  --bg: #ffffff;
+  --bg-deep: #f6f6f7;
+  --bg-elevated: #f3f3f5;
+  --bg-elevated-2: #ececef;
+  /* Text */
+  --text: #0a0a0c;
+  --text-muted: #5b6068;
+  --text-subtle: rgba(10, 10, 12, 0.72);
+  /* Borders */
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --border-gold: rgba(184, 149, 58, 0.28);
+  /* Glass / overlays */
+  --glass: rgba(0, 0, 0, 0.025);
+  --glass-strong: rgba(0, 0, 0, 0.04);
+  --glass-inner: rgba(255, 255, 255, 0.6);
+  /* Scrim used over hero image */
+  --scrim-1: rgba(255, 255, 255, 0.55);
+  --scrim-2: #ffffff;
+  /* Header */
+  --header-bg: rgba(255, 255, 255, 0.82);
+  /* Shadows */
+  --shadow-color: rgba(15, 23, 42, 0.08);
+  /* Gold (slightly deeper for contrast on white) */
+  --gold: #B8953A;
+  --gold-light: #d4b86a;
+  --gold-soft: #C8A55A;
+  --gold-deep: #9b7c2e;
+  --gold-darker: #8a6e26;
+  /* Status */
+  --whatsapp: #1ea952;
+  --success: #16a34a;
+  --danger: #dc2626;
+  color-scheme: light;
+}
+
 /* Base styles */
 html {
   scroll-behavior: smooth;
@@ -50,8 +130,9 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: #EDEDEF;
-  background-color: #050506;
+  color: var(--text);
+  background-color: var(--bg);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* RTL support for Arabic */
@@ -64,7 +145,7 @@ html[dir="rtl"] {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0c;
+  background: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(200, 165, 90, 0.3);
@@ -77,12 +158,12 @@ html[dir="rtl"] {
 /* Selection */
 ::selection {
   background-color: rgba(200, 165, 90, 0.25);
-  color: #EDEDEF;
+  color: var(--text);
 }
 
 /* Header scroll effect */
 .header-scrolled .absolute {
-  border-bottom-color: rgba(200, 165, 90, 0.08);
+  border-bottom-color: var(--border-gold);
 }
 
 /* Performance: Scroll-triggered animations (replace Framer Motion) */
@@ -176,6 +257,33 @@ html[dir="rtl"] {
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+/* Theme toggle button */
+.theme-toggle {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: var(--glass);
+  border: 1px solid var(--border);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--glass-strong);
+}
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 
 /* Reduce motion preference */
 @media (prefers-reduced-motion: reduce) {

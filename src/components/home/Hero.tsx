@@ -53,7 +53,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #050506 0%, #0a0a0f 50%, #050506 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated-2) 50%, var(--bg) 100%)' }}
     >
       {/* Noise overlay */}
       <div
@@ -115,12 +115,12 @@ export default function Hero() {
           <span
             className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-sm font-medium"
             style={{
-              background: 'rgba(255,255,255,0.03)',
+              background: 'var(--glass)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              border: '1px solid var(--border)',
               color: '#C8A55A',
-              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05)',
+              boxShadow: 'inset 0 1px 0 0 var(--glass-strong)',
             }}
           >
             <span
@@ -141,7 +141,7 @@ export default function Hero() {
             transition={{ type: 'spring', damping: 20, stiffness: 90, delay: 0.15 }}
             className="mt-8 text-5xl sm:text-7xl lg:text-8xl font-display font-bold leading-[0.95]"
             style={{
-              color: '#EDEDEF',
+              color: 'var(--text)',
               textShadow: '0 0 80px rgba(200,165,90,0.15), 0 0 40px rgba(200,165,90,0.05)',
             }}
           >
@@ -168,7 +168,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', damping: 20, stiffness: 90, delay: 0.3 }}
             className="mt-6 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed"
-            style={{ color: '#8A8F98' }}
+            style={{ color: 'var(--text-muted)' }}
           >
             Erstklassige Haarschnitte, präzise Rasur und premium Pflege —
             seit 2020 Ihr Barbershop im Herzen von Berlin-Kreuzberg.
@@ -209,9 +209,9 @@ export default function Hero() {
             whileTap={{ scale: 0.97 }}
             className="inline-flex items-center gap-2 font-medium px-6 py-4 rounded-full transition-all"
             style={{
-              color: 'rgba(237,237,239,0.7)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(255,255,255,0.03)',
+              color: 'var(--text-subtle)',
+              border: '1px solid var(--border-strong)',
+              background: 'var(--glass)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
             }}
@@ -240,11 +240,11 @@ export default function Hero() {
                 transition={{ type: 'spring', damping: 20, stiffness: 90, delay: 0.8 + i * 0.05 }}
                 className="text-center rounded-2xl px-4 py-5"
                 style={{
-                  background: 'rgba(255,255,255,0.03)',
+                  background: 'var(--glass)',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05)',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'inset 0 1px 0 0 var(--glass-strong)',
                 }}
               >
                 <div className="text-2xl sm:text-3xl font-display font-bold" style={{ color: '#C8A55A' }}>
@@ -256,7 +256,7 @@ export default function Hero() {
                     <><CountUp target={5} suffix="+" /></>
                   )}
                 </div>
-                <div className="text-xs sm:text-sm mt-1" style={{ color: '#8A8F98' }}>{stat.label}</div>
+                <div className="text-xs sm:text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -275,8 +275,8 @@ export default function Hero() {
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="w-7 h-11 rounded-full flex items-start justify-center p-2"
           style={{
-            border: '2px solid rgba(255,255,255,0.12)',
-            background: 'rgba(255,255,255,0.02)',
+            border: '2px solid var(--border-strong)',
+            background: 'var(--glass)',
           }}
         >
           <motion.div

@@ -2,9 +2,18 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
+Disallow: /en/dashboard
+Disallow: /tr/dashboard
+Disallow: /ar/dashboard
 Disallow: /admin
 Disallow: /login
+Disallow: /en/login
+Disallow: /tr/login
+Disallow: /ar/login
 Disallow: /register
+Disallow: /en/register
+Disallow: /tr/register
+Disallow: /ar/register
 
 Sitemap: https://barbier.berlin/sitemap.xml
 

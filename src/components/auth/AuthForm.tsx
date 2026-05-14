@@ -117,23 +117,23 @@ export default function AuthForm({ mode, lang = 'de' }: Props) {
       {mode === 'register' && (
         <>
           <div>
-            <label className="block text-white/60 text-sm mb-1.5">{tr.auth.name}</label>
+            <label className="block text-[var(--text-muted)] text-sm mb-1.5">{tr.auth.name}</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-gold-500 transition-colors"
               placeholder={namePlaceholders[lang]}
             />
           </div>
           <div>
-            <label className="block text-white/60 text-sm mb-1.5">{tr.auth.phone}</label>
+            <label className="block text-[var(--text-muted)] text-sm mb-1.5">{tr.auth.phone}</label>
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-gold-500 transition-colors"
               placeholder="+49 170 1234567"
             />
           </div>
@@ -141,39 +141,39 @@ export default function AuthForm({ mode, lang = 'de' }: Props) {
       )}
 
       <div>
-        <label className="block text-white/60 text-sm mb-1.5">{tr.auth.email}</label>
+        <label className="block text-[var(--text-muted)] text-sm mb-1.5">{tr.auth.email}</label>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
+          className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-gold-500 transition-colors"
           placeholder="ihre@email.de"
         />
       </div>
 
       <div>
-        <label className="block text-white/60 text-sm mb-1.5">{tr.auth.password}</label>
+        <label className="block text-[var(--text-muted)] text-sm mb-1.5">{tr.auth.password}</label>
         <input
           type="password"
           required
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
+          className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-gold-500 transition-colors"
           placeholder={passwordPlaceholders[lang]}
         />
       </div>
 
       {mode === 'register' && (
         <div>
-          <label className="block text-white/60 text-sm mb-1.5">{tr.auth.confirmPassword}</label>
+          <label className="block text-[var(--text-muted)] text-sm mb-1.5">{tr.auth.confirmPassword}</label>
           <input
             type="password"
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
+            className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-gold-500 transition-colors"
             placeholder={passwordRepeatPlaceholders[lang]}
           />
         </div>
@@ -181,7 +181,7 @@ export default function AuthForm({ mode, lang = 'de' }: Props) {
 
       {showMfa && (
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-          <label className="block text-white/60 text-sm mb-1.5">{tr.auth.mfaCode}</label>
+          <label className="block text-[var(--text-muted)] text-sm mb-1.5">{tr.auth.mfaCode}</label>
           <input
             type="text"
             inputMode="numeric"
@@ -190,7 +190,7 @@ export default function AuthForm({ mode, lang = 'de' }: Props) {
             required
             value={mfaCode}
             onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-center text-2xl tracking-[0.5em] font-mono placeholder-white/25 focus:outline-none focus:border-gold-500 transition-colors"
+            className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] text-center text-2xl tracking-[0.5em] font-mono placeholder:text-[var(--text-muted)] focus:outline-none focus:border-gold-500 transition-colors"
             placeholder="000000"
           />
         </motion.div>
@@ -205,14 +205,14 @@ export default function AuthForm({ mode, lang = 'de' }: Props) {
       </button>
 
       {mode === 'login' ? (
-        <p className="text-center text-white/40 text-sm">
+        <p className="text-center text-[var(--text-muted)] text-sm">
           {tr.auth.noAccount}{' '}
           <a href={registerHref} className="text-gold-400 hover:text-gold-300 transition-colors">
             {tr.auth.register}
           </a>
         </p>
       ) : (
-        <p className="text-center text-white/40 text-sm">
+        <p className="text-center text-[var(--text-muted)] text-sm">
           {tr.auth.hasAccount}{' '}
           <a href={loginHref} className="text-gold-400 hover:text-gold-300 transition-colors">
             {tr.auth.login}

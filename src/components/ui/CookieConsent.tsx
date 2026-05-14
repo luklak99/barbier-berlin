@@ -53,14 +53,23 @@ export default function CookieConsent({ lang = 'de' }: Props) {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0c]/95 backdrop-blur-xl border-t border-white/[0.06]">
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl"
+      style={{
+        background: 'var(--header-bg)',
+        borderTop: '1px solid var(--border)',
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-[#8A8F98] text-sm text-center sm:text-left">
+        <p className="text-[var(--text-muted)] text-sm text-center sm:text-left">
           {message}
         </p>
         <button
           onClick={handleAccept}
-          className="shrink-0 px-6 py-2 rounded-full bg-[#C8A55A] text-[#050506] text-sm font-semibold hover:bg-[#E8D48B] transition-colors duration-300"
+          className="shrink-0 px-6 py-2 rounded-full text-sm font-semibold transition-colors duration-300"
+          style={{ background: 'var(--gold)', color: '#050506' }}
+          onMouseOver={(e) => (e.currentTarget.style.background = 'var(--gold-light)')}
+          onMouseOut={(e) => (e.currentTarget.style.background = 'var(--gold)')}
         >
           {button}
         </button>

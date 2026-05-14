@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout
+  title="Termin stornieren | Barbier Berlin"
+  description="Gastbuchung stornieren"
+  noindex={true}
+>
+  <section class="min-h-[70vh] flex items-center justify-center bg-[var(--bg)] py-20">
+    <div class="max-w-md mx-auto px-4 text-center">
+      <div id="cancel-loading" class="flex flex-col items-center gap-4">
+        <div class="w-10 h-10 border-2 border-[#C8A55A] border-t-transparent rounded-full animate-spin"></div>
+        <p id="loading-text" class="text-[var(--text-muted)]">Wird storniert…</p>
+      </div>
+
+      <div id="cancel-success" class="hidden">
+        <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 id="success-title" class="text-2xl font-display font-semibold text-[var(--text)] mb-3">
+          Termin storniert
+        </h1>
+        <p id="success-desc" class="text-[var(--text-muted)] mb-8">
+          Ihr Termin wurde erfolgreich storniert.
+        </p>
+        <a id="success-link" href="/" class="px-6 py-3 rounded-full bg-[#C8A55A] text-[#050506] font-semibold text-sm hover:bg-[#E8D48B] transition-colors duration-300">
+          Zur Startseite
+        </a>
+      </div>
+
+      <div id="cancel-error" class="hidden bg-[var(--glass)] backdrop-blur-xl rounded-2xl border border-[var(--border)] p-8">
+        <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        <h1 id="error-title" class="text-xl font-display font-semibold text-[var(--text)] mb-3">Fehler</h1>
+        <p id="error-msg" class="text-[var(--text-muted)] text-sm mb-6"></p>
+        <a href="mailto:info@barbier.berlin" class="text-[#C8A55A] text-sm hover:underline">
+          info@barbier.berlin
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const i18n = {
+    en: { loading: 'Cancelling…', successTitle: 'Appointment Cancelled', successDesc: 'Your appointment has been successfully cancelled.', home: 'Back to Home', errorTitle: 'Error' },
+    tr: { loading: 'İptal ediliyor…', successTitle: 'Randevu İptal Edildi', successDesc: 'Randevunuz başarıyla iptal edildi.', home: 'Ana Sayfaya Dön', errorTitle: 'Hata' },
+    ar: { loading: 'جارٍ الإلغاء…', successTitle: 'تم إلغاء الموعد', successDesc: 'تم إلغاء موعدك بنجاح.', home: 'العودة إلى الرئيسية', errorTitle: 'خطأ' },
+  } as const;
+
+  type Lang = keyof typeof i18n;
+
+  function detectLang(): Lang | null {
+    const path = window.location.pathname;
+    if (path.startsWith('/en')) return 'en';
+    if (path.startsWith('/tr')) return 'tr';
+    if (path.startsWith('/ar')) return 'ar';
+    return null;
+  }
+
+  const lang = detectLang();
+  const l = lang ? i18n[lang] : null;
+
+  if (l) {
+    const loadingEl = document.getElementById('loading-text');
+    if (loadingEl) loadingEl.textContent = l.loading;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  const loadingEl = document.getElementById('cancel-loading');
+  const successEl = document.getElementById('cancel-success');
+  const errorEl = document.getElementById('cancel-error');
+
+  async function doCancel() {
+    if (!token) {
+      showError('Kein Stornierungstoken angegeben.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/bookings/cancel-guest', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json() as { success?: boolean; error?: string };
+
+      if (res.ok && data.success) {
+        showSuccess();
+      } else {
+        showError(data.error ?? 'Unbekannter Fehler.');
+      }
+    } catch {
+      showError('Netzwerkfehler. Bitte versuchen Sie es erneut oder kontaktieren Sie uns per E-Mail.');
+    }
+  }
+
+  function showSuccess() {
+    loadingEl?.classList.add('hidden');
+    successEl?.classList.remove('hidden');
+    if (l) {
+      const t = document.getElementById('success-title');
+      const d = document.getElementById('success-desc');
+      const a = document.getElementById('success-link') as HTMLAnchorElement | null;
+      if (t) t.textContent = l.successTitle;
+      if (d) d.textContent = l.successDesc;
+      if (a) a.textContent = l.home;
+    }
+  }
+
+  function showError(msg: string) {
+    loadingEl?.classList.add('hidden');
+    errorEl?.classList.remove('hidden');
+    const errMsg = document.getElementById('error-msg');
+    if (errMsg) errMsg.textContent = msg;
+    if (l) {
+      const t = document.getElementById('error-title');
+      if (t) t.textContent = l.errorTitle;
+    }
+  }
+
+  doCancel();
+</script>

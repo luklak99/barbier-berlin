@@ -48,7 +48,7 @@ export default function Testimonials() {
   return (
     <section
       className="relative py-24 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #050506 0%, #0a0a0c 50%, #050506 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 50%, var(--bg) 100%)' }}
     >
       {/* Noise overlay */}
       <div
@@ -71,7 +71,7 @@ export default function Testimonials() {
           <span className="text-sm uppercase tracking-widest font-medium" style={{ color: '#C8A55A' }}>
             Bewertungen
           </span>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-display font-bold" style={{ color: '#EDEDEF' }}>
+          <h2 className="mt-3 text-4xl sm:text-5xl font-display font-bold" style={{ color: 'var(--text)' }}>
             Was unsere Kunden sagen
           </h2>
           <div className="mt-4 flex items-center justify-center gap-2">
@@ -81,7 +81,7 @@ export default function Testimonials() {
               ))}
             </div>
             <span className="font-semibold text-lg" style={{ color: '#C8A55A' }}>4.8</span>
-            <span className="text-sm" style={{ color: '#8A8F98' }}>/ 5 — über 1.400 Bewertungen</span>
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>/ 5 — über 1.400 Bewertungen</span>
           </div>
         </motion.div>
 
@@ -90,11 +90,11 @@ export default function Testimonials() {
           {/* Fade edges */}
           <div
             className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-            style={{ background: 'linear-gradient(to right, #0a0a0c, transparent)' }}
+            style={{ background: 'linear-gradient(to right, var(--bg-elevated), transparent)' }}
           />
           <div
             className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-            style={{ background: 'linear-gradient(to left, #0a0a0c, transparent)' }}
+            style={{ background: 'linear-gradient(to left, var(--bg-elevated), transparent)' }}
           />
 
           {/* CSS-based infinite scroll for smooth seamless looping */}
@@ -111,11 +111,11 @@ export default function Testimonials() {
                   key={i}
                   className="flex-shrink-0 w-80 rounded-2xl p-6 transition-all duration-300"
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
+                    background: 'var(--glass)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'inset 0 1px 0 0 var(--glass-strong)',
                   }}
                 >
                   {/* Gold stars */}
@@ -124,7 +124,7 @@ export default function Testimonials() {
                       <StarIcon key={j} className="w-4 h-4" />
                     ))}
                   </div>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(237,237,239,0.7)' }}>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-subtle)' }}>
                     {review.text}
                   </p>
                   <p className="mt-4 text-sm font-medium" style={{ color: '#C8A55A' }}>

@@ -17,19 +17,19 @@ const items: Record<Language, string[]> = {
 const currentItems = items[lang];
 ---
 
-<div class="relative py-6 overflow-hidden border-y border-white/[0.04]" style="background: rgba(200,165,90,0.03);">
+<div class="relative py-6 overflow-hidden" style="background: color-mix(in oklab, var(--gold) 4%, transparent); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class={`marquee-track flex gap-8 whitespace-nowrap ${lang === 'ar' ? 'marquee-rtl' : ''}`} style="width: max-content;">
     {[...Array(3)].map(() => (
-      <div class="flex items-center gap-8 text-sm font-display font-semibold uppercase tracking-[0.25em]" style="color: rgba(200,165,90,0.35);">
+      <div class="flex items-center gap-8 text-sm font-display font-semibold uppercase tracking-[0.25em]" style="color: color-mix(in oklab, var(--gold) 60%, transparent);">
         {currentItems.map((item, i) => (
           <>
             <span>{item}</span>
             {i < currentItems.length - 1 && (
-              <span style="color: rgba(200,165,90,0.15);">◆</span>
+              <span style="color: color-mix(in oklab, var(--gold) 30%, transparent);">◆</span>
             )}
           </>
         ))}
-        <span style="color: rgba(200,165,90,0.15);">◆</span>
+        <span style="color: color-mix(in oklab, var(--gold) 30%, transparent);">◆</span>
       </div>
     ))}
   </div>

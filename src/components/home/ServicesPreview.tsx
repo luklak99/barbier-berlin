@@ -57,7 +57,7 @@ export default function ServicesPreview() {
   return (
     <section
       className="relative py-24 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #050506 0%, #0a0a0c 50%, #080809 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 50%, var(--bg-deep) 100%)' }}
     >
       {/* Noise overlay */}
       <div
@@ -92,10 +92,10 @@ export default function ServicesPreview() {
           <span className="text-sm uppercase tracking-widest font-medium" style={{ color: '#C8A55A' }}>
             Unsere Services
           </span>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-display font-bold" style={{ color: '#EDEDEF' }}>
+          <h2 className="mt-3 text-4xl sm:text-5xl font-display font-bold" style={{ color: 'var(--text)' }}>
             Erstklassige Pflege
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg" style={{ color: '#8A8F98' }}>
+          <p className="mt-4 max-w-2xl mx-auto text-lg" style={{ color: 'var(--text-muted)' }}>
             Von präzisen Haarschnitten bis zur klassischen Nassrasur — wir bieten das volle Programm
             für den modernen Mann.
           </p>
@@ -113,12 +113,12 @@ export default function ServicesPreview() {
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium cursor-default transition-colors"
               style={{
-                background: 'rgba(255,255,255,0.03)',
+                background: 'var(--glass)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                color: '#EDEDEF',
-                boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                boxShadow: 'inset 0 1px 0 0 var(--glass-strong)',
               }}
             >
               <span style={{ color: '#C8A55A' }}>{cat.icon}</span>
@@ -139,11 +139,11 @@ export default function ServicesPreview() {
               whileHover={{ y: -4 }}
               className="group relative rounded-2xl p-6 overflow-hidden transition-all duration-300"
               style={{
-                background: 'rgba(255,255,255,0.03)',
+                background: 'var(--glass)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05)',
+                border: '1px solid var(--border)',
+                boxShadow: 'inset 0 1px 0 0 var(--glass-strong)',
               }}
             >
               {/* Hover glow effect */}
@@ -166,10 +166,10 @@ export default function ServicesPreview() {
                 <div className="text-3xl font-display font-bold" style={{ color: '#C8A55A' }}>
                   {service.price}€
                 </div>
-                <h3 className="mt-3 font-semibold text-lg leading-tight" style={{ color: '#EDEDEF' }}>
+                <h3 className="mt-3 font-semibold text-lg leading-tight" style={{ color: 'var(--text)' }}>
                   {service.name.de}
                 </h3>
-                <p className="mt-2 text-sm" style={{ color: '#8A8F98' }}>
+                <p className="mt-2 text-sm" style={{ color: 'var(--text-muted)' }}>
                   ca. {service.duration} Min.
                 </p>
                 <motion.a

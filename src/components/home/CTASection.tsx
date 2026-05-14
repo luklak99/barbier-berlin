@@ -4,7 +4,7 @@ export default function CTASection() {
   return (
     <section
       className="relative py-24 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #080809 0%, #0a0a0f 50%, #080809 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-elevated-2) 50%, var(--bg-deep) 100%)' }}
     >
       {/* Noise overlay */}
       <div
@@ -45,11 +45,11 @@ export default function CTASection() {
           transition={{ type: 'spring', damping: 20, stiffness: 90 }}
           className="relative rounded-3xl px-8 py-16 sm:px-16 text-center overflow-hidden"
           style={{
-            background: 'rgba(255,255,255,0.03)',
+            background: 'var(--glass)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05), 0 0 60px rgba(200,165,90,0.03)',
+            border: '1px solid var(--border)',
+            boxShadow: 'inset 0 1px 0 0 var(--glass-strong), 0 0 60px rgba(200,165,90,0.03)',
           }}
         >
           {/* Shimmer effect - top edge */}
@@ -70,7 +70,7 @@ export default function CTASection() {
             }}
           />
 
-          <h2 className="text-4xl sm:text-5xl font-display font-bold" style={{ color: '#EDEDEF' }}>
+          <h2 className="text-4xl sm:text-5xl font-display font-bold" style={{ color: 'var(--text)' }}>
             Bereit für einen
             <span
               className="inline"
@@ -83,7 +83,7 @@ export default function CTASection() {
             > neuen Look</span>?
           </h2>
 
-          <p className="mt-4 text-lg" style={{ color: '#8A8F98' }}>
+          <p className="mt-4 text-lg" style={{ color: 'var(--text-muted)' }}>
             Buchen Sie Ihren Termin in wenigen Sekunden — online, einfach und bequem.
           </p>
 
@@ -111,9 +111,9 @@ export default function CTASection() {
               whileTap={{ scale: 0.97 }}
               className="inline-flex items-center gap-2 font-medium transition-all px-6 py-4 rounded-full"
               style={{
-                color: 'rgba(237,237,239,0.7)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                background: 'rgba(255,255,255,0.03)',
+                color: 'var(--text-subtle)',
+                border: '1px solid var(--border-strong)',
+                background: 'var(--glass)',
               }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#C8A55A' }}>

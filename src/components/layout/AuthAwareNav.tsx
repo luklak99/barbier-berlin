@@ -32,7 +32,7 @@ export default function AuthAwareNav() {
   if (loading) {
     return (
       <div className="flex items-center gap-3">
-        <div className="w-20 h-8 bg-white/5 rounded-full animate-pulse" />
+        <div className="w-20 h-8 bg-[var(--glass)] rounded-full animate-pulse" />
       </div>
     );
   }
@@ -41,7 +41,7 @@ export default function AuthAwareNav() {
     return (
       <a
         href="/login"
-        className="text-white/60 hover:text-white text-sm transition-colors"
+        className="text-[var(--text-muted)] hover:text-[var(--text)] text-sm transition-colors"
       >
         Anmelden
       </a>
@@ -60,13 +60,13 @@ export default function AuthAwareNav() {
       )}
       <a
         href="/dashboard"
-        className="text-white/60 hover:text-white text-sm transition-colors"
+        className="text-[var(--text-muted)] hover:text-[var(--text)] text-sm transition-colors"
       >
         Mein Bereich
       </a>
       <button
         onClick={handleLogout}
-        className="text-white/40 hover:text-red-400 text-sm transition-colors"
+        className="text-[var(--text-muted)] hover:text-red-400 text-sm transition-colors"
       >
         Abmelden
       </button>

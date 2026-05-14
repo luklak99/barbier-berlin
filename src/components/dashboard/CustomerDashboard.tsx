@@ -38,25 +38,25 @@ interface Props {
 const statusLabelsMap: Record<Language, Record<string, { text: string; class: string }>> = {
   de: {
     confirmed: { text: 'Bestätigt', class: 'bg-green-500/10 text-green-400' },
-    completed: { text: 'Abgeschlossen', class: 'bg-white/5 text-white/40' },
+    completed: { text: 'Abgeschlossen', class: 'bg-[var(--glass)] text-[var(--text-muted)]' },
     cancelled: { text: 'Storniert', class: 'bg-red-500/10 text-red-400' },
     no_show: { text: 'Nicht erschienen', class: 'bg-orange-500/10 text-orange-400' },
   },
   en: {
     confirmed: { text: 'Confirmed', class: 'bg-green-500/10 text-green-400' },
-    completed: { text: 'Completed', class: 'bg-white/5 text-white/40' },
+    completed: { text: 'Completed', class: 'bg-[var(--glass)] text-[var(--text-muted)]' },
     cancelled: { text: 'Cancelled', class: 'bg-red-500/10 text-red-400' },
     no_show: { text: 'No Show', class: 'bg-orange-500/10 text-orange-400' },
   },
   tr: {
     confirmed: { text: 'Onaylandı', class: 'bg-green-500/10 text-green-400' },
-    completed: { text: 'Tamamlandı', class: 'bg-white/5 text-white/40' },
+    completed: { text: 'Tamamlandı', class: 'bg-[var(--glass)] text-[var(--text-muted)]' },
     cancelled: { text: 'İptal edildi', class: 'bg-red-500/10 text-red-400' },
     no_show: { text: 'Gelmedi', class: 'bg-orange-500/10 text-orange-400' },
   },
   ar: {
     confirmed: { text: 'مؤكد', class: 'bg-green-500/10 text-green-400' },
-    completed: { text: 'مكتمل', class: 'bg-white/5 text-white/40' },
+    completed: { text: 'مكتمل', class: 'bg-[var(--glass)] text-[var(--text-muted)]' },
     cancelled: { text: 'ملغى', class: 'bg-red-500/10 text-red-400' },
     no_show: { text: 'لم يحضر', class: 'bg-orange-500/10 text-orange-400' },
   },
@@ -93,6 +93,19 @@ const extraLabels: Record<Language, {
   noCompleted: string;
   bookingsLoading: string;
   pointsLoading: string;
+  // Cancellation countdown
+  cancelableFor: string;
+  cancelableHours: string;
+  noLongerCancelable: string;
+  // 2FA setup dialog
+  setup2FATitle: string;
+  setup2FAStep1: string;
+  setup2FAVerify: string;
+  setup2FACode: string;
+  setup2FAConfirm: string;
+  setup2FASuccess: string;
+  setup2FACancel: string;
+  setup2FALoading: string;
 }> = {
   de: {
     welcomeBack: 'Willkommen zurück,',
@@ -125,6 +138,17 @@ const extraLabels: Record<Language, {
     noCompleted: 'Noch keine abgeschlossenen Termine zum Bewerten.',
     bookingsLoading: 'Termine werden geladen...',
     pointsLoading: 'Punkte werden geladen...',
+    cancelableFor: 'Stornierbar für',
+    cancelableHours: 'Std.',
+    noLongerCancelable: 'Nicht mehr stornierbar',
+    setup2FATitle: '2FA einrichten',
+    setup2FAStep1: 'Scannen Sie den QR-Code mit Ihrer Authenticator-App',
+    setup2FAVerify: 'Code eingeben und bestätigen',
+    setup2FACode: '6-stelliger Code',
+    setup2FAConfirm: 'Bestätigen',
+    setup2FASuccess: '2FA erfolgreich aktiviert!',
+    setup2FACancel: 'Abbrechen',
+    setup2FALoading: 'Wird generiert...',
   },
   en: {
     welcomeBack: 'Welcome back,',
@@ -157,6 +181,17 @@ const extraLabels: Record<Language, {
     noCompleted: 'No completed appointments to review yet.',
     bookingsLoading: 'Loading appointments...',
     pointsLoading: 'Loading points...',
+    cancelableFor: 'Free cancel for',
+    cancelableHours: 'h',
+    noLongerCancelable: 'No longer cancellable',
+    setup2FATitle: 'Set Up 2FA',
+    setup2FAStep1: 'Scan the QR code with your authenticator app',
+    setup2FAVerify: 'Enter code to confirm',
+    setup2FACode: '6-digit code',
+    setup2FAConfirm: 'Confirm',
+    setup2FASuccess: '2FA successfully activated!',
+    setup2FACancel: 'Cancel',
+    setup2FALoading: 'Generating...',
   },
   tr: {
     welcomeBack: 'Tekrar hoş geldiniz,',
@@ -189,6 +224,17 @@ const extraLabels: Record<Language, {
     noCompleted: 'Henüz değerlendirilecek tamamlanmış randevu yok.',
     bookingsLoading: 'Randevular yükleniyor...',
     pointsLoading: 'Puanlar yükleniyor...',
+    cancelableFor: 'İptal için',
+    cancelableHours: 'sa.',
+    noLongerCancelable: 'Artık iptal edilemiyor',
+    setup2FATitle: '2FA Kur',
+    setup2FAStep1: 'QR kodunu authenticator uygulamanızla tarayın',
+    setup2FAVerify: 'Onaylamak için kodu girin',
+    setup2FACode: '6 haneli kod',
+    setup2FAConfirm: 'Onayla',
+    setup2FASuccess: '2FA başarıyla etkinleştirildi!',
+    setup2FACancel: 'İptal',
+    setup2FALoading: 'Oluşturuluyor...',
   },
   ar: {
     welcomeBack: 'مرحباً بعودتك،',
@@ -221,6 +267,17 @@ const extraLabels: Record<Language, {
     noCompleted: 'لا توجد مواعيد مكتملة للتقييم بعد.',
     bookingsLoading: 'جارٍ تحميل المواعيد...',
     pointsLoading: 'جارٍ تحميل النقاط...',
+    cancelableFor: 'قابل للإلغاء لمدة',
+    cancelableHours: 'س.',
+    noLongerCancelable: 'لم يعد قابلاً للإلغاء',
+    setup2FATitle: 'إعداد 2FA',
+    setup2FAStep1: 'امسح رمز QR بتطبيق المصادقة',
+    setup2FAVerify: 'أدخل الرمز للتأكيد',
+    setup2FACode: 'رمز 6 أرقام',
+    setup2FAConfirm: 'تأكيد',
+    setup2FASuccess: 'تم تفعيل 2FA بنجاح!',
+    setup2FACancel: 'إلغاء',
+    setup2FALoading: 'جارٍ الإنشاء...',
   },
 };
 
@@ -259,6 +316,15 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState('');
   const [reviewSuccess, setReviewSuccess] = useState('');
+
+  // 2FA dialog state
+  const [show2FADialog, setShow2FADialog] = useState(false);
+  const [twoFAStep, setTwoFAStep] = useState<'idle' | 'loading' | 'scan' | 'verify' | 'success'>('idle');
+  const [twoFAQrUrl, setTwoFAQrUrl] = useState('');
+  const [twoFASecret, setTwoFASecret] = useState('');
+  const [twoFAToken, setTwoFAToken] = useState('');
+  const [twoFAError, setTwoFAError] = useState('');
+  const [twoFAVerifyLoading, setTwoFAVerifyLoading] = useState(false);
 
   // Auth-Check
   useEffect(() => {
@@ -377,6 +443,48 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
     }
   };
 
+  const handle2FASetup = async () => {
+    setTwoFAStep('loading');
+    setTwoFAError('');
+    try {
+      const data = await api<{ qrUrl: string; secret: string }>('/api/auth/2fa/setup', { method: 'POST' });
+      setTwoFAQrUrl(data.qrUrl);
+      setTwoFASecret(data.secret);
+      setTwoFAStep('scan');
+    } catch (err) {
+      setTwoFAError(err instanceof Error ? err.message : tr.common.error);
+      setTwoFAStep('idle');
+    }
+  };
+
+  const handle2FAVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!twoFAToken || twoFAToken.length !== 6) return;
+    setTwoFAVerifyLoading(true);
+    setTwoFAError('');
+    try {
+      await api<{ success: boolean }>('/api/auth/2fa/verify', {
+        method: 'POST',
+        body: JSON.stringify({ token: twoFAToken }),
+      });
+      setTwoFAStep('success');
+    } catch (err) {
+      setTwoFAError(err instanceof Error ? err.message : tr.common.error);
+    } finally {
+      setTwoFAVerifyLoading(false);
+    }
+  };
+
+  const close2FADialog = () => {
+    setShow2FADialog(false);
+    setTwoFAStep('idle');
+    setTwoFAQrUrl('');
+    setTwoFASecret('');
+    setTwoFAToken('');
+    setTwoFAError('');
+    setTwoFAVerifyLoading(false);
+  };
+
   const upcomingCount = bookings.filter((b) => b.status === 'confirmed').length;
   const completedCount = bookings.filter((b) => b.status === 'completed').length;
 
@@ -416,8 +524,8 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white">{tr.dashboard.title}</h1>
-          <p className="text-white/40 mt-1">{xl.welcomeBack} {user?.name?.split(' ')[0] ?? ''}!</p>
+          <h1 className="text-3xl font-display font-bold text-[var(--text)]">{tr.dashboard.title}</h1>
+          <p className="text-[var(--text-muted)] mt-1">{xl.welcomeBack} {user?.name?.split(' ')[0] ?? ''}!</p>
         </div>
         <a
           href={lang === 'de' ? '/booking' : `/${lang}/booking`}
@@ -429,31 +537,31 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white/5 rounded-xl p-5 border border-white/5">
-          <p className="text-white/40 text-sm">{tr.dashboard.upcoming}</p>
-          <p className="text-2xl font-display font-bold text-white mt-1">
+        <div className="bg-[var(--glass)] rounded-xl p-5 border border-[var(--border)]">
+          <p className="text-[var(--text-muted)] text-sm">{tr.dashboard.upcoming}</p>
+          <p className="text-2xl font-display font-bold text-[var(--text)] mt-1">
             {bookingsLoading ? '...' : upcomingCount}
           </p>
         </div>
-        <div className="bg-white/5 rounded-xl p-5 border border-white/5">
-          <p className="text-white/40 text-sm">{tr.dashboard.pointsBalance}</p>
+        <div className="bg-[var(--glass)] rounded-xl p-5 border border-[var(--border)]">
+          <p className="text-[var(--text-muted)] text-sm">{tr.dashboard.pointsBalance}</p>
           <p className="text-2xl font-display font-bold text-gold-400 mt-1">
             {pointsData ? pointsData.balance : user?.pointsBalance ?? 0}
           </p>
-          <p className="text-white/30 text-xs">
+          <p className="text-[var(--text-muted)] text-xs">
             {tr.dashboard.pointsValue}: {pointsData ? pointsData.valueEur : ((user?.pointsBalance ?? 0) / 100).toFixed(2)}€
           </p>
         </div>
-        <div className="bg-white/5 rounded-xl p-5 border border-white/5">
-          <p className="text-white/40 text-sm">{xl.totalVisits}</p>
-          <p className="text-2xl font-display font-bold text-white mt-1">
+        <div className="bg-[var(--glass)] rounded-xl p-5 border border-[var(--border)]">
+          <p className="text-[var(--text-muted)] text-sm">{xl.totalVisits}</p>
+          <p className="text-2xl font-display font-bold text-[var(--text)] mt-1">
             {bookingsLoading ? '...' : completedCount}
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white/5 rounded-xl p-1 mb-8 overflow-x-auto">
+      <div className="flex gap-1 bg-[var(--glass)] rounded-xl p-1 mb-8 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -461,7 +569,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.key
                 ? 'bg-gold-500 text-surface-950'
-                : 'text-white/50 hover:text-white hover:bg-white/5'
+                : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--glass)]'
             }`}
           >
             {tab.icon}
@@ -478,7 +586,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
             {bookingsLoading && (
               <div className="flex items-center justify-center py-12">
                 <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
-                <span className="ml-3 text-white/40 text-sm">{xl.bookingsLoading}</span>
+                <span className="ml-3 text-[var(--text-muted)] text-sm">{xl.bookingsLoading}</span>
               </div>
             )}
 
@@ -490,7 +598,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
 
             {!bookingsLoading && !bookingsError && bookings.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-white/40">{xl.noAppointments}</p>
+                <p className="text-[var(--text-muted)]">{xl.noAppointments}</p>
                 <a
                   href={lang === 'de' ? '/booking' : `/${lang}/booking`}
                   className="text-gold-400 hover:text-gold-300 text-sm mt-2 inline-block"
@@ -503,15 +611,15 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
             {!bookingsLoading && !bookingsError && bookings.length > 0 && (
               <div className="space-y-3">
                 {bookings.map((apt) => (
-                  <div key={apt.id} className="bg-white/5 rounded-xl p-5 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div key={apt.id} className="bg-[var(--glass)] rounded-xl p-5 border border-[var(--border)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-white font-medium">{apt.serviceName}</h3>
-                      <p className="text-white/40 text-sm mt-0.5">
+                      <h3 className="text-[var(--text)] font-medium">{apt.serviceName}</h3>
+                      <p className="text-[var(--text-muted)] text-sm mt-0.5">
                         {new Date(apt.date).toLocaleDateString(getLocale(lang), { weekday: 'short', day: 'numeric', month: 'long' })} {apt.startTime} Uhr
                       </p>
                     </div>
                     <div className="flex items-center gap-3 flex-wrap">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusLabels[apt.status]?.class ?? 'bg-white/5 text-white/40'}`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusLabels[apt.status]?.class ?? 'bg-[var(--glass)] text-[var(--text-muted)]'}`}>
                         {statusLabels[apt.status]?.text ?? apt.status}
                       </span>
                       {apt.paidWithPoints && (
@@ -529,15 +637,35 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                           {redeemingId === apt.id ? xl.redeemLoading : xl.redeemPoints}
                         </button>
                       )}
-                      {apt.status === 'confirmed' && (
-                        <button
-                          onClick={() => handleCancel(apt.id)}
-                          disabled={cancellingId === apt.id}
-                          className="text-white/30 hover:text-red-400 text-sm transition-colors disabled:opacity-50"
-                        >
-                          {cancellingId === apt.id ? xl.cancelLoading : tr.booking.cancel}
-                        </button>
-                      )}
+                      {apt.status === 'confirmed' && (() => {
+                        const apptMs = new Date(`${apt.date}T${apt.startTime}`).getTime();
+                        const hoursRemaining = (apptMs - Date.now()) / 1000 / 3600 - 24;
+                        const canCancel = hoursRemaining > 0;
+                        const showCountdown = hoursRemaining > 0 && hoursRemaining < 48;
+                        const isUrgent = hoursRemaining < 1;
+                        return (
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {showCountdown && (
+                              <span className={`text-xs ${isUrgent ? 'text-red-400' : 'text-[var(--text-muted)]'}`}>
+                                {xl.cancelableFor} {Math.floor(hoursRemaining)}{xl.cancelableHours}
+                              </span>
+                            )}
+                            {canCancel ? (
+                              <button
+                                onClick={() => handleCancel(apt.id)}
+                                disabled={cancellingId === apt.id}
+                                className="text-[var(--text-muted)] hover:text-red-400 text-sm transition-colors disabled:opacity-50"
+                              >
+                                {cancellingId === apt.id ? xl.cancelLoading : tr.booking.cancel}
+                              </button>
+                            ) : (
+                              <span className="text-[var(--text-muted)] text-sm cursor-not-allowed">
+                                {xl.noLongerCancelable}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                       {apt.status === 'completed' && (
                         <button
                           onClick={() => setReviewBookingId(apt.id)}
@@ -560,7 +688,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
             {pointsLoading && (
               <div className="flex items-center justify-center py-12">
                 <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
-                <span className="ml-3 text-white/40 text-sm">{xl.pointsLoading}</span>
+                <span className="ml-3 text-[var(--text-muted)] text-sm">{xl.pointsLoading}</span>
               </div>
             )}
 
@@ -579,20 +707,20 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                     <span className="text-gold-400/60">{xl.pointsUnit}</span>
                   </div>
                   <p className="text-gold-400/60 text-sm mt-1">{tr.dashboard.pointsValue}: {pointsData.valueEur}€</p>
-                  <p className="text-white/30 text-xs mt-4">
+                  <p className="text-[var(--text-muted)] text-xs mt-4">
                     {tr.dashboard.pointsExpiry}
                   </p>
                 </div>
 
                 {pointsData.transactions.length > 0 && (
                   <>
-                    <h3 className="text-white font-semibold mb-3">{xl.transactionsLabel}</h3>
+                    <h3 className="text-[var(--text)] font-semibold mb-3">{xl.transactionsLabel}</h3>
                     <div className="space-y-2">
                       {pointsData.transactions.map((tx) => (
-                        <div key={tx.id} className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div key={tx.id} className="bg-[var(--glass)] rounded-xl p-4 flex items-center justify-between">
                           <div>
-                            <p className="text-white text-sm">{tx.description ?? xl.transactionFallback}</p>
-                            <p className="text-white/30 text-xs">
+                            <p className="text-[var(--text)] text-sm">{tx.description ?? xl.transactionFallback}</p>
+                            <p className="text-[var(--text-muted)] text-xs">
                               {new Date(tx.createdAt).toLocaleDateString(getLocale(lang))}
                             </p>
                           </div>
@@ -606,7 +734,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                 )}
 
                 {pointsData.transactions.length === 0 && (
-                  <p className="text-white/40 text-sm text-center py-4">{xl.noTransactions}</p>
+                  <p className="text-[var(--text-muted)] text-sm text-center py-4">{xl.noTransactions}</p>
                 )}
               </>
             )}
@@ -624,11 +752,11 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
 
             {/* Bewertungsformular */}
             {reviewBookingId ? (
-              <div className="bg-white/5 rounded-2xl p-6 border border-white/10 mb-6">
-                <h3 className="text-white font-semibold mb-4">{xl.reviewWriting}</h3>
+              <div className="bg-[var(--glass)] rounded-2xl p-6 border border-[var(--border)] mb-6">
+                <h3 className="text-[var(--text)] font-semibold mb-4">{xl.reviewWriting}</h3>
                 <form onSubmit={handleReview}>
                   <div className="mb-4">
-                    <label className="text-white/40 text-sm block mb-2">{xl.ratingLabel}</label>
+                    <label className="text-[var(--text-muted)] text-sm block mb-2">{xl.ratingLabel}</label>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -638,7 +766,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                           className="p-1"
                         >
                           <svg
-                            className={`w-8 h-8 ${star <= reviewRating ? 'text-gold-400' : 'text-white/20'}`}
+                            className={`w-8 h-8 ${star <= reviewRating ? 'text-gold-400' : 'text-[var(--text-muted)]'}`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -649,13 +777,13 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                     </div>
                   </div>
                   <div className="mb-4">
-                    <label className="text-white/40 text-sm block mb-2">{xl.commentLabel}</label>
+                    <label className="text-[var(--text-muted)] text-sm block mb-2">{xl.commentLabel}</label>
                     <textarea
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                       maxLength={1000}
                       rows={3}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gold-500 resize-none"
+                      className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--text)] text-sm focus:outline-none focus:border-gold-500 resize-none"
                       placeholder={xl.commentPlaceholder}
                     />
                   </div>
@@ -671,7 +799,7 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                         setReviewBookingId(null);
                         setReviewError('');
                       }}
-                      className="flex-1 py-2.5 rounded-lg border border-white/10 text-white/60 hover:text-white text-sm transition-colors"
+                      className="flex-1 py-2.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] text-sm transition-colors"
                     >
                       {tr.common.cancel}
                     </button>
@@ -690,17 +818,17 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                 {/* Abgeschlossene Termine zur Bewertung */}
                 {bookings.filter((b) => b.status === 'completed').length > 0 ? (
                   <div className="space-y-3">
-                    <p className="text-white/40 text-sm mb-3">
+                    <p className="text-[var(--text-muted)] text-sm mb-3">
                       {xl.selectCompleted}
                     </p>
                     {bookings.filter((b) => b.status === 'completed').map((apt) => (
                       <button
                         key={apt.id}
                         onClick={() => setReviewBookingId(apt.id)}
-                        className="w-full text-left bg-white/5 rounded-xl p-4 border border-white/5 hover:border-gold-500/30 transition-colors"
+                        className="w-full text-left bg-[var(--glass)] rounded-xl p-4 border border-[var(--border)] hover:border-gold-500/30 transition-colors"
                       >
-                        <h4 className="text-white font-medium">{apt.serviceName}</h4>
-                        <p className="text-white/40 text-sm">
+                        <h4 className="text-[var(--text)] font-medium">{apt.serviceName}</h4>
+                        <p className="text-[var(--text-muted)] text-sm">
                           {new Date(apt.date).toLocaleDateString(getLocale(lang), { day: 'numeric', month: 'long', year: 'numeric' })}
                         </p>
                       </button>
@@ -708,10 +836,10 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <svg className="w-12 h-12 text-white/20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
-                    <p className="text-white/40">{xl.noCompleted}</p>
+                    <p className="text-[var(--text-muted)]">{xl.noCompleted}</p>
                   </div>
                 )}
               </div>
@@ -722,26 +850,29 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
         {/* Einstellungen Tab */}
         {activeTab === 'settings' && (
           <div className="space-y-6">
-            <div className="bg-white/5 rounded-xl p-6 border border-white/5">
-              <h3 className="text-white font-semibold mb-4">{xl.profile}</h3>
+            <div className="bg-[var(--glass)] rounded-xl p-6 border border-[var(--border)]">
+              <h3 className="text-[var(--text)] font-semibold mb-4">{xl.profile}</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="text-white/40 text-sm">Name</label>
-                  <input type="text" defaultValue={user?.name ?? ''} className="w-full mt-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gold-500" />
+                  <label className="text-[var(--text-muted)] text-sm">Name</label>
+                  <input type="text" defaultValue={user?.name ?? ''} className="w-full mt-1 bg-[var(--glass)] border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--text)] text-sm focus:outline-none focus:border-gold-500" />
                 </div>
                 <div>
-                  <label className="text-white/40 text-sm">E-Mail</label>
-                  <input type="email" defaultValue={user?.email ?? ''} disabled className="w-full mt-1 bg-white/3 border border-white/5 rounded-lg px-4 py-2 text-white/40 text-sm cursor-not-allowed" />
+                  <label className="text-[var(--text-muted)] text-sm">E-Mail</label>
+                  <input type="email" defaultValue={user?.email ?? ''} disabled className="w-full mt-1 bg-[var(--glass)] border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--text-muted)] text-sm cursor-not-allowed" />
                 </div>
               </div>
             </div>
-            <div className="bg-white/5 rounded-xl p-6 border border-white/5">
-              <h3 className="text-white font-semibold mb-2">{xl.twoFactor}</h3>
-              <p className="text-white/40 text-sm mb-4">
+            <div className="bg-[var(--glass)] rounded-xl p-6 border border-[var(--border)]">
+              <h3 className="text-[var(--text)] font-semibold mb-2">{xl.twoFactor}</h3>
+              <p className="text-[var(--text-muted)] text-sm mb-4">
                 {user?.totpEnabled ? xl.twoFactorEnabled : xl.twoFactorDisabled}
               </p>
               {!user?.totpEnabled && (
-                <button className="px-4 py-2 rounded-lg bg-gold-500/10 text-gold-400 text-sm font-medium hover:bg-gold-500/20 transition-colors">
+                <button
+                  onClick={() => { setShow2FADialog(true); setTwoFAStep('idle'); }}
+                  className="px-4 py-2 rounded-lg bg-gold-500/10 text-gold-400 text-sm font-medium hover:bg-gold-500/20 transition-colors"
+                >
                   {xl.setup2FA}
                 </button>
               )}
@@ -749,6 +880,132 @@ export default function CustomerDashboard({ lang = 'de' }: Props) {
           </div>
         )}
       </motion.div>
+
+      {/* 2FA Setup Dialog */}
+      {show2FADialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[color-mix(in_oklab,var(--bg)_70%,transparent)] backdrop-blur-sm">
+          <div className="bg-[var(--bg-elevated-2)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-[var(--text)] font-semibold text-lg">{xl.setup2FATitle}</h2>
+              <button
+                onClick={close2FADialog}
+                className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+                aria-label={xl.setup2FACancel}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {twoFAError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-red-400 text-sm mb-4">
+                {twoFAError}
+              </div>
+            )}
+
+            {twoFAStep === 'success' && (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-green-400 font-medium">{xl.setup2FASuccess}</p>
+                <button
+                  onClick={close2FADialog}
+                  className="mt-6 px-6 py-2.5 rounded-full bg-gold-500 text-surface-950 font-semibold text-sm hover:bg-gold-400 transition-colors"
+                >
+                  {tr.common.close ?? 'OK'}
+                </button>
+              </div>
+            )}
+
+            {(twoFAStep === 'idle' || twoFAStep === 'loading') && (
+              <div>
+                <p className="text-[var(--text-muted)] text-sm mb-6">{xl.setup2FAStep1}</p>
+                <button
+                  onClick={handle2FASetup}
+                  disabled={twoFAStep === 'loading'}
+                  className="w-full py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {twoFAStep === 'loading' && (
+                    <div className="w-4 h-4 border-2 border-surface-950 border-t-transparent rounded-full animate-spin" />
+                  )}
+                  {twoFAStep === 'loading' ? xl.setup2FALoading : xl.setup2FATitle}
+                </button>
+                <button
+                  onClick={close2FADialog}
+                  className="w-full mt-3 py-3 rounded-full border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] text-sm transition-colors"
+                >
+                  {xl.setup2FACancel}
+                </button>
+              </div>
+            )}
+
+            {twoFAStep === 'scan' && (
+              <div>
+                <p className="text-[var(--text-muted)] text-sm mb-4">{xl.setup2FAStep1}</p>
+                <div className="flex justify-center mb-4">
+                  <img src={twoFAQrUrl} alt="QR Code" className="w-48 h-48 rounded-lg bg-white p-2" />
+                </div>
+                {twoFASecret && (
+                  <div className="bg-[var(--glass)] rounded-lg px-4 py-2 mb-6 text-center">
+                    <p className="text-[var(--text-muted)] text-xs mb-1">Secret</p>
+                    <code className="text-gold-400 text-sm font-mono tracking-widest break-all">{twoFASecret}</code>
+                  </div>
+                )}
+                <button
+                  onClick={() => setTwoFAStep('verify')}
+                  className="w-full py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors"
+                >
+                  {xl.setup2FAVerify}
+                </button>
+                <button
+                  onClick={close2FADialog}
+                  className="w-full mt-3 py-3 rounded-full border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] text-sm transition-colors"
+                >
+                  {xl.setup2FACancel}
+                </button>
+              </div>
+            )}
+
+            {twoFAStep === 'verify' && (
+              <form onSubmit={handle2FAVerify}>
+                <p className="text-[var(--text-muted)] text-sm mb-4">{xl.setup2FAVerify}</p>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]{6}"
+                  maxLength={6}
+                  value={twoFAToken}
+                  onChange={(e) => setTwoFAToken(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder={xl.setup2FACode}
+                  className="w-full bg-[var(--glass)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] text-center text-2xl tracking-[0.5em] font-mono focus:outline-none focus:border-gold-500 transition-colors mb-6"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  disabled={twoFAVerifyLoading || twoFAToken.length !== 6}
+                  className="w-full py-3 rounded-full bg-gold-500 text-surface-950 font-semibold hover:bg-gold-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {twoFAVerifyLoading && (
+                    <div className="w-4 h-4 border-2 border-surface-950 border-t-transparent rounded-full animate-spin" />
+                  )}
+                  {xl.setup2FAConfirm}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTwoFAStep('scan')}
+                  className="w-full mt-3 py-3 rounded-full border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] text-sm transition-colors"
+                >
+                  {tr.common.back}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -44,7 +44,7 @@ export default function Features() {
   return (
     <section
       className="relative py-24 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #080809 0%, #0a0a0c 50%, #050506 100%)' }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-elevated) 50%, var(--bg) 100%)' }}
     >
       {/* Noise overlay */}
       <div
@@ -95,10 +95,10 @@ export default function Features() {
                 {feature.icon}
               </motion.div>
 
-              <h3 className="text-lg font-semibold" style={{ color: '#EDEDEF' }}>
+              <h3 className="text-lg font-semibold" style={{ color: 'var(--text)' }}>
                 {feature.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: '#8A8F98' }}>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                 {feature.description}
               </p>
             </motion.div>
