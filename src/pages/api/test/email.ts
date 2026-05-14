@@ -2,7 +2,7 @@ import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
-import { sendWelcomeEmail } from '../../../lib/email';
+import { isMailConfigured, sendWelcomeEmail } from '../../../lib/email';
 import { jsonResponse, errorResponse } from '../../../lib/validation';
 
 export async function GET(context: APIContext) {
@@ -13,8 +13,8 @@ export async function GET(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user || user.role !== 'admin') return errorResponse('Keine Berechtigung.', 403);
 
-  if (!env.BREVO_API_KEY) {
-    return jsonResponse({ error: 'BREVO_API_KEY nicht konfiguriert' });
+  if (!isMailConfigured(env)) {
+    return jsonResponse({ error: 'Microsoft Graph (MS_TENANT_ID / MS_CLIENT_ID / MS_CLIENT_SECRET / MAIL_SENDER) nicht konfiguriert' });
   }
 
   try {

@@ -11,7 +11,7 @@ import {
   jsonResponse,
   errorResponse,
 } from '../../../lib/validation';
-import { sendBookingConfirmation } from '../../../lib/email';
+import { sendBookingConfirmation, isMailConfigured } from '../../../lib/email';
 
 export async function POST(context: APIContext) {
   const token = getSessionToken(context.request);
@@ -84,7 +84,7 @@ export async function POST(context: APIContext) {
   }
 
   // E-Mail-Bestätigung (fire and forget)
-  if (env.BREVO_API_KEY) {
+  if (isMailConfigured(env)) {
     sendBookingConfirmation(env, {
       to: user.email,
       customerName: user.name,

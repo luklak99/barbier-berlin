@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { generateId, generateSessionToken } from '../../../lib/crypto';
 import { getServiceById } from '../../../data/services';
+import { isMailConfigured, sendCustomEmail } from '../../../lib/email';
 import {
   validateEmail,
   validateServiceId,
@@ -151,20 +152,11 @@ export async function POST(context: APIContext) {
   const cancelUrl = `https://barbier.berlin/booking/cancel?token=${cancelToken}`;
   const serviceName = service.name[lang];
 
-  if (env.BREVO_API_KEY) {
+  if (isMailConfigured(env)) {
     const html = guestConfirmHtml({ name, serviceName, date, startTime, endTime, price: service.price, cancelUrl, lang });
     const text = guestConfirmText({ name, serviceName, date, startTime, price: service.price, cancelUrl, lang });
-    fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': env.BREVO_API_KEY },
-      body: JSON.stringify({
-        sender: { name: 'Barbier Berlin', email: 'info@barbier.berlin' },
-        to: [{ email }],
-        subject: guestConfirmSubject[lang],
-        htmlContent: html,
-        textContent: text,
-      }),
-    }).catch((err) => console.error('Gast-E-Mail fehlgeschlagen:', err));
+    sendCustomEmail(env, { to: email, subject: guestConfirmSubject[lang], html, text })
+      .catch((err) => console.error('Gast-E-Mail fehlgeschlagen:', err));
   }
 
   return jsonResponse({ success: true, bookingId, cancelToken }, 201);

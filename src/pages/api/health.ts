@@ -5,7 +5,7 @@ export async function GET() {
     const info: Record<string, unknown> = {
       status: 'ok',
       hasDb: !!env.DB,
-      hasBrevo: !!env.BREVO_API_KEY,
+      hasMailConfig: !!(env.MS_TENANT_ID && env.MS_CLIENT_ID && env.MS_CLIENT_SECRET && env.MAIL_SENDER),
     };
 
     if (env.DB) {

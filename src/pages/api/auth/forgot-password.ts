@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { users, passwordResetTokens } from '../../../db/schema';
 import { generateId, generateSessionToken, hashToken } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
+import { isMailConfigured, sendPasswordResetEmail } from '../../../lib/email';
 import { validateEmail, jsonResponse, errorResponse } from '../../../lib/validation';
 
 export async function POST(context: APIContext) {
@@ -31,8 +32,7 @@ export async function POST(context: APIContext) {
     });
 
     // Send reset email (fire and forget)
-    if (env.BREVO_API_KEY) {
-      const { sendPasswordResetEmail } = await import('../../../lib/email');
+    if (isMailConfigured(env)) {
       sendPasswordResetEmail(env, {
         to: email,
         customerName: user.name,

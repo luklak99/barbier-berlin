@@ -13,7 +13,7 @@ import {
   jsonResponse,
   errorResponse,
 } from '../../../lib/validation';
-import { sendWelcomeEmail } from '../../../lib/email';
+import { sendWelcomeEmail, isMailConfigured } from '../../../lib/email';
 
 export async function POST(context: APIContext) {
   try {
@@ -58,7 +58,7 @@ export async function POST(context: APIContext) {
     const token = await createSession(db, userId);
 
     // Willkommens-E-Mail (fire and forget)
-    if (env.BREVO_API_KEY) {
+    if (isMailConfigured(env)) {
       sendWelcomeEmail(env, { to: email, customerName: name }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
     }
 

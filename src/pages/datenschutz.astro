@@ -126,13 +126,14 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div>
-          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">11. E-Mail-Versand (Brevo)</h2>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">11. E-Mail-Versand (Microsoft Exchange Online)</h2>
           <p>
             Für transaktionale E-Mails (Buchungsbestätigung, Erinnerung, Stornierung,
-            Passwort-Zurücksetzung, E-Mail-Bestätigung, Willkommen) nutzen wir den
-            E-Mail-Dienstleister Brevo (Sendinblue SAS, 106 boulevard Haussmann, 75008 Paris,
-            Frankreich). Brevo ist ein EU-ansässiges Unternehmen und verarbeitet die
-            Versanddaten in Rechenzentren innerhalb der Europäischen Union.
+            Passwort-Zurücksetzung, E-Mail-Bestätigung, Willkommen) nutzen wir Microsoft
+            Exchange Online über die Microsoft Graph API. Anbieter ist die Microsoft Ireland
+            Operations Limited, One Microsoft Place, South County Business Park, Leopardstown,
+            Dublin 18, Irland. Die Versanddaten werden in EU-Rechenzentren von Microsoft
+            verarbeitet.
           </p>
           <p class="mt-2">
             Verarbeitet werden dabei: Ihre E-Mail-Adresse, Ihr Name sowie der Inhalt der
@@ -142,9 +143,12 @@ import Layout from '../layouts/Layout.astro';
             zuverlässiger Kundenkommunikation).
           </p>
           <p class="mt-2">
-            Mit Brevo wurde ein Auftragsverarbeitungsvertrag gemäß Art. 28 DSGVO geschlossen.
-            Datenschutzerklärung von Brevo:
-            <a href="https://www.brevo.com/legal/privacypolicy/" target="_blank" rel="noopener noreferrer" class="text-gold-400 hover:text-gold-300">brevo.com/legal/privacypolicy</a>
+            Mit Microsoft wurde ein Auftragsverarbeitungsvertrag nach Art. 28 DSGVO
+            (Microsoft Products and Services Data Protection Addendum, DPA) geschlossen.
+            Eine etwaige Übermittlung in Drittländer (Microsoft Corporation, USA) ist durch
+            EU-Standardvertragsklauseln und ergänzende technische Schutzmaßnahmen abgesichert.
+            Datenschutzerklärung von Microsoft:
+            <a href="https://privacy.microsoft.com/de-de/privacystatement" target="_blank" rel="noopener noreferrer" class="text-gold-400 hover:text-gold-300">privacy.microsoft.com</a>
           </p>
         </div>
 

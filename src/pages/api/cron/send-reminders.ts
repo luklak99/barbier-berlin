@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { bookings, users } from '../../../db/schema';
 import { getDb } from '../../../lib/db';
 import { getServiceById } from '../../../data/services';
+import { isMailConfigured, sendBookingReminder } from '../../../lib/email';
 import { jsonResponse, errorResponse } from '../../../lib/validation';
 
 export async function GET(context: APIContext) {
@@ -25,8 +26,7 @@ export async function GET(context: APIContext) {
     .where(and(eq(bookings.date, tomorrowStr), eq(bookings.status, 'confirmed')));
 
   let sent = 0;
-  if (env.BREVO_API_KEY) {
-    const { sendBookingReminder } = await import('../../../lib/email');
+  if (isMailConfigured(env)) {
     for (const { booking, userName, userEmail } of tomorrowBookings) {
       const service = getServiceById(booking.serviceId);
       if (!service) continue;

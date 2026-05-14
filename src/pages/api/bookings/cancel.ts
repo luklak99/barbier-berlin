@@ -6,7 +6,7 @@ import { generateId } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
 import { validateBookingId, jsonResponse, errorResponse } from '../../../lib/validation';
-import { sendBookingCancellation } from '../../../lib/email';
+import { sendBookingCancellation, isMailConfigured } from '../../../lib/email';
 import { getServiceById } from '../../../data/services';
 
 export async function POST(context: APIContext) {
@@ -81,7 +81,7 @@ export async function POST(context: APIContext) {
 
   // E-Mail-Bestätigung (fire and forget)
   const service = getServiceById(booking.serviceId);
-  if (env.BREVO_API_KEY && service) {
+  if (isMailConfigured(env) && service) {
     sendBookingCancellation(env, {
       to: user.email,
       customerName: user.name,

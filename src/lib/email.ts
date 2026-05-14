@@ -1,7 +1,16 @@
 /**
- * E-Mail-Versand über Brevo (Sendinblue) HTTP API.
- * EU-Server (Paris), DSGVO-konform, 300 Mails/Tag kostenlos.
- * API-Key als Cloudflare Secret: BREVO_API_KEY
+ * E-Mail-Versand über Microsoft Graph API (Exchange Online).
+ *
+ * Authentifizierung: OAuth 2.0 Client Credentials Flow (App-only).
+ * - App-Registrierung in Azure AD mit Application Permission `Mail.Send`
+ * - Admin Consent erteilt
+ * - Application Access Policy in EXO beschränkt App auf MAIL_SENDER-Mailbox
+ *
+ * Benötigte Cloudflare Pages Secrets:
+ *   MS_TENANT_ID     – GUID des Azure AD Tenants
+ *   MS_CLIENT_ID     – Application (Client) ID der App-Registrierung
+ *   MS_CLIENT_SECRET – Client Secret der App-Registrierung
+ *   MAIL_SENDER      – Absender-Mailbox (z. B. info@barbier.berlin)
  */
 
 import { sanitizeEmailForSmtp } from './validation';
@@ -20,46 +29,133 @@ import {
   welcomeEmailText,
 } from './email-templates';
 
-const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 const FROM_NAME = 'Barbier Berlin';
-const FROM_EMAIL = 'info@barbier.berlin';
+const GRAPH_BASE = 'https://graph.microsoft.com/v1.0';
+const TOKEN_EXPIRY_BUFFER_MS = 60_000;
 
 interface EmailEnv {
-  BREVO_API_KEY: string;
+  MS_TENANT_ID: string;
+  MS_CLIENT_ID: string;
+  MS_CLIENT_SECRET: string;
+  MAIL_SENDER: string;
 }
 
-async function sendViaBrevo(
+// In-memory token cache per Worker isolate.
+// Graph access tokens are valid for ~1h; we refresh 1 min early to avoid edge cases.
+let cachedToken: { value: string; expiresAt: number } | null = null;
+
+async function getAccessToken(env: EmailEnv): Promise<string> {
+  const now = Date.now();
+  if (cachedToken && cachedToken.expiresAt > now + TOKEN_EXPIRY_BUFFER_MS) {
+    return cachedToken.value;
+  }
+
+  if (!env.MS_TENANT_ID || !env.MS_CLIENT_ID || !env.MS_CLIENT_SECRET) {
+    throw new Error('Microsoft Graph nicht konfiguriert: MS_TENANT_ID / MS_CLIENT_ID / MS_CLIENT_SECRET fehlen.');
+  }
+
+  const url = `https://login.microsoftonline.com/${encodeURIComponent(env.MS_TENANT_ID)}/oauth2/v2.0/token`;
+  const body = new URLSearchParams({
+    client_id: env.MS_CLIENT_ID,
+    client_secret: env.MS_CLIENT_SECRET,
+    scope: 'https://graph.microsoft.com/.default',
+    grant_type: 'client_credentials',
+  });
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    throw new Error(`Graph Token-Endpoint ${res.status}: ${detail}`);
+  }
+
+  const json = await res.json() as { access_token: string; expires_in: number };
+  cachedToken = {
+    value: json.access_token,
+    expiresAt: now + json.expires_in * 1000,
+  };
+  return json.access_token;
+}
+
+async function sendViaGraph(
   env: EmailEnv,
   to: string,
   subject: string,
   html: string,
   text: string,
 ): Promise<void> {
-  const safeTo = sanitizeEmailForSmtp(to);
+  if (!env.MAIL_SENDER) {
+    throw new Error('Microsoft Graph nicht konfiguriert: MAIL_SENDER fehlt.');
+  }
 
-  const res = await fetch(BREVO_API_URL, {
+  const safeTo = sanitizeEmailForSmtp(to);
+  const token = await getAccessToken(env);
+
+  const url = `${GRAPH_BASE}/users/${encodeURIComponent(env.MAIL_SENDER)}/sendMail`;
+  const payload = {
+    message: {
+      subject,
+      body: { contentType: 'HTML', content: html },
+      toRecipients: [{ emailAddress: { address: safeTo } }],
+      from: { emailAddress: { name: FROM_NAME, address: env.MAIL_SENDER } },
+    },
+    saveToSentItems: true,
+  };
+
+  const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'accept': 'application/json',
+      'authorization': `Bearer ${token}`,
       'content-type': 'application/json',
-      'api-key': env.BREVO_API_KEY,
     },
-    body: JSON.stringify({
-      sender: { name: FROM_NAME, email: FROM_EMAIL },
-      to: [{ email: safeTo }],
-      subject,
-      htmlContent: html,
-      textContent: text,
-    }),
+    body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`Brevo API Fehler (${res.status}): ${body}`);
+  // 401 → Token könnte revoked sein, einmal Cache invalidieren und retry
+  if (res.status === 401) {
+    cachedToken = null;
+    const fresh = await getAccessToken(env);
+    const retry = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'authorization': `Bearer ${fresh}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!retry.ok) {
+      const detail = await retry.text().catch(() => '');
+      throw new Error(`Graph sendMail (retry) ${retry.status}: ${detail}`);
+    }
+    return;
   }
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    throw new Error(`Graph sendMail ${res.status}: ${detail}`);
+  }
+
+  // Plain-Text-Variante landet nicht direkt im Graph-Payload (HTML reicht).
+  // Text-Argument ist für künftige multipart/alternative-Varianten erhalten.
+  void text;
 }
 
 // --- Public API ---
+
+export function isMailConfigured(env: Partial<EmailEnv>): boolean {
+  return !!(env.MS_TENANT_ID && env.MS_CLIENT_ID && env.MS_CLIENT_SECRET && env.MAIL_SENDER);
+}
+
+export interface CustomEmailParams { to: string; subject: string; html: string; text: string; }
+
+/** Generischer Versand für Spezialfälle (z. B. Gast-Buchungen mit ad-hoc Template). */
+export async function sendCustomEmail(env: EmailEnv, params: CustomEmailParams): Promise<void> {
+  await sendViaGraph(env, params.to, params.subject, params.html, params.text);
+}
 
 type EmailLang = 'de' | 'en' | 'tr' | 'ar';
 
@@ -99,28 +195,28 @@ export interface WelcomeEmailParams extends WelcomeEmailData { to: string; }
 
 export async function sendBookingConfirmation(env: EmailEnv, params: BookingConfirmationParams): Promise<void> {
   const { to, lang = 'de', ...data } = params;
-  await sendViaBrevo(env, to,
+  await sendViaGraph(env, to,
     confirmationSubject(data.serviceName, data.date, lang),
     bookingConfirmationHtml(data), bookingConfirmationText(data));
 }
 
 export async function sendBookingCancellation(env: EmailEnv, params: BookingCancellationParams): Promise<void> {
   const { to, lang = 'de', ...data } = params;
-  await sendViaBrevo(env, to,
+  await sendViaGraph(env, to,
     cancellationSubject(data.serviceName, data.date, lang),
     bookingCancellationHtml(data), bookingCancellationText(data));
 }
 
 export async function sendBookingReminder(env: EmailEnv, params: BookingReminderParams): Promise<void> {
   const { to, lang = 'de', ...data } = params;
-  await sendViaBrevo(env, to,
+  await sendViaGraph(env, to,
     reminderSubject(data.startTime, lang),
     bookingReminderHtml(data), bookingReminderText(data));
 }
 
 export async function sendWelcomeEmail(env: EmailEnv, params: WelcomeEmailParams): Promise<void> {
   const { to, ...data } = params;
-  await sendViaBrevo(env, to, 'Willkommen bei Barbier Berlin!',
+  await sendViaGraph(env, to, 'Willkommen bei Barbier Berlin!',
     welcomeEmailHtml(data), welcomeEmailText(data));
 }
 
@@ -137,7 +233,7 @@ export async function sendPasswordResetEmail(env: EmailEnv, params: PasswordRese
     <a href="${params.resetUrl}" style="color:#1a1a2e;text-decoration:none;font-weight:700;font-size:15px">Neues Passwort setzen</a></td></tr></table>
     <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">Dieser Link ist 1 Stunde gültig.</p></td></tr></table></td></tr></table></body></html>`;
   const text = `Passwort zurücksetzen\n\nHallo ${params.customerName},\n${params.resetUrl}\n\n1h gültig.\n\nBarbier Berlin`;
-  await sendViaBrevo(env, params.to, 'Passwort zurücksetzen – Barbier Berlin', html, text);
+  await sendViaGraph(env, params.to, 'Passwort zurücksetzen – Barbier Berlin', html, text);
 }
 
 export interface VerificationEmailParams { to: string; customerName: string; verifyUrl: string; }
@@ -153,7 +249,7 @@ export async function sendVerificationEmail(env: EmailEnv, params: VerificationE
     <a href="${params.verifyUrl}" style="color:#1a1a2e;text-decoration:none;font-weight:700;font-size:15px">E-Mail bestätigen</a></td></tr></table>
     <p style="color:#a0a0a0;font-size:13px;margin:24px 0 0">24 Stunden gültig.</p></td></tr></table></td></tr></table></body></html>`;
   const text = `E-Mail bestätigen\n\nHallo ${params.customerName},\n${params.verifyUrl}\n\nBarbier Berlin`;
-  await sendViaBrevo(env, params.to, 'E-Mail bestätigen – Barbier Berlin', html, text);
+  await sendViaGraph(env, params.to, 'E-Mail bestätigen – Barbier Berlin', html, text);
 }
 
 function fmtDate(d: string): string { const [y,m,dd] = d.split('-'); return `${dd}.${m}.${y}`; }
