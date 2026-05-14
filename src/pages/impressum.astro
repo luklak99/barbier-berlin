@@ -1,11 +1,36 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+// HINWEIS — vor Live-Gang vervollständigen:
+// - Vollständiger Name des Inhabers (Vor- + Nachname) statt nur "Mohammed"
+// - Rechtsform (Einzelunternehmen, GmbH, …)
+// - USt-IdNr. nach §27a UStG ODER Hinweis "Kleinunternehmer gemäß §19 UStG"
+// - Wirtschafts-ID (sofern vorhanden)
+// - Berufsbezeichnung: Friseur / Barbier
+// - Zuständige Kammer (i. d. R. Handwerkskammer Berlin) + Adresse
+// - Verleihungsstaat der Berufsbezeichnung (Deutschland)
+// - Berufsrechtliche Regelungen (Handwerksordnung — abrufbar unter gesetze-im-internet.de)
+// - Optional: Berufshaftpflichtversicherung (Versicherer + räumlicher Geltungsbereich)
+const showTodoBanner = import.meta.env.DEV;
 ---
 
 <Layout title="Impressum – Barbier Berlin">
   <section class="pt-32 pb-16 bg-[var(--bg)]">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-4xl font-display font-bold text-[var(--text)] mb-8">Impressum</h1>
+
+      {showTodoBanner && (
+        <div class="mb-8 rounded-xl border-2 border-dashed p-5" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.08); color: var(--text);">
+          <p class="font-semibold mb-2" style="color: #f59e0b;">⚠️ Nur in Entwicklungs-Vorschau sichtbar — vor Live vervollständigen</p>
+          <ul class="text-sm list-disc list-inside space-y-1" style="color: var(--text-subtle);">
+            <li>Vollständiger Inhaber-Name (aktuell nur „Mohammed“) + Rechtsform</li>
+            <li>USt-IdNr. oder Kleinunternehmer-Hinweis (§19 UStG)</li>
+            <li>Berufsbezeichnung „Friseur/Barbier“ + zuständige Handwerkskammer Berlin</li>
+            <li>Optional: Berufshaftpflichtversicherung</li>
+          </ul>
+        </div>
+      )}
+
       <div class="prose prose-invert prose-sm max-w-none space-y-6 text-[var(--text-subtle)]">
         <div>
           <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Angaben gemäß § 5 TMG</h2>
@@ -13,6 +38,14 @@ import Layout from '../layouts/Layout.astro';
             Barbier Berlin<br />
             Markgrafenstraße 88<br />
             10969 Berlin
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Vertreten durch</h2>
+          <p>
+            Mohammed<br />
+            <span class="opacity-70">[Nachname und Rechtsform bitte ergänzen]</span>
           </p>
         </div>
 
@@ -25,9 +58,32 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div>
-          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Umsatzsteuer</h2>
           <p>
-            Mohammed<br />
+            <span class="opacity-70">
+              [USt-IdNr. nach §27a UStG eintragen ODER Hinweis: „Kleinunternehmer gemäß §19 UStG –
+              es wird keine Umsatzsteuer ausgewiesen.“]
+            </span>
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Berufsbezeichnung und berufsrechtliche Regelungen</h2>
+          <p>
+            Berufsbezeichnung: <span class="opacity-70">[Friseur / Barbier]</span><br />
+            Verleihungsstaat: Deutschland<br />
+            Zuständige Kammer: <span class="opacity-70">[Handwerkskammer Berlin, Blücherstraße 68, 10961 Berlin]</span>
+          </p>
+          <p class="mt-2">
+            Berufsrechtliche Regelungen: Handwerksordnung (HwO) — einsehbar unter
+            <a href="https://www.gesetze-im-internet.de/hwo/" target="_blank" rel="noopener noreferrer" class="text-gold-400 hover:text-gold-300">gesetze-im-internet.de/hwo</a>
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+          <p>
+            Mohammed <span class="opacity-70">[Nachname ergänzen]</span><br />
             Markgrafenstraße 88<br />
             10969 Berlin
           </p>
@@ -44,6 +100,35 @@ import Layout from '../layouts/Layout.astro';
           <p>
             Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
             Verbraucherschlichtungsstelle teilzunehmen.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Haftung für Inhalte</h2>
+          <p>
+            Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten
+            nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als
+            Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
+            Informationen zu überwachen.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Haftung für Links</h2>
+          <p>
+            Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen
+            Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
+            oder Betreiber verantwortlich.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-2">Urheberrecht</h2>
+          <p>
+            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen
+            dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede Art der
+            Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung
+            des jeweiligen Autors bzw. Erstellers.
           </p>
         </div>
       </div>

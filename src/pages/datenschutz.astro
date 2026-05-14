@@ -26,8 +26,9 @@ import Layout from '../layouts/Layout.astro';
           <ul class="list-disc list-inside mt-2 space-y-1">
             <li>Bestandsdaten (Name, E-Mail-Adresse, Telefonnummer) bei Registrierung</li>
             <li>Buchungsdaten (gewählter Service, Datum, Uhrzeit)</li>
-            <li>Nutzungsdaten (Punktestand, Buchungshistorie)</li>
+            <li>Nutzungsdaten (Punktestand, Buchungshistorie, Bewertungen)</li>
             <li>Technische Daten (IP-Adresse, Browser-Typ) über Server-Logs</li>
+            <li>Authentifizierungsdaten (gehashtes Passwort, ggf. 2FA-Secret) bei aktivierter Zwei-Faktor-Authentifizierung</li>
           </ul>
         </div>
 
@@ -78,31 +79,89 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div>
-          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">7. Cookies</h2>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">7. Cookies und lokale Speicherung</h2>
           <p>
-            Wir verwenden nur technisch notwendige Cookies (Session-Cookies für die Anmeldung).
-            Es werden keine Tracking- oder Marketing-Cookies verwendet.
+            Wir verwenden ausschließlich technisch notwendige Cookies und lokal gespeicherte Werte
+            (kein Drittanbieter-Tracking, keine Marketing-Cookies):
           </p>
+          <ul class="list-disc list-inside mt-2 space-y-1">
+            <li><strong>session</strong> (Cookie, HTTP-only, Secure) — hält Ihre Anmeldung aufrecht. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Lebensdauer: bis zur Abmeldung bzw. max. 30 Tage.</li>
+            <li><strong>bb-theme</strong> (localStorage) — speichert Ihre Wahl Hell-/Dunkel-Modus. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an nutzerfreundlicher Darstellung). Kein Personenbezug.</li>
+            <li><strong>cookie-consent-accepted</strong> (localStorage) — merkt, dass Sie den Cookie-Hinweis bestätigt haben. Kein Personenbezug.</li>
+          </ul>
         </div>
 
         <div>
           <h2 class="text-[var(--text)] text-xl font-semibold mb-3">8. SSL-Verschlüsselung</h2>
           <p>
-            Diese Website nutzt aus Sicherheitsgründen eine SSL-Verschlüsselung (HTTPS).
-            Eine verschlüsselte Verbindung erkennen Sie am Schloss-Symbol in der Adresszeile.
+            Diese Website nutzt aus Sicherheitsgründen eine SSL-/TLS-Verschlüsselung (HTTPS) mit
+            HTTP Strict Transport Security (HSTS). Eine verschlüsselte Verbindung erkennen Sie am
+            Schloss-Symbol in der Adresszeile.
           </p>
         </div>
 
         <div>
-          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">9. Hosting</h2>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">9. Hosting (Cloudflare)</h2>
           <p>
-            Unsere Website wird bei Cloudflare Pages gehostet. Cloudflare betreibt Rechenzentren
-            in der EU und verarbeitet Daten gemäß der DSGVO.
+            Unsere Website wird über Cloudflare Pages bereitgestellt (Cloudflare Germany GmbH,
+            Rosental 7, c/o Mindspace, 80331 München; Mutterunternehmen: Cloudflare Inc., USA).
+            Cloudflare verarbeitet beim Aufruf der Website technische Verbindungsdaten (insb.
+            IP-Adresse, Datum/Uhrzeit, übertragene Datenmenge) zur Auslieferung der Inhalte und
+            zur Abwehr von Angriffen.
+          </p>
+          <p class="mt-2">
+            Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem und
+            performantem Betrieb). Mit Cloudflare wurde ein Auftragsverarbeitungsvertrag gemäß
+            Art. 28 DSGVO geschlossen. Eine Übermittlung in Drittländer wird durch
+            EU-Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO) abgesichert.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">10. Datenbank (Cloudflare D1)</h2>
+          <p>
+            Ihre Konto- und Buchungsdaten speichern wir in einer Cloudflare-D1-Datenbank, gehostet
+            in EU-Rechenzentren. Backups werden automatisch durch Cloudflare angefertigt.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">11. E-Mail-Versand</h2>
+          <p>
+            Für transaktionale E-Mails (Buchungsbestätigung, Erinnerung, Stornierung,
+            Passwort-Zurücksetzung, E-Mail-Bestätigung) nutzen wir einen externen
+            E-Mail-Dienstleister. Verarbeitet werden dabei Ihre E-Mail-Adresse, Ihr Name sowie
+            die Inhalte der jeweiligen E-Mail.
+          </p>
+          <p class="mt-2">
+            <em>Hinweis: Der aktuell eingesetzte Dienstleister wird zum Launch der Website
+            verbindlich benannt; ein Auftragsverarbeitungsvertrag nach Art. 28 DSGVO wird vor
+            Inbetriebnahme geschlossen. EU-Datenverarbeitung wird sichergestellt.</em>
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">12. Externe Dienste</h2>
+          <p>
+            Wir binden folgende externe Ressourcen ein:
+          </p>
+          <ul class="list-disc list-inside mt-2 space-y-1">
+            <li><strong>Google Fonts</strong> (fonts.googleapis.com, fonts.gstatic.com) — Schriftarten "Inter" und "Playfair Display". Beim Laden wird Ihre IP-Adresse an Google übertragen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</li>
+            <li><strong>Google Maps</strong> (auf Kontaktseite) — Anzeige unseres Standorts. Beim Laden wird Ihre IP-Adresse an Google übertragen.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-[var(--text)] text-xl font-semibold mb-3">13. Beschwerderecht</h2>
+          <p>
+            Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren.
+            Zuständig ist die Berliner Beauftragte für Datenschutz und Informationsfreiheit,
+            Friedrichstr. 219, 10969 Berlin.
           </p>
         </div>
 
         <p class="text-[var(--text-muted)] text-xs pt-4 border-t border-[var(--border)]">
-          Stand: April 2026
+          Stand: Mai 2026
         </p>
       </div>
     </div>
