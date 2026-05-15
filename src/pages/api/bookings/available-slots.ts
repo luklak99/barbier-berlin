@@ -1,7 +1,7 @@
 import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { and, eq } from 'drizzle-orm';
-import { bookings } from '../../../db/schema';
+import { bookings, guestBookings } from '../../../db/schema';
 import { getDb } from '../../../lib/db';
 import { getServiceById } from '../../../data/services';
 import { validateDate, validateServiceId, jsonResponse, errorResponse } from '../../../lib/validation';
@@ -31,11 +31,18 @@ export async function GET(context: APIContext) {
 
   const db = getDb(env.DB);
 
-  // Get existing bookings for this date
-  const existing = await db
-    .select({ startTime: bookings.startTime, endTime: bookings.endTime })
-    .from(bookings)
-    .where(and(eq(bookings.date, date), eq(bookings.status, 'confirmed')));
+  // Get existing bookings (auth + guest) for this date
+  const [existingAuth, existingGuest] = await Promise.all([
+    db
+      .select({ startTime: bookings.startTime, endTime: bookings.endTime })
+      .from(bookings)
+      .where(and(eq(bookings.date, date), eq(bookings.status, 'confirmed'))),
+    db
+      .select({ startTime: guestBookings.startTime, endTime: guestBookings.endTime })
+      .from(guestBookings)
+      .where(and(eq(guestBookings.date, date), eq(guestBookings.status, 'confirmed'))),
+  ]);
+  const existing = [...existingAuth, ...existingGuest];
 
   // Generate 30-minute slots
   const slots: { time: string; available: boolean }[] = [];

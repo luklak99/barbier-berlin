@@ -83,6 +83,49 @@ export async function hashToken(token: string): Promise<string> {
   return Array.from(hash, (b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+// --- Symmetric encryption for TOTP secrets at rest (AES-GCM) ---
+//
+// Format: <iv-hex>:<ciphertext-hex>
+// Key:    32 Bytes (256 Bit), Hex-codiert in Env-Var TOTP_ENCRYPTION_KEY (64 Zeichen)
+// IV:     12 zufällige Bytes pro Verschlüsselung (AES-GCM-Standard)
+
+async function importAesKey(keyHex: string): Promise<CryptoKey> {
+  if (!/^[0-9a-fA-F]{64}$/.test(keyHex)) {
+    throw new Error('TOTP_ENCRYPTION_KEY muss genau 64 Hex-Zeichen (32 Byte) lang sein.');
+  }
+  const raw = new Uint8Array(keyHex.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+  return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+}
+
+export async function encryptSecret(plaintext: string, keyHex: string): Promise<string> {
+  const key = await importAesKey(keyHex);
+  const iv = new Uint8Array(12);
+  crypto.getRandomValues(iv);
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    new TextEncoder().encode(plaintext),
+  );
+  const ivHex = Array.from(iv, (b) => b.toString(16).padStart(2, '0')).join('');
+  const ctHex = Array.from(new Uint8Array(ciphertext), (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${ivHex}:${ctHex}`;
+}
+
+export async function decryptSecret(stored: string, keyHex: string): Promise<string> {
+  const [ivHex, ctHex] = stored.split(':');
+  if (!ivHex || !ctHex) throw new Error('Ungültiges Encryption-Format.');
+  const iv = new Uint8Array(ivHex.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+  const ct = new Uint8Array(ctHex.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+  const key = await importAesKey(keyHex);
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+  return new TextDecoder().decode(pt);
+}
+
+// Erkennt verschlüsselte Werte am Format <hex>:<hex> mit korrekter IV-Länge (24 hex chars)
+export function isEncryptedSecret(stored: string): boolean {
+  return /^[0-9a-f]{24}:[0-9a-f]+$/i.test(stored);
+}
+
 // --- TOTP (Time-based One-Time Password - RFC 6238) ---
 
 export function generateTotpSecret(): string {

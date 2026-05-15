@@ -125,29 +125,38 @@ export async function POST(context: APIContext) {
   if (bookingDate <= new Date()) return errorResponse('Termine nur in der Zukunft.');
   if (bookingDate.getDay() === 0) return errorResponse('Sonntags geschlossen.');
 
-  const [h] = startTime.split(':').map(Number);
-  const maxHour = bookingDate.getDay() === 6 ? 17 : 18;
-  if (h! < 10 || h! >= maxHour) return errorResponse(`Termine nur zwischen 10:00 und ${maxHour}:00 Uhr.`);
+  const closingHour = bookingDate.getDay() === 6 ? 17 : 18;
+  const startMin = startH! * 60 + startM!;
+  const endMin = totalMinutes;
+  if (startMin < 10 * 60 || endMin > closingHour * 60) {
+    return errorResponse(`Termine nur zwischen 10:00 und ${closingHour}:00 Uhr.`);
+  }
 
   const bookingId = generateId();
   const cancelToken = generateSessionToken();
 
-  // Atomare Konfliktprüfung gegen beide Tabellen + INSERT
-  const conflictInBookings = await env.DB.prepare(
-    `SELECT 1 FROM bookings WHERE date = ? AND status = 'confirmed' AND start_time < ? AND end_time > ? LIMIT 1`
-  ).bind(date, endTime, startTime).first();
+  // Atomares Conditional-INSERT — prüft beide Tabellen in einem Statement
+  const result = await env.DB.prepare(`
+    INSERT INTO guest_bookings (id, service_id, date, start_time, end_time, status, guest_name, guest_email, guest_phone, cancel_token)
+    SELECT ?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?
+    WHERE NOT EXISTS (
+      SELECT 1 FROM bookings
+      WHERE date = ? AND status = 'confirmed'
+      AND start_time < ? AND end_time > ?
+    ) AND NOT EXISTS (
+      SELECT 1 FROM guest_bookings
+      WHERE date = ? AND status = 'confirmed'
+      AND start_time < ? AND end_time > ?
+    )
+  `).bind(
+    bookingId, serviceId, date, startTime, endTime, name, email, phone ?? null, cancelToken,
+    date, endTime, startTime,
+    date, endTime, startTime,
+  ).run();
 
-  if (conflictInBookings) return errorResponse('Dieser Zeitslot ist leider nicht mehr verfügbar.');
-
-  const conflictInGuest = await env.DB.prepare(
-    `SELECT 1 FROM guest_bookings WHERE date = ? AND status = 'confirmed' AND start_time < ? AND end_time > ? LIMIT 1`
-  ).bind(date, endTime, startTime).first();
-
-  if (conflictInGuest) return errorResponse('Dieser Zeitslot ist leider nicht mehr verfügbar.');
-
-  await env.DB.prepare(
-    `INSERT INTO guest_bookings (id, service_id, date, start_time, end_time, status, guest_name, guest_email, guest_phone, cancel_token) VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?)`
-  ).bind(bookingId, serviceId, date, startTime, endTime, name, email, phone ?? null, cancelToken).run();
+  if (result.meta.changes === 0) {
+    return errorResponse('Dieser Zeitslot ist leider nicht mehr verfügbar.');
+  }
 
   const cancelUrl = `https://barbier.berlin/booking/cancel?token=${cancelToken}`;
   const serviceName = service.name[lang];

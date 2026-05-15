@@ -1,10 +1,9 @@
 import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { eq } from 'drizzle-orm';
-import { users } from '../../../db/schema';
-import { generateId, hashPassword } from '../../../lib/crypto';
+import { users, emailVerificationTokens } from '../../../db/schema';
+import { generateId, generateSessionToken, hashPassword, hashToken } from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
-import { createSession, sessionCookie } from '../../../lib/session';
 import {
   validateEmail,
   validatePassword,
@@ -13,7 +12,9 @@ import {
   jsonResponse,
   errorResponse,
 } from '../../../lib/validation';
-import { sendWelcomeEmail, isMailConfigured } from '../../../lib/email';
+import { sendVerificationEmail, sendWelcomeEmail, isMailConfigured } from '../../../lib/email';
+
+const VERIFICATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 export async function POST(context: APIContext) {
   try {
@@ -34,7 +35,7 @@ export async function POST(context: APIContext) {
 
     const db = getDb(env.DB);
 
-    // Check if user exists
+    // Existence check + Insert: bei UNIQUE-Konflikt fängt der INSERT die Race-Condition.
     const existing = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
     if (existing.length > 0) {
       return errorResponse('Ein Konto mit dieser E-Mail existiert bereits.');
@@ -42,31 +43,60 @@ export async function POST(context: APIContext) {
 
     const passwordHash = await hashPassword(password);
     const userId = generateId();
-
     const now = new Date().toISOString();
-    await db.insert(users).values({
-      id: userId,
-      email,
-      passwordHash,
-      name,
-      phone,
-      role: 'customer',
-      createdAt: now,
-      updatedAt: now,
-    });
 
-    const token = await createSession(db, userId);
+    // Dev-Bypass: ohne Mail-Config wird sofort auto-verifiziert (lokales Testing).
+    // In Production ist Mail konfiguriert → User muss Link aus Mail klicken.
+    const mailConfigured = isMailConfigured(env);
+    const autoVerify = !mailConfigured;
 
-    // Willkommens-E-Mail (fire and forget)
-    if (isMailConfigured(env)) {
-      sendWelcomeEmail(env, { to: email, customerName: name }).catch((err) => console.error('E-Mail fehlgeschlagen:', err));
+    try {
+      await db.insert(users).values({
+        id: userId,
+        email,
+        passwordHash,
+        name,
+        phone,
+        role: 'customer',
+        emailVerified: autoVerify,
+        createdAt: now,
+        updatedAt: now,
+      });
+    } catch (err) {
+      // UNIQUE-Konflikt auf email (Race) → höflich behandeln
+      const msg = err instanceof Error ? err.message : '';
+      if (/UNIQUE|unique/i.test(msg)) {
+        return errorResponse('Ein Konto mit dieser E-Mail existiert bereits.');
+      }
+      throw err;
     }
 
-    return jsonResponse(
-      { success: true, redirect: '/dashboard' },
-      201,
-      { 'Set-Cookie': sessionCookie(token) },
-    );
+    // Verify-Token erzeugen und Mail rausschicken (wenn konfiguriert)
+    if (mailConfigured) {
+      const verifyToken = generateSessionToken();
+      const verifyTokenHash = await hashToken(verifyToken);
+      await db.insert(emailVerificationTokens).values({
+        id: generateId(),
+        userId,
+        tokenHash: verifyTokenHash,
+        expiresAt: new Date(Date.now() + VERIFICATION_TOKEN_TTL_MS).toISOString(),
+      });
+      const verifyUrl = `https://barbier.berlin/verify-email?token=${verifyToken}`;
+      sendVerificationEmail(env, { to: email, customerName: name, verifyUrl })
+        .catch((err) => console.error('Verifizierungs-E-Mail fehlgeschlagen:', err));
+    } else {
+      // Ohne Mail-Config keinen Token erzeugen, User ist auto-verifiziert.
+      sendWelcomeEmail(env, { to: email, customerName: name })
+        .catch(() => { /* no-op, mail not configured */ });
+    }
+
+    return jsonResponse({
+      success: true,
+      message: mailConfigured
+        ? 'Konto erstellt. Bitte E-Mail-Adresse über den zugesandten Link bestätigen, dann anmelden.'
+        : 'Konto erstellt. Sie können sich jetzt anmelden.',
+      requiresVerification: mailConfigured,
+    }, 201);
   } catch (err) {
     console.error('Register error:', err instanceof Error ? err.message : 'Unbekannter Fehler');
     return errorResponse('Registrierung fehlgeschlagen.', 500);

@@ -60,14 +60,15 @@ export async function POST(context: APIContext) {
     return errorResponse('Sonntags geschlossen.');
   }
 
-  // Validate within opening hours
-  const [h] = startTime.split(':').map(Number);
-  const maxHour = bookingDate.getDay() === 6 ? 17 : 18;
-  if (h! < 10 || h! >= maxHour) {
-    return errorResponse(`Termine nur zwischen 10:00 und ${maxHour}:00 Uhr.`);
+  // Validate within opening hours — Start UND End müssen drin liegen
+  const closingHour = bookingDate.getDay() === 6 ? 17 : 18;
+  const startMin = startH! * 60 + startM!;
+  const endMin = totalMinutes;
+  if (startMin < 10 * 60 || endMin > closingHour * 60) {
+    return errorResponse(`Termine nur zwischen 10:00 und ${closingHour}:00 Uhr.`);
   }
 
-  // Atomare Konfliktprüfung + INSERT via D1 raw SQL
+  // Atomare Konfliktprüfung + INSERT — prüft sowohl bookings ALS AUCH guest_bookings
   const bookingId = generateId();
   const result = await env.DB.prepare(`
     INSERT INTO bookings (id, user_id, service_id, date, start_time, end_time, status, paid_with_points, points_used, is_walk_in)
@@ -76,8 +77,16 @@ export async function POST(context: APIContext) {
       SELECT 1 FROM bookings
       WHERE date = ? AND status = 'confirmed'
       AND start_time < ? AND end_time > ?
+    ) AND NOT EXISTS (
+      SELECT 1 FROM guest_bookings
+      WHERE date = ? AND status = 'confirmed'
+      AND start_time < ? AND end_time > ?
     )
-  `).bind(bookingId, user.id, serviceId, date, startTime, endTime, date, endTime, startTime).run();
+  `).bind(
+    bookingId, user.id, serviceId, date, startTime, endTime,
+    date, endTime, startTime,
+    date, endTime, startTime,
+  ).run();
 
   if (result.meta.changes === 0) {
     return errorResponse('Dieser Zeitslot ist leider nicht verfügbar.');

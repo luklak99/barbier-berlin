@@ -26,11 +26,15 @@ function getClientIp(request: Request): string {
     || 'unknown';
 }
 
-// Rate limit configs per path pattern
+// Rate limit configs per path pattern (first match wins)
 const RATE_LIMITS: { pattern: RegExp; max: number; windowMs: number }[] = [
   { pattern: /^\/api\/auth\/(login|register)$/, max: 10, windowMs: 60_000 },    // Auth: 10/min
+  { pattern: /^\/api\/auth\/forgot-password$/, max: 3, windowMs: 3_600_000 },     // Forgot-PW: 3/h (Spam-Schutz)
+  { pattern: /^\/api\/auth\/reset-password$/, max: 5, windowMs: 600_000 },        // Reset: 5/10min
+  { pattern: /^\/api\/auth\/verify-email$/, max: 10, windowMs: 600_000 },         // Verify: 10/10min
+  { pattern: /^\/api\/auth\/resend-verification$/, max: 3, windowMs: 3_600_000 }, // Resend-Verify: 3/h
   { pattern: /^\/api\/auth\/mfa-setup$/, max: 5, windowMs: 60_000 },             // MFA: 5/min
-  { pattern: /^\/api\/bookings\/create$/, max: 10, windowMs: 60_000 },            // Booking: 10/min
+  { pattern: /^\/api\/bookings\/create(-guest)?$/, max: 10, windowMs: 60_000 },   // Booking: 10/min
   { pattern: /^\/api\/reviews\/create$/, max: 5, windowMs: 60_000 },              // Reviews: 5/min
   { pattern: /^\/api\/points\/redeem$/, max: 5, windowMs: 60_000 },               // Points: 5/min
   { pattern: /^\/api\/admin\//, max: 30, windowMs: 60_000 },                      // Admin: 30/min

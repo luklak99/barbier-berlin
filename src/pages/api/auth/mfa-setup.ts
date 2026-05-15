@@ -2,7 +2,14 @@ import { env } from 'cloudflare:workers';
 import type { APIContext } from 'astro';
 import { eq } from 'drizzle-orm';
 import { users } from '../../../db/schema';
-import { generateTotpSecret, getTotpUri, verifyTotp } from '../../../lib/crypto';
+import {
+  decryptSecret,
+  encryptSecret,
+  generateTotpSecret,
+  getTotpUri,
+  isEncryptedSecret,
+  verifyTotp,
+} from '../../../lib/crypto';
 import { getDb } from '../../../lib/db';
 import { getSessionToken, validateSession } from '../../../lib/session';
 import { validateTotpCode, jsonResponse, errorResponse } from '../../../lib/validation';
@@ -16,7 +23,10 @@ export async function GET(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
-  // Blockiere wenn TOTP bereits aktiviert
+  if (!env.TOTP_ENCRYPTION_KEY) {
+    return errorResponse('2FA serverseitig nicht konfiguriert (Master-Key fehlt).', 500);
+  }
+
   if (user.totpEnabled) {
     return errorResponse('2FA ist bereits aktiviert. Bitte zuerst deaktivieren.');
   }
@@ -24,8 +34,9 @@ export async function GET(context: APIContext) {
   const secret = generateTotpSecret();
   const uri = getTotpUri(secret, user.email);
 
-  // Store secret temporarily (not yet enabled)
-  await db.update(users).set({ totpSecret: secret }).where(eq(users.id, user.id));
+  // Encrypt at rest before persisting
+  const encrypted = await encryptSecret(secret, env.TOTP_ENCRYPTION_KEY);
+  await db.update(users).set({ totpSecret: encrypted }).where(eq(users.id, user.id));
 
   return jsonResponse({ secret, uri });
 }
@@ -39,6 +50,10 @@ export async function POST(context: APIContext) {
   const user = await validateSession(db, token);
   if (!user) return errorResponse('Sitzung abgelaufen.', 401);
 
+  if (!env.TOTP_ENCRYPTION_KEY) {
+    return errorResponse('2FA serverseitig nicht konfiguriert (Master-Key fehlt).', 500);
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await context.request.json();
@@ -49,15 +64,22 @@ export async function POST(context: APIContext) {
   const code = validateTotpCode(body.code);
   if (!code) return errorResponse('Ungültiger Code.');
 
-  // Get the stored secret
   const result = await db.select({ totpSecret: users.totpSecret }).from(users).where(eq(users.id, user.id)).limit(1);
-  const secret = result[0]?.totpSecret;
-  if (!secret) return errorResponse('Kein 2FA-Secret gefunden. Bitte neu einrichten.');
+  const stored = result[0]?.totpSecret;
+  if (!stored) return errorResponse('Kein 2FA-Secret gefunden. Bitte neu einrichten.');
+
+  const secret = isEncryptedSecret(stored) ? await decryptSecret(stored, env.TOTP_ENCRYPTION_KEY) : stored;
 
   const valid = await verifyTotp(secret, code);
   if (!valid) return errorResponse('Ungültiger Code. Bitte erneut versuchen.');
 
-  await db.update(users).set({ totpEnabled: true }).where(eq(users.id, user.id));
+  // Legacy-Migration: wenn Secret unverschlüsselt war, jetzt verschlüsselt nachspeichern
+  if (!isEncryptedSecret(stored)) {
+    const encrypted = await encryptSecret(secret, env.TOTP_ENCRYPTION_KEY);
+    await db.update(users).set({ totpSecret: encrypted, totpEnabled: true }).where(eq(users.id, user.id));
+  } else {
+    await db.update(users).set({ totpEnabled: true }).where(eq(users.id, user.id));
+  }
 
   return jsonResponse({ success: true });
 }
